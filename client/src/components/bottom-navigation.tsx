@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { Home, PieChart, List, Settings } from "lucide-react";
+import { Home, PieChart, List, Target } from "lucide-react";
 
 interface BottomNavigationProps {
-  activeTab: 'home' | 'analytics' | 'transactions' | 'settings';
+  activeTab: 'home' | 'analytics' | 'transactions' | 'goals';
 }
 
 export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
@@ -13,7 +13,7 @@ export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
     { id: 'home', icon: Home, label: 'الرئيسية', path: '/' },
     { id: 'analytics', icon: PieChart, label: 'التحليلات', path: '/analytics' },
     { id: 'transactions', icon: List, label: 'العمليات', path: '/transactions' },
-    { id: 'settings', icon: Settings, label: 'الإعدادات', path: '/settings' },
+    { id: 'goals', icon: Target, label: 'الأهداف', path: '/goals' },
   ];
 
   return (

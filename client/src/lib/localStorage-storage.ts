@@ -1,8 +1,9 @@
-import { type Transaction, type Category, type InsertTransaction, type InsertCategory } from "@shared/schema";
+import { type Transaction, type Category, type InsertTransaction, type InsertCategory, type Goal, type InsertGoal } from "@shared/schema";
 
 export class LocalStorageManager {
   private readonly TRANSACTIONS_KEY = 'expense_tracker_transactions';
   private readonly CATEGORIES_KEY = 'expense_tracker_categories';
+  private readonly GOALS_KEY = 'expense_tracker_goals';
   private readonly INITIALIZED_KEY = 'expense_tracker_initialized';
 
   constructor() {
@@ -193,10 +194,102 @@ export class LocalStorageManager {
     };
   }
 
+  // Goal methods
+  getGoals(): Promise<Goal[]> {
+    const goals = this.loadFromLocalStorage<Goal>(this.GOALS_KEY);
+    return Promise.resolve(goals);
+  }
+
+  getGoal(id: string): Promise<Goal | undefined> {
+    const goals = this.loadFromLocalStorage<Goal>(this.GOALS_KEY);
+    const goal = goals.find(g => g.id === id);
+    return Promise.resolve(goal);
+  }
+
+  createGoal(insertGoal: InsertGoal): Promise<Goal> {
+    const goals = this.loadFromLocalStorage<Goal>(this.GOALS_KEY);
+    const newGoal: Goal = {
+      ...insertGoal,
+      id: this.generateId(),
+      createdAt: new Date(),
+    };
+    
+    goals.push(newGoal);
+    this.saveToLocalStorage(this.GOALS_KEY, goals);
+    return Promise.resolve(newGoal);
+  }
+
+  updateGoal(id: string, updates: Partial<InsertGoal>): Promise<Goal | undefined> {
+    const goals = this.loadFromLocalStorage<Goal>(this.GOALS_KEY);
+    const goalIndex = goals.findIndex(g => g.id === id);
+    
+    if (goalIndex === -1) {
+      return Promise.resolve(undefined);
+    }
+    
+    goals[goalIndex] = { ...goals[goalIndex], ...updates };
+    this.saveToLocalStorage(this.GOALS_KEY, goals);
+    return Promise.resolve(goals[goalIndex]);
+  }
+
+  deleteGoal(id: string): Promise<boolean> {
+    const goals = this.loadFromLocalStorage<Goal>(this.GOALS_KEY);
+    const filteredGoals = goals.filter(g => g.id !== id);
+    
+    if (filteredGoals.length === goals.length) {
+      return Promise.resolve(false); // Goal not found
+    }
+    
+    this.saveToLocalStorage(this.GOALS_KEY, filteredGoals);
+    return Promise.resolve(true);
+  }
+
+  getActiveGoals(): Promise<Goal[]> {
+    const goals = this.loadFromLocalStorage<Goal>(this.GOALS_KEY);
+    const now = new Date();
+    const activeGoals = goals.filter(goal => 
+      goal.isActive === 'true' && 
+      new Date(goal.startDate) <= now && 
+      new Date(goal.endDate) >= now
+    );
+    return Promise.resolve(activeGoals);
+  }
+
+  // Calculate goal progress
+  async getGoalProgress(goalId: string): Promise<{ spent: number; percentage: number; remaining: number } | null> {
+    const goal = await this.getGoal(goalId);
+    if (!goal) return null;
+
+    const transactions = await this.getTransactions();
+    const goalStartDate = new Date(goal.startDate);
+    const goalEndDate = new Date(goal.endDate);
+
+    // Filter transactions within goal period and category (if specified)
+    const relevantTransactions = transactions.filter(transaction => {
+      const transactionDate = new Date(transaction.date);
+      const isInPeriod = transactionDate >= goalStartDate && transactionDate <= goalEndDate;
+      const isExpense = transaction.type === 'expense';
+      const isRightCategory = !goal.category || transaction.category === goal.category;
+      
+      return isInPeriod && isExpense && isRightCategory;
+    });
+
+    const spent = relevantTransactions.reduce((sum, transaction) => 
+      sum + parseFloat(transaction.amount), 0
+    );
+    
+    const targetAmount = parseFloat(goal.targetAmount);
+    const percentage = targetAmount > 0 ? (spent / targetAmount) * 100 : 0;
+    const remaining = Math.max(0, targetAmount - spent);
+
+    return { spent, percentage, remaining };
+  }
+
   // Clear all data (for debugging or reset)
   clearAllData(): void {
     localStorage.removeItem(this.TRANSACTIONS_KEY);
     localStorage.removeItem(this.CATEGORIES_KEY);
+    localStorage.removeItem(this.GOALS_KEY);
     localStorage.removeItem(this.INITIALIZED_KEY);
     this.initializeDefaultCategories();
   }
@@ -205,10 +298,12 @@ export class LocalStorageManager {
   exportToJSON(): string {
     const transactions = this.loadFromLocalStorage<Transaction>(this.TRANSACTIONS_KEY);
     const categories = this.loadFromLocalStorage<Category>(this.CATEGORIES_KEY);
+    const goals = this.loadFromLocalStorage<Goal>(this.GOALS_KEY);
     
     return JSON.stringify({
       transactions,
       categories,
+      goals,
       exportDate: new Date().toISOString()
     }, null, 2);
   }
@@ -222,6 +317,9 @@ export class LocalStorageManager {
       }
       if (data.categories) {
         this.saveToLocalStorage(this.CATEGORIES_KEY, data.categories);
+      }
+      if (data.goals) {
+        this.saveToLocalStorage(this.GOALS_KEY, data.goals);
       }
     } catch (error) {
       console.error('Error importing data:', error);

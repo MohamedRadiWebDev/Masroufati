@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertTransactionSchema, insertCategorySchema } from "@shared/schema";
+import { insertTransactionSchema, insertCategorySchema, insertGoalSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -116,6 +116,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(500).json({ message: "Failed to calculate balance" });
+    }
+  });
+
+  // Goal routes
+  app.get("/api/goals", async (req, res) => {
+    try {
+      const goals = await storage.getGoals();
+      res.json(goals);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get goals" });
+    }
+  });
+
+  app.get("/api/goals/active", async (req, res) => {
+    try {
+      const activeGoals = await storage.getActiveGoals();
+      res.json(activeGoals);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get active goals" });
+    }
+  });
+
+  app.get("/api/goals/:id", async (req, res) => {
+    try {
+      const goal = await storage.getGoal(req.params.id);
+      if (!goal) {
+        return res.status(404).json({ message: "Goal not found" });
+      }
+      res.json(goal);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get goal" });
+    }
+  });
+
+  app.post("/api/goals", async (req, res) => {
+    try {
+      const validatedData = insertGoalSchema.parse(req.body);
+      const goal = await storage.createGoal(validatedData);
+      res.status(201).json(goal);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid goal data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create goal" });
+    }
+  });
+
+  app.put("/api/goals/:id", async (req, res) => {
+    try {
+      const validatedData = insertGoalSchema.partial().parse(req.body);
+      const goal = await storage.updateGoal(req.params.id, validatedData);
+      if (!goal) {
+        return res.status(404).json({ message: "Goal not found" });
+      }
+      res.json(goal);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid goal data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update goal" });
+    }
+  });
+
+  app.delete("/api/goals/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteGoal(req.params.id);
+      if (!success) {
+        return res.status(404).json({ message: "Goal not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete goal" });
     }
   });
 
