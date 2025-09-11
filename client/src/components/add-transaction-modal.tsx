@@ -35,7 +35,7 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
   const queryClient = useQueryClient();
 
   const { data: categories = [] } = useQuery<Category[]>({
-    queryKey: ["/api/categories", { type }],
+    queryKey: ["/api/categories", type],
   });
 
   const form = useForm<TransactionFormData>({
