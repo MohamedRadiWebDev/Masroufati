@@ -77,6 +77,7 @@ export function AddGoalModal({ isOpen, onClose, onSuccess, categories }: AddGoal
       const goalData = {
         ...data,
         targetAmount: data.targetAmount,
+        category: data.category === 'all' ? '' : data.category,
         startDate: new Date(data.startDate),
         endDate: new Date(data.endDate),
       };
@@ -193,7 +194,7 @@ export function AddGoalModal({ isOpen, onClose, onSuccess, categories }: AddGoal
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">جميع المصروفات</SelectItem>
+                      <SelectItem value="all">جميع المصروفات</SelectItem>
                       {expenseCategories.map((category) => (
                         <SelectItem key={category.id} value={category.name}>
                           {category.nameAr}
