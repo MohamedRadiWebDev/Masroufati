@@ -3,6 +3,7 @@ import BottomNavigation from "@/components/bottom-navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useLocation } from "wouter";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 interface AnalyticsData {
   categoryBreakdown: {
@@ -60,6 +61,42 @@ export default function Analytics() {
     return colorMap[color] || 'bg-muted';
   };
 
+  const getChartColor = (color: string) => {
+    const colorMap: Record<string, string> = {
+      warning: '#f59e0b',
+      primary: '#3b82f6', 
+      secondary: '#10b981',
+      success: '#22c55e',
+      destructive: '#ef4444',
+      accent: '#8b5cf6',
+      muted: '#6b7280',
+    };
+    return colorMap[color] || '#6b7280';
+  };
+
+  // Prepare chart data
+  const chartData = analytics?.categoryBreakdown.map((item, index) => ({
+    name: item.categoryAr,
+    value: item.amount,
+    color: getChartColor(item.color),
+    percentage: balance && balance.totalExpenses > 0 ? ((item.amount / balance.totalExpenses) * 100).toFixed(1) : '0'
+  })) || [];
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0];
+      return (
+        <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+          <p className="font-medium">{data.payload.name}</p>
+          <p className="text-sm text-primary">
+            {formatCurrency(data.value)} ({data.payload.percentage}%)
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       <div className="p-4 pb-32">
@@ -94,16 +131,40 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Chart Placeholder */}
-        <div className="chart-container mb-4">
+        {/* Expense Distribution Chart */}
+        <div className="chart-container mb-4" data-testid="chart-expense-distribution">
           <h3 className="font-semibold mb-3">توزيع المصروفات</h3>
-          <div className="h-64 bg-muted rounded-lg flex items-center justify-center">
-            <div className="text-center text-muted-foreground">
-              <i className="fas fa-chart-pie text-4xl mb-2"></i>
-              <p>الرسم البياني للمصروفات</p>
-              <p className="text-xs mt-1">سيتم تطوير هذه الميزة قريباً</p>
+          {chartData.length === 0 ? (
+            <div className="h-64 bg-muted rounded-lg flex items-center justify-center" data-testid="chart-empty-state">
+              <div className="text-center text-muted-foreground">
+                <i className="fas fa-chart-pie text-4xl mb-2"></i>
+                <p>لا توجد مصروفات لعرضها</p>
+                <p className="text-xs mt-1">أضف مصروفات لترى التوزيع</p>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="h-64 w-full" data-testid="pie-chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percentage }) => percentage && percentage !== '0' ? `${name} ${percentage}%` : name}
+                    labelLine={false}
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTooltip />} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
 
         {/* Categories Breakdown */}
