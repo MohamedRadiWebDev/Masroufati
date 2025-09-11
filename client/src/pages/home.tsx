@@ -26,9 +26,14 @@ export default function Home() {
     queryKey: ["/api/transactions"],
   });
 
-  const { data: categories = [] } = useQuery<string[]>({
+  const { data: categoriesData = [] } = useQuery({
     queryKey: ["/api/categories"],
   });
+
+  // Extract category names for the filter dropdown
+  const categories = Array.isArray(categoriesData) ? 
+    categoriesData.map((cat: any) => typeof cat === 'string' ? cat : cat.name || cat) : 
+    [];
 
   // Filter transactions based on search and filter criteria
   const filteredTransactions = useMemo(() => {
@@ -37,7 +42,7 @@ export default function Home() {
     // Apply search filter
     if (searchText.trim()) {
       filtered = filtered.filter(transaction =>
-        transaction.description.toLowerCase().includes(searchText.toLowerCase())
+        transaction.description && transaction.description.toLowerCase().includes(searchText.toLowerCase())
       );
     }
 
