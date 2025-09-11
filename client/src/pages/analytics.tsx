@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import BottomNavigation from "@/components/bottom-navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
 import { useLocation } from "wouter";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
@@ -97,19 +97,89 @@ export default function Analytics() {
     return null;
   };
 
+  const escapeCSVField = (field: any): string => {
+    // Convert to string and handle null/undefined
+    const str = field?.toString() || '';
+    
+    // If field contains comma, quote, or newline, wrap in quotes and escape internal quotes
+    if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    
+    return str;
+  };
+
+  const exportToCSV = () => {
+    try {
+      // Get transactions from localStorage
+      const transactionsData = localStorage.getItem('transactions');
+      const transactions = transactionsData ? JSON.parse(transactionsData) : [];
+      
+      if (!transactions || transactions.length === 0) {
+        alert('لا توجد بيانات للتصدير');
+        return;
+      }
+
+      // Prepare CSV data with proper escaping
+      const csvHeaders = ['التاريخ', 'الوصف', 'المبلغ', 'النوع', 'التصنيف'];
+      const csvRows = transactions.map((transaction: any) => [
+        escapeCSVField(new Date(transaction.date).toLocaleDateString('ar-EG')),
+        escapeCSVField(transaction.description),
+        escapeCSVField(transaction.amount),
+        escapeCSVField(transaction.type === 'income' ? 'دخل' : 'مصروف'),
+        escapeCSVField(transaction.category)
+      ]);
+
+      // Create CSV content with proper line endings
+      const csvContent = [
+        csvHeaders.map(escapeCSVField).join(','),
+        ...csvRows.map(row => row.join(','))
+      ].join('\r\n');
+
+      // Add BOM for Arabic text support
+      const BOM = '\uFEFF';
+      const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+      
+      // Create download link
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `العمليات_المالية_${new Date().toLocaleDateString('ar-EG').replace(/\//g, '-')}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('خطأ في تصدير البيانات:', error);
+      alert('حدث خطأ أثناء تصدير البيانات');
+    }
+  };
+
   return (
     <>
       <div className="p-4 pb-32">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-bold">التحليلات الشهرية</h1>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setLocation("/")}
-            data-testid="button-back-home"
-          >
-            <ArrowRight className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToCSV}
+              data-testid="button-export-csv"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              تصدير CSV
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocation("/")}
+              data-testid="button-back-home"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Monthly Summary */}
