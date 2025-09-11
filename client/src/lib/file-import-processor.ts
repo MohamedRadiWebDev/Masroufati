@@ -132,9 +132,14 @@ function parseAmount(amount: any): number | null {
   }
   
   if (typeof amount === 'string') {
-    // Remove common currency symbols and spaces
-    const cleaned = amount.trim()
-      .replace(/[جنيه|جنية|ج|£|$|€|ريال|درهم|دينار]/g, '')
+    // Normalize Arabic-Hindi numbers to Western numbers
+    const arabicToWestern = amount.replace(/[\u0660-\u0669]/g, (d: string) => 
+      String.fromCharCode(d.charCodeAt(0) - '\u0660'.charCodeAt(0) + '0'.charCodeAt(0))
+    );
+    
+    // Remove common currency symbols and spaces - using alternation instead of character class
+    const cleaned = arabicToWestern.trim()
+      .replace(/(جنيه|جنية|ج|£|\$|€|ريال|درهم|دينار)/g, '')
       .replace(/\s+/g, '')
       .replace(/,/g, ''); // Remove comma separators
     
@@ -228,7 +233,7 @@ function normalizeCategory(category: string, availableCategories: string[]): str
   return null;
 }
 
-function parseDate(dateStr: string): Date | null {
+function parseDate(dateStr: string): string | null {
   if (!dateStr) return null;
   
   const cleaned = dateStr.trim();
@@ -236,29 +241,36 @@ function parseDate(dateStr: string): Date | null {
   // Try parsing as ISO date (yyyy-mm-dd)
   const isoMatch = cleaned.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
   if (isoMatch) {
-    const date = new Date(isoMatch[1] + '-' + isoMatch[2].padStart(2, '0') + '-' + isoMatch[3].padStart(2, '0'));
-    return isValidDate(date) ? date : null;
+    const isoString = isoMatch[1] + '-' + isoMatch[2].padStart(2, '0') + '-' + isoMatch[3].padStart(2, '0');
+    const date = new Date(isoString);
+    return isValidDate(date) ? isoString : null;
   }
 
   // Try parsing as dd/mm/yyyy or dd-mm-yyyy
   const ddmmyyyyMatch = cleaned.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (ddmmyyyyMatch) {
     const [, day, month, year] = ddmmyyyyMatch;
-    const date = new Date(year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0'));
-    return isValidDate(date) ? date : null;
+    const isoString = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');
+    const date = new Date(isoString);
+    return isValidDate(date) ? isoString : null;
   }
 
   // Try parsing as mm/dd/yyyy or mm-dd-yyyy (less common but might appear)
   const mmddyyyyMatch = cleaned.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (mmddyyyyMatch) {
     const [, month, day, year] = mmddyyyyMatch;
-    const date = new Date(year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0'));
-    return isValidDate(date) ? date : null;
+    const isoString = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');
+    const date = new Date(isoString);
+    return isValidDate(date) ? isoString : null;
   }
 
   // Try parsing with built-in Date constructor as fallback
   const fallbackDate = new Date(cleaned);
-  return isValidDate(fallbackDate) ? fallbackDate : null;
+  if (isValidDate(fallbackDate)) {
+    return fallbackDate.toISOString().split('T')[0]; // Return yyyy-mm-dd format
+  }
+  
+  return null;
 }
 
 function isValidDate(date: Date): boolean {

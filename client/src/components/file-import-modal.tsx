@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Upload, FileSpreadsheet, AlertCircle, CheckCircle, X, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,7 +27,7 @@ interface FileImportModalProps {
 
 type ImportStep = 'upload' | 'processing' | 'validation' | 'results';
 
-export function FileImportModal({ isOpen, onClose, availableCategories }: FileImportModalProps) {
+export default function FileImportModal({ isOpen, onClose, availableCategories }: FileImportModalProps) {
   const [step, setStep] = useState<ImportStep>('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -203,6 +203,9 @@ export function FileImportModal({ isOpen, onClose, availableCategories }: FileIm
               تحميل نموذج
             </Button>
           </div>
+          <DialogDescription>
+            اختر ملف Excel أو CSV لاستيراد العمليات المالية إلى التطبيق. تأكد من أن الملف يحتوي على الأعمدة المطلوبة بالترتيب الصحيح.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">

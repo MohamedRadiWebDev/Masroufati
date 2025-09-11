@@ -4,17 +4,19 @@ import BalanceCard from "@/components/balance-card";
 import TransactionItem from "@/components/transaction-item";
 import AddTransactionModal from "@/components/add-transaction-modal";
 import VoiceRecordingModal from "@/components/voice-recording-modal";
+import FileImportModal from "@/components/file-import-modal";
 import BottomNavigation from "@/components/bottom-navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mic, Plus, Minus, Search, Filter, X } from "lucide-react";
+import { Mic, Plus, Minus, Search, Filter, X, Upload } from "lucide-react";
 import { type Transaction } from "@shared/schema";
 
 export default function Home() {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   
   // Filter states
   const [searchText, setSearchText] = useState("");
@@ -103,7 +105,7 @@ export default function Home() {
 
       {/* Quick Actions */}
       <div className="px-4 mb-4">
-        <div className="flex gap-3">
+        <div className="flex gap-3 mb-3">
           <Button
             className="flex-1 bg-destructive text-destructive-foreground hover:bg-destructive/90"
             onClick={() => setIsExpenseModalOpen(true)}
@@ -121,6 +123,15 @@ export default function Home() {
             إضافة دخل
           </Button>
         </div>
+        <Button
+          variant="outline"
+          className="w-full border-primary text-primary hover:bg-primary/10"
+          onClick={() => setIsImportModalOpen(true)}
+          data-testid="button-import-file"
+        >
+          <Upload className="ml-2 h-4 w-4" />
+          استيراد من ملف Excel أو CSV
+        </Button>
       </div>
 
       {/* Search and Filter Section */}
@@ -254,6 +265,11 @@ export default function Home() {
       <VoiceRecordingModal
         open={isVoiceModalOpen}
         onOpenChange={setIsVoiceModalOpen}
+      />
+      <FileImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        availableCategories={categories}
       />
     </>
   );
