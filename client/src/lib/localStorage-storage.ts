@@ -59,12 +59,24 @@ export class LocalStorageManager {
     }
   }
 
-  // Transaction methods
-  getTransactions(): Promise<Transaction[]> {
+  // Transaction methods with lazy loading support
+  getTransactions(page = 1, limit = 50): Promise<Transaction[]> {
     const transactions = this.loadFromLocalStorage<Transaction>(this.TRANSACTIONS_KEY);
     // Sort by date (newest first)
     transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    // Apply pagination if requested
+    if (page > 1 || (limit < transactions.length && limit > 0)) {
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      return Promise.resolve(transactions.slice(startIndex, endIndex));
+    }
+    
     return Promise.resolve(transactions);
+  }
+
+  getAllTransactions(): Promise<Transaction[]> {
+    return this.getTransactions(1, Number.MAX_SAFE_INTEGER);
   }
 
   getTransaction(id: string): Promise<Transaction | undefined> {
@@ -79,6 +91,7 @@ export class LocalStorageManager {
       ...insertTransaction,
       id: this.generateId(),
       note: insertTransaction.note || null,
+      receiptImage: insertTransaction.receiptImage || null,
       date: insertTransaction.date || new Date(),
       createdAt: new Date(),
     };
@@ -140,7 +153,7 @@ export class LocalStorageManager {
 
   // Balance calculation
   async getBalance(): Promise<{ currentBalance: number; totalIncome: number; totalExpenses: number }> {
-    const transactions = await this.getTransactions();
+    const transactions = await this.getAllTransactions();
     
     const totalIncome = transactions
       .filter(t => t.type === 'income')
@@ -161,7 +174,7 @@ export class LocalStorageManager {
 
   // Analytics data
   async getAnalytics(): Promise<{ categoryBreakdown: any[] }> {
-    const transactions = await this.getTransactions();
+    const transactions = await this.getAllTransactions();
     const categories = await this.getCategories();
     
     // Group expenses by category

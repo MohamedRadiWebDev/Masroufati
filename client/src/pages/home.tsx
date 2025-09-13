@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Mic, Plus, Minus, Search, Filter, X, Upload, Settings } from "lucide-react";
 import { type Transaction } from "@shared/schema";
 import { localStorageManager } from "@/lib/localStorage-storage";
+import { transactionsQueryOptions } from "@/lib/queryClient";
 
 export default function Home() {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
@@ -31,6 +32,7 @@ export default function Home() {
 
   const { data: transactions = [], isLoading } = useQuery<Transaction[]>({
     queryKey: ["/api/transactions"],
+    ...transactionsQueryOptions,
   });
 
   const { data: categoriesData = [] } = useQuery({
@@ -93,7 +95,7 @@ export default function Home() {
     // Apply date filter
     if (selectedDateFilter !== "all") {
       filtered = filtered.filter(transaction => 
-        isDateInRange(transaction.date, selectedDateFilter)
+        isDateInRange(typeof transaction.date === 'string' ? transaction.date : transaction.date.toISOString(), selectedDateFilter)
       );
     }
 

@@ -5,6 +5,8 @@ import { ArrowRight, Download } from "lucide-react";
 import { useLocation } from "wouter";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { localStorageManager } from "@/lib/localStorage-storage";
+// Remove the invalid import - formatCurrency is defined locally
+import { analyticsQueryOptions } from "@/lib/queryClient";
 
 interface AnalyticsData {
   categoryBreakdown: {
@@ -27,10 +29,12 @@ export default function Analytics() {
 
   const { data: analytics, isLoading: analyticsLoading } = useQuery<AnalyticsData>({
     queryKey: ["/api/analytics"],
+    ...analyticsQueryOptions,
   });
 
   const { data: balance, isLoading: balanceLoading } = useQuery<BalanceData>({
     queryKey: ["/api/balance"],
+    ...analyticsQueryOptions, // Balance also changes frequently like analytics
   });
 
   const isLoading = analyticsLoading || balanceLoading;

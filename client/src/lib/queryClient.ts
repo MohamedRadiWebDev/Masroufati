@@ -7,7 +7,14 @@ export const getQueryFn = (): QueryFunction<any> => async ({ queryKey }) => {
   
   switch (endpoint) {
     case "/api/transactions":
-      return await localStorageManager.getTransactions();
+      // Support pagination only when explicitly requested with params: ["/api/transactions", page, limit]
+      if (params.length >= 2) {
+        const page = params[0] || 1;
+        const limit = params[1] || 50;
+        return await localStorageManager.getTransactions(page, limit);
+      }
+      // Default: return all transactions for analytics, balance, etc.
+      return await localStorageManager.getAllTransactions();
     
     case "/api/categories":
       // Check if type parameter is provided
@@ -71,7 +78,8 @@ export const queryClient = new QueryClient({
       queryFn: getQueryFn(),
       refetchInterval: false,
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
+      staleTime: 1000 * 60 * 5, // 5 minutes for most data
+      gcTime: 1000 * 60 * 30, // 30 minutes cache (was cacheTime in v4)
       retry: false,
     },
     mutations: {
@@ -79,3 +87,19 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+// Specialized cache settings for different data types
+export const analyticsQueryOptions = {
+  staleTime: 1000 * 60 * 2, // 2 minutes for analytics (changes more frequently)
+  gcTime: 1000 * 60 * 10, // 10 minutes cache (was cacheTime in v4)
+};
+
+export const transactionsQueryOptions = {
+  staleTime: 1000 * 60 * 1, // 1 minute for transactions (real-time updates)
+  gcTime: 1000 * 60 * 15, // 15 minutes cache (was cacheTime in v4)
+};
+
+export const categoriesQueryOptions = {
+  staleTime: 1000 * 60 * 60, // 1 hour for categories (rarely change)
+  gcTime: 1000 * 60 * 60 * 2, // 2 hours cache (was cacheTime in v4)
+};
