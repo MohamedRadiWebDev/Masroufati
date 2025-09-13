@@ -276,11 +276,7 @@ export default function Analytics() {
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, percentage }) => {
-                      // Only show label if percentage is significant (>= 5%)
-                      const percentNum = parseFloat(percentage || '0');
-                      return percentNum >= 5 ? `${percentage}%` : '';
-                    }}
+                    label={false}
                     labelLine={false}
                   >
                     {chartData.map((entry, index) => (
@@ -294,27 +290,40 @@ export default function Analytics() {
           )}
         </div>
 
-        {/* Categories Breakdown */}
+        {/* Categories Breakdown with Enhanced Design */}
         <div className="bg-card rounded-lg border border-border p-4">
-          <h3 className="font-semibold mb-3">تفصيل حسب التصنيفات</h3>
+          <h3 className="font-semibold mb-4">تفصيل حسب التصنيفات</h3>
           <div className="space-y-3">
             {analytics?.categoryBreakdown.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <p>لا توجد مصروفات لعرضها</p>
               </div>
             ) : (
-              analytics?.categoryBreakdown.map((item, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${getColorClass(item.color)}`}></div>
-                    <div className="flex items-center gap-2">
-                      <i className={`${item.icon} text-muted-foreground`}></i>
-                      <span>{item.categoryAr}</span>
+              analytics?.categoryBreakdown.map((item, index) => {
+                const percentage = balance && balance.totalExpenses > 0 ? 
+                  ((item.amount / balance.totalExpenses) * 100).toFixed(1) : '0';
+                return (
+                  <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                    <div className="flex items-center gap-3 flex-1">
+                      <div 
+                        className="w-4 h-4 rounded-full flex-shrink-0" 
+                        style={{ backgroundColor: getChartColor(item.color) }}
+                      ></div>
+                      <div className="flex items-center gap-2 flex-1">
+                        <i className={`${item.icon} text-muted-foreground text-sm`}></i>
+                        <div className="flex-1">
+                          <span className="font-medium text-sm">{item.categoryAr}</span>
+                          <div className="text-xs text-muted-foreground">{percentage}% من إجمالي المصروفات</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm">{formatCurrency(item.amount)}</div>
+                      <div className="text-xs text-primary font-medium">{percentage}%</div>
                     </div>
                   </div>
-                  <span className="font-medium">{formatCurrency(item.amount)}</span>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
