@@ -204,6 +204,25 @@ export default function Reports() {
     });
   };
 
+  const formatMonth = (monthStr: string) => {
+    const [year, month] = monthStr.split('-');
+    return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('ar-EG', {
+      year: 'numeric',
+      month: 'short',
+    });
+  };
+
+  // Use monthly data for longer periods
+  const chartData = useMemo(() => {
+    const isLongPeriod = ['3months', '6months', 'year'].includes(timeRange);
+    return isLongPeriod ? reportData.trends.monthly : reportData.trends.daily;
+  }, [reportData.trends, timeRange]);
+
+  const formatChartLabel = useMemo(() => {
+    const isLongPeriod = ['3months', '6months', 'year'].includes(timeRange);
+    return isLongPeriod ? formatMonth : formatDate;
+  }, [timeRange]);
+
   if (isLoading) {
     return (
       <div className="mobile-container" dir="rtl">
@@ -320,47 +339,59 @@ export default function Reports() {
             <CardHeader>
               <CardTitle>اتجاهات الإنفاق</CardTitle>
               <CardDescription>
-                مقارنة الدخل والمصروفات خلال الفترة المحددة
+                {['3months', '6months', 'year'].includes(timeRange) 
+                  ? 'اتجاهات شهرية للدخل والمصروفات' 
+                  : 'اتجاهات يومية للدخل والمصروفات'
+                }
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   {chartType === 'line' ? (
-                    <LineChart data={reportData.trends.daily}>
+                    <LineChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" tickFormatter={formatDate} />
+                      <XAxis 
+                        dataKey={['3months', '6months', 'year'].includes(timeRange) ? 'month' : 'date'} 
+                        tickFormatter={formatChartLabel} 
+                      />
                       <YAxis />
                       <Tooltip 
-                        labelFormatter={(value) => formatDate(value)}
+                        labelFormatter={(value) => formatChartLabel(value)}
                         formatter={(value: number) => formatCurrency(value)}
                       />
-                      <Line type="monotone" dataKey="income" stroke="#22c55e" strokeWidth={2} />
-                      <Line type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} />
+                      <Line type="monotone" dataKey="income" stroke="#22c55e" strokeWidth={2} name="الدخل" />
+                      <Line type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} name="المصروفات" />
                     </LineChart>
                   ) : chartType === 'area' ? (
-                    <AreaChart data={reportData.trends.daily}>
+                    <AreaChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" tickFormatter={formatDate} />
+                      <XAxis 
+                        dataKey={['3months', '6months', 'year'].includes(timeRange) ? 'month' : 'date'} 
+                        tickFormatter={formatChartLabel} 
+                      />
                       <YAxis />
                       <Tooltip 
-                        labelFormatter={(value) => formatDate(value)}
+                        labelFormatter={(value) => formatChartLabel(value)}
                         formatter={(value: number) => formatCurrency(value)}
                       />
-                      <Area type="monotone" dataKey="income" stackId="1" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
-                      <Area type="monotone" dataKey="expenses" stackId="2" stroke="#ef4444" fill="#ef4444" fillOpacity={0.3} />
+                      <Area type="monotone" dataKey="income" stackId="1" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} name="الدخل" />
+                      <Area type="monotone" dataKey="expenses" stackId="2" stroke="#ef4444" fill="#ef4444" fillOpacity={0.3} name="المصروفات" />
                     </AreaChart>
                   ) : (
-                    <BarChart data={reportData.trends.daily}>
+                    <BarChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" tickFormatter={formatDate} />
+                      <XAxis 
+                        dataKey={['3months', '6months', 'year'].includes(timeRange) ? 'month' : 'date'} 
+                        tickFormatter={formatChartLabel} 
+                      />
                       <YAxis />
                       <Tooltip 
-                        labelFormatter={(value) => formatDate(value)}
+                        labelFormatter={(value) => formatChartLabel(value)}
                         formatter={(value: number) => formatCurrency(value)}
                       />
-                      <Bar dataKey="income" fill="#22c55e" />
-                      <Bar dataKey="expenses" fill="#ef4444" />
+                      <Bar dataKey="income" fill="#22c55e" name="الدخل" />
+                      <Bar dataKey="expenses" fill="#ef4444" name="المصروفات" />
                     </BarChart>
                   )}
                 </ResponsiveContainer>
@@ -475,19 +506,30 @@ function generateDailyTrends(transactions: Transaction[], dateRange: { start: Da
 function generateMonthlyTrends(transactions: Transaction[], dateRange: { start: Date; end: Date }) {
   const monthlyData: Record<string, { income: number; expenses: number }> = {};
   
+  // Initialize months in range
+  const startMonth = new Date(dateRange.start.getFullYear(), dateRange.start.getMonth(), 1);
+  const endMonth = new Date(dateRange.end.getFullYear(), dateRange.end.getMonth(), 1);
+  
+  for (let d = new Date(startMonth); d <= endMonth; d.setMonth(d.getMonth() + 1)) {
+    const monthKey = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+    monthlyData[monthKey] = { income: 0, expenses: 0 };
+  }
+  
+  // Aggregate transactions by month
   transactions.forEach(t => {
     const date = new Date(t.date);
-    const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-    
-    if (!monthlyData[monthKey]) {
-      monthlyData[monthKey] = { income: 0, expenses: 0 };
-    }
-    
-    const amount = parseFloat(t.amount);
-    if (t.type === 'income') {
-      monthlyData[monthKey].income += amount;
-    } else {
-      monthlyData[monthKey].expenses += amount;
+    // Only include transactions within the date range
+    if (date >= dateRange.start && date <= dateRange.end) {
+      const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+      
+      if (monthlyData[monthKey]) {
+        const amount = parseFloat(t.amount);
+        if (t.type === 'income') {
+          monthlyData[monthKey].income += amount;
+        } else {
+          monthlyData[monthKey].expenses += amount;
+        }
+      }
     }
   });
   
