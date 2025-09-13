@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { type Transaction, type Category } from "@shared/schema";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Trash2, 
   ShoppingCart, 
@@ -19,7 +21,9 @@ import {
   PiggyBank,
   CircleDollarSign,
   Receipt,
-  MoreHorizontal
+  MoreHorizontal,
+  Image,
+  Eye
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -31,6 +35,7 @@ interface TransactionItemProps {
 export default function TransactionItem({ transaction }: TransactionItemProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [showImageModal, setShowImageModal] = useState(false);
   
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -221,6 +226,20 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
           <p className={`font-bold ${transaction.type === 'income' ? 'text-success' : 'text-destructive'}`} data-testid={`text-amount-${transaction.id}`}>
             {transaction.type === 'income' ? '+' : '-'}{formatCurrency(parseFloat(transaction.amount))}
           </p>
+          {transaction.receiptImage && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowImageModal(true);
+              }}
+              className="h-8 w-8 p-0 text-muted-foreground hover:text-primary"
+              data-testid={`button-view-image-${transaction.id}`}
+            >
+              <Image className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="sm"
@@ -233,6 +252,36 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
           </Button>
         </div>
       </div>
+      
+      {/* Receipt Image Modal */}
+      {transaction.receiptImage && (
+        <Dialog open={showImageModal} onOpenChange={setShowImageModal}>
+          <DialogContent className="sm:max-w-md mx-4">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Eye className="h-5 w-5" />
+                صورة الإيصال
+              </DialogTitle>
+            </DialogHeader>
+            <div className="p-4">
+              <img
+                src={transaction.receiptImage}
+                alt="صورة الإيصال"
+                className="w-full max-h-96 object-contain rounded-lg"
+                data-testid={`modal-image-${transaction.id}`}
+              />
+              <div className="mt-3 space-y-1 text-sm text-muted-foreground">
+                <p><span className="font-medium">التصنيف:</span> {category?.nameAr || transaction.category}</p>
+                <p><span className="font-medium">المبلغ:</span> {formatCurrency(parseFloat(transaction.amount))}</p>
+                <p><span className="font-medium">التاريخ:</span> {formatDate(transaction.date)}</p>
+                {transaction.note && (
+                  <p><span className="font-medium">الملاحظة:</span> {transaction.note}</p>
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

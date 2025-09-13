@@ -10,6 +10,7 @@ export const transactions = pgTable("transactions", {
   category: varchar("category", { length: 50 }).notNull(),
   note: text("note"),
   date: timestamp("date").notNull().defaultNow(),
+  receiptImage: text("receipt_image"), // Base64 encoded image or image URL
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
