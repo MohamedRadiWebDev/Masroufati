@@ -25,6 +25,7 @@ export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
+  const [selectedDateFilter, setSelectedDateFilter] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
 
   const { data: transactions = [], isLoading } = useQuery<Transaction[]>({
@@ -39,6 +40,32 @@ export default function Home() {
   const categories = Array.isArray(categoriesData) ? 
     categoriesData.map((cat: any) => typeof cat === 'string' ? cat : cat.name || cat) : 
     [];
+
+  // Helper function to check if a date is within a specific range
+  const isDateInRange = (dateString: string, range: string): boolean => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    switch (range) {
+      case "today":
+        const transactionDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        return transactionDate.getTime() === today.getTime();
+      
+      case "week":
+        const weekAgo = new Date(today);
+        weekAgo.setDate(today.getDate() - 7);
+        return date >= weekAgo && date <= now;
+      
+      case "month":
+        const monthAgo = new Date(today);
+        monthAgo.setDate(today.getDate() - 30);
+        return date >= monthAgo && date <= now;
+      
+      default:
+        return true;
+    }
+  };
 
   // Filter transactions based on search and filter criteria
   const filteredTransactions = useMemo(() => {
@@ -62,11 +89,18 @@ export default function Home() {
       filtered = filtered.filter(transaction => transaction.type === selectedType);
     }
 
+    // Apply date filter
+    if (selectedDateFilter !== "all") {
+      filtered = filtered.filter(transaction => 
+        isDateInRange(transaction.date, selectedDateFilter)
+      );
+    }
+
     return filtered;
-  }, [transactions, searchText, selectedCategory, selectedType]);
+  }, [transactions, searchText, selectedCategory, selectedType, selectedDateFilter]);
 
   // Show filtered results or recent transactions
-  const displayTransactions = (searchText || selectedCategory !== "all" || selectedType !== "all") 
+  const displayTransactions = (searchText || selectedCategory !== "all" || selectedType !== "all" || selectedDateFilter !== "all") 
     ? filteredTransactions 
     : transactions.slice(0, 5);
 
@@ -75,10 +109,11 @@ export default function Home() {
     setSearchText("");
     setSelectedCategory("all");
     setSelectedType("all");
+    setSelectedDateFilter("all");
     setShowFilters(false);
   };
 
-  const hasActiveFilters = searchText || selectedCategory !== "all" || selectedType !== "all";
+  const hasActiveFilters = searchText || selectedCategory !== "all" || selectedType !== "all" || selectedDateFilter !== "all";
 
   if (isLoading) {
     return (
@@ -177,29 +212,43 @@ export default function Home() {
         </div>
 
         {showFilters && (
-          <div className="grid grid-cols-2 gap-3 mb-3" data-testid="filters-container">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger data-testid="select-category">
-                <SelectValue placeholder="جميع التصنيفات" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">جميع التصنيفات</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="space-y-3 mb-3" data-testid="filters-container">
+            <div className="grid grid-cols-2 gap-3">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger data-testid="select-category">
+                  <SelectValue placeholder="جميع التصنيفات" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">جميع التصنيفات</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger data-testid="select-type">
+                  <SelectValue placeholder="جميع الأنواع" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">جميع الأنواع</SelectItem>
+                  <SelectItem value="income">دخل</SelectItem>
+                  <SelectItem value="expense">مصروف</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             
-            <Select value={selectedType} onValueChange={setSelectedType}>
-              <SelectTrigger data-testid="select-type">
-                <SelectValue placeholder="جميع الأنواع" />
+            <Select value={selectedDateFilter} onValueChange={setSelectedDateFilter}>
+              <SelectTrigger data-testid="select-date">
+                <SelectValue placeholder="جميع الفترات" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">جميع الأنواع</SelectItem>
-                <SelectItem value="income">دخل</SelectItem>
-                <SelectItem value="expense">مصروف</SelectItem>
+                <SelectItem value="all">جميع الفترات</SelectItem>
+                <SelectItem value="today">اليوم</SelectItem>
+                <SelectItem value="week">آخر أسبوع</SelectItem>
+                <SelectItem value="month">آخر شهر</SelectItem>
               </SelectContent>
             </Select>
           </div>
