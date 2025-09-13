@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -13,7 +13,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { type Category } from "@shared/schema";
-import { X, Camera, Upload, Trash2 } from "lucide-react";
+import { suggestCategoryFromText } from "@/lib/arabic-text-processor";
+import { X, Camera, Upload, Trash2, Lightbulb } from "lucide-react";
 
 const transactionSchema = z.object({
   amount: z.string().min(1, "المبلغ مطلوب").refine((val) => parseFloat(val) > 0, "المبلغ يجب أن يكون أكبر من صفر"),
@@ -36,6 +37,8 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [suggestedCategory, setSuggestedCategory] = useState<string | null>(null);
+  const [showSuggestion, setShowSuggestion] = useState(false);
 
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["/api/categories", type],
@@ -150,6 +153,33 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
 
   const filteredCategories = categories.filter(cat => cat.type === type);
 
+  // Smart category suggestion based on note text
+  useEffect(() => {
+    const note = form.watch('note');
+    if (note && note.length > 3) {
+      const suggested = suggestCategoryFromText(note, categories, type);
+      if (suggested && suggested !== form.getValues('category')) {
+        setSuggestedCategory(suggested);
+        setShowSuggestion(true);
+      } else {
+        setShowSuggestion(false);
+      }
+    } else {
+      setShowSuggestion(false);
+    }
+  }, [form.watch('note'), categories, type]);
+
+  const applySuggestedCategory = () => {
+    if (suggestedCategory) {
+      form.setValue('category', suggestedCategory);
+      setShowSuggestion(false);
+      toast({
+        title: "تم اقتراح التصنيف!",
+        description: "تم تحديد التصنيف تلقائياً بناءً على الوصف",
+      });
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md mx-4 rounded-t-lg data-[state=open]:slide-in-from-bottom-full">
@@ -237,6 +267,33 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
                 </FormItem>
               )}
             />
+            
+            {/* Smart Category Suggestion */}
+            {showSuggestion && suggestedCategory && (
+              <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 space-y-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                  <Lightbulb className="h-4 w-4" />
+                  اقتراح ذكي للتصنيف
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="text-sm text-muted-foreground">
+                    يبدو أن هذه المعاملة من فئة:{' '}
+                    <span className="font-medium text-foreground">
+                      {filteredCategories.find(cat => cat.name === suggestedCategory)?.nameAr || suggestedCategory}
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={applySuggestedCategory}
+                    className="h-8 px-3"
+                    data-testid="button-apply-suggestion"
+                  >
+                    تطبيق
+                  </Button>
+                </div>
+              </div>
+            )}
             
             <FormField
               control={form.control}
