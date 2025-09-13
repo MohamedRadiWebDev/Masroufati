@@ -14,7 +14,14 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { type Category } from "@shared/schema";
 import { suggestCategoryFromText } from "@/lib/arabic-text-processor";
-import { X, Camera, Upload, Trash2, Lightbulb } from "lucide-react";
+import { X, Camera, Upload, Trash2, Lightbulb, Loader2 } from "lucide-react";
+import { 
+  compressImage as compressImageOptimized, 
+  isValidImageFile, 
+  formatFileSize, 
+  getCompressionStats,
+  type CompressionStats 
+} from "@/lib/image-compression";
 
 const transactionSchema = z.object({
   amount: z.string().min(1, "المبلغ مطلوب").refine((val) => parseFloat(val) > 0, "المبلغ يجب أن يكون أكبر من صفر"),
@@ -39,6 +46,8 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [suggestedCategory, setSuggestedCategory] = useState<string | null>(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [compressionStats, setCompressionStats] = useState<CompressionStats | null>(null);
 
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["/api/categories", type],
@@ -55,50 +64,84 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
     },
   });
 
-  // Function to compress and convert image to base64
-  const compressImage = (file: File): Promise<string> => {
-    return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
+  // Function to compress and convert image to base64 with enhanced optimization
+  const compressImage = async (file: File): Promise<{ dataUrl: string, stats: CompressionStats }> => {
+    try {
+      setIsCompressing(true);
       
-      img.onload = () => {
-        // Calculate new dimensions (max 800px width)
-        const maxWidth = 800;
-        const scale = Math.min(maxWidth / img.width, maxWidth / img.height);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        
-        // Draw and compress
-        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-        resolve(compressedDataUrl);
-      };
+      // Use the optimized compression library
+      const compressedFile = await compressImageOptimized(file, {
+        maxWidth: 1200,
+        maxHeight: 1600,
+        quality: 0.8,
+        format: 'jpeg',
+        maxSizeKB: 500,
+      });
       
-      img.src = URL.createObjectURL(file);
-    });
+      // Get compression stats for display
+      const stats = await getCompressionStats(file, compressedFile);
+      
+      // Convert to base64
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(compressedFile);
+      });
+      
+      return { dataUrl, stats };
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsCompressing(false);
+    }
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      // Validate file type
+      if (!isValidImageFile(file)) {
+        toast({
+          title: "نوع الملف غير مدعوم",
+          description: "يرجى اختيار صورة بصيغة JPG، PNG، أو WebP",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Check file size limit (10MB)
+      if (file.size > 10 * 1024 * 1024) {
         toast({
           title: "الملف كبير جداً",
-          description: "يجب أن يكون حجم الصورة أقل من 10 ميجابايت",
+          description: `حجم الملف: ${formatFileSize(file.size)}. يجب أن يكون أقل من 10 ميجابايت`,
           variant: "destructive",
         });
         return;
       }
 
       try {
-        const compressedImage = await compressImage(file);
-        setSelectedImage(compressedImage);
-        form.setValue('receiptImage', compressedImage);
+        const { dataUrl, stats } = await compressImage(file);
+        setSelectedImage(dataUrl);
+        setCompressionStats(stats);
+        form.setValue('receiptImage', dataUrl);
+        
+        // Show success message with compression stats
+        if (stats.compressionRatio > 0) {
+          toast({
+            title: "تم ضغط الصورة بنجاح",
+            description: `تم توفير ${stats.compressionRatio}% من المساحة`,
+          });
+        } else {
+          toast({
+            title: "تم تحسين الصورة",
+            description: "تم تحسين جودة وأبعاد الصورة للاستخدام الأمثل",
+          });
+        }
       } catch (error) {
         toast({
           title: "خطأ في رفع الصورة",
-          description: "حدث خطأ أثناء معالجة الصورة",
+          description: "حدث خطأ أثناء معالجة الصورة. يرجى المحاولة مرة أخرى",
           variant: "destructive",
         });
       }
@@ -107,6 +150,7 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
 
   const removeImage = () => {
     setSelectedImage(null);
+    setCompressionStats(null);
     form.setValue('receiptImage', '');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -136,6 +180,7 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
       
       form.reset();
       setSelectedImage(null);
+      setCompressionStats(null);
       onOpenChange(false);
     },
     onError: (error) => {
@@ -323,10 +368,20 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
                     variant="outline"
                     className="flex-1"
                     onClick={() => fileInputRef.current?.click()}
+                    disabled={isCompressing}
                     data-testid="button-upload-image"
                   >
-                    <Camera className="ml-2 h-4 w-4" />
-                    رفع صورة
+                    {isCompressing ? (
+                      <>
+                        <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                        جاري ضغط الصورة...
+                      </>
+                    ) : (
+                      <>
+                        <Camera className="ml-2 h-4 w-4" />
+                        رفع صورة
+                      </>
+                    )}
                   </Button>
                   {selectedImage && (
                     <Button
@@ -351,16 +406,34 @@ export default function AddTransactionModal({ type, open, onOpenChange }: AddTra
                 />
                 
                 {selectedImage && (
-                  <div className="border border-border rounded-lg p-2">
+                  <div className="border border-border rounded-lg p-2 space-y-2">
                     <img
                       src={selectedImage}
                       alt="معاينة الإيصال"
                       className="w-full max-h-40 object-contain rounded"
                       data-testid="image-preview"
                     />
-                    <p className="text-xs text-muted-foreground mt-1 text-center">
-                      معاينة صورة الإيصال
-                    </p>
+                    <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground text-center">
+                        معاينة صورة الإيصال
+                      </p>
+                      {compressionStats && (
+                        <div className="bg-success/10 border border-success/20 rounded px-2 py-1">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">
+                              الحجم الأصلي: {formatFileSize(compressionStats.originalSize)}
+                            </span>
+                            <span className="text-success font-medium">
+                              تم توفير {compressionStats.compressionRatio}%
+                            </span>
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            الحجم المحسّن: {formatFileSize(compressionStats.compressedSize)} • 
+                            الأبعاد: {compressionStats.compressedDimensions.width}×{compressionStats.compressedDimensions.height}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
