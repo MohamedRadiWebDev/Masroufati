@@ -276,7 +276,11 @@ export default function Analytics() {
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, percentage }) => percentage && percentage !== '0' ? `${name} ${percentage}%` : name}
+                    label={({ name, percentage }) => {
+                      // Only show label if percentage is significant (>= 5%)
+                      const percentNum = parseFloat(percentage || '0');
+                      return percentNum >= 5 ? `${percentage}%` : '';
+                    }}
                     labelLine={false}
                   >
                     {chartData.map((entry, index) => (

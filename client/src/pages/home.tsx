@@ -27,6 +27,7 @@ export default function Home() {
   const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedDateFilter, setSelectedDateFilter] = useState<string>("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
 
   const { data: transactions = [], isLoading } = useQuery<Transaction[]>({
     queryKey: ["/api/transactions"],
@@ -99,10 +100,10 @@ export default function Home() {
     return filtered;
   }, [transactions, searchText, selectedCategory, selectedType, selectedDateFilter]);
 
-  // Show filtered results or recent transactions
+  // Show filtered results or recent/all transactions
   const displayTransactions = (searchText || selectedCategory !== "all" || selectedType !== "all" || selectedDateFilter !== "all") 
     ? filteredTransactions 
-    : transactions.slice(0, 5);
+    : showAllTransactions ? transactions : transactions.slice(0, 5);
 
   // Clear all filters
   const clearFilters = () => {
@@ -261,11 +262,18 @@ export default function Home() {
           <h2 className="text-lg font-semibold">
             {hasActiveFilters 
               ? `العمليات المصفاة (${displayTransactions.length})` 
-              : "آخر العمليات"}
+              : showAllTransactions 
+                ? `جميع العمليات (${transactions.length})`
+                : "آخر العمليات"}
           </h2>
           {!hasActiveFilters && (
-            <Button variant="ghost" size="sm" data-testid="button-show-all">
-              عرض الكل
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              data-testid="button-show-all"
+              onClick={() => setShowAllTransactions(!showAllTransactions)}
+            >
+              {showAllTransactions ? "عرض الأحدث فقط" : "عرض الكل"}
             </Button>
           )}
         </div>
