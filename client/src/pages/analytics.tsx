@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Download } from "lucide-react";
 import { useLocation } from "wouter";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { localStorageManager } from "@/lib/localStorage-storage";
 
 interface AnalyticsData {
   categoryBreakdown: {
@@ -109,47 +110,99 @@ export default function Analytics() {
     return str;
   };
 
-  const exportToCSV = () => {
+  const safeFormatDate = (dateValue: any): string => {
     try {
-      // Get transactions from localStorage
-      const transactionsData = localStorage.getItem('transactions');
-      const transactions = transactionsData ? JSON.parse(transactionsData) : [];
+      if (!dateValue) return '';
+      
+      const date = new Date(dateValue);
+      
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        return '';
+      }
+      
+      // Try Arabic locale formatting first
+      try {
+        return date.toLocaleDateString('ar-EG');
+      } catch {
+        // Fallback to ISO format if Arabic locale fails
+        return date.toISOString().split('T')[0];
+      }
+    } catch (error) {
+      console.warn('Date formatting error:', error, 'for value:', dateValue);
+      return '';
+    }
+  };
+
+  const exportToCSV = async () => {
+    try {
+      console.log('Starting CSV export...');
+      
+      // Get transactions from localStorage manager
+      const transactions = await localStorageManager.getTransactions();
+      console.log('Fetched transactions:', transactions.length);
       
       if (!transactions || transactions.length === 0) {
         alert('لا توجد بيانات للتصدير');
         return;
       }
 
-      // Prepare CSV data with proper escaping
+      // Prepare CSV data with proper escaping and sanitization
       const csvHeaders = ['التاريخ', 'الوصف', 'المبلغ', 'النوع', 'التصنيف'];
-      const csvRows = transactions.map((transaction: any) => [
-        escapeCSVField(new Date(transaction.date).toLocaleDateString('ar-EG')),
-        escapeCSVField(transaction.description),
-        escapeCSVField(transaction.amount),
-        escapeCSVField(transaction.type === 'income' ? 'دخل' : 'مصروف'),
-        escapeCSVField(transaction.category)
-      ]);
+      const csvRows = transactions.map((transaction: any) => {
+        try {
+          return [
+            escapeCSVField(safeFormatDate(transaction.date)),
+            escapeCSVField(transaction.note || ''),
+            escapeCSVField(transaction.amount?.toString() || '0'),
+            escapeCSVField(transaction.type === 'income' ? 'دخل' : 'مصروف'),
+            escapeCSVField(transaction.category || '')
+          ];
+        } catch (rowError) {
+          console.warn('Error processing transaction row:', rowError, transaction);
+          return [
+            escapeCSVField(''),
+            escapeCSVField(transaction.note || ''),
+            escapeCSVField(transaction.amount?.toString() || '0'),
+            escapeCSVField(transaction.type === 'income' ? 'دخل' : 'مصروف'),
+            escapeCSVField(transaction.category || '')
+          ];
+        }
+      });
+      
+      console.log('Prepared CSV rows:', csvRows.length);
 
       // Create CSV content with proper line endings
       const csvContent = [
         csvHeaders.map(escapeCSVField).join(','),
         ...csvRows.map(row => row.join(','))
       ].join('\r\n');
+      console.log('Created CSV content');
 
       // Add BOM for Arabic text support
       const BOM = '\uFEFF';
       const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+      console.log('Created Blob');
       
       // Create download link
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
+      console.log('Created object URL');
+      
+      const fileName = `العمليات_المالية_${new Date().toISOString().split('T')[0]}.csv`;
       link.setAttribute('href', url);
-      link.setAttribute('download', `العمليات_المالية_${new Date().toLocaleDateString('ar-EG').replace(/\//g, '-')}.csv`);
+      link.setAttribute('download', fileName);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      
+      // Cleanup URL after a short delay to avoid premature revocation
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 100);
+      
+      console.log('CSV export completed successfully');
     } catch (error) {
       console.error('خطأ في تصدير البيانات:', error);
       alert('حدث خطأ أثناء تصدير البيانات');

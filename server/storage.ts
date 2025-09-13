@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Transaction, type InsertTransaction, type Category, type InsertCategory, type Goal, type InsertGoal } from "@shared/schema";
+import { type User, type InsertUser, type Transaction, type InsertTransaction, type Category, type InsertCategory } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -19,26 +19,17 @@ export interface IStorage {
   getCategoriesByType(type: 'income' | 'expense'): Promise<Category[]>;
   createCategory(category: InsertCategory): Promise<Category>;
   
-  // Goal methods
-  getGoals(): Promise<Goal[]>;
-  getGoal(id: string): Promise<Goal | undefined>;
-  createGoal(goal: InsertGoal): Promise<Goal>;
-  updateGoal(id: string, goal: Partial<InsertGoal>): Promise<Goal | undefined>;
-  deleteGoal(id: string): Promise<boolean>;
-  getActiveGoals(): Promise<Goal[]>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private transactions: Map<string, Transaction>;
   private categories: Map<string, Category>;
-  private goals: Map<string, Goal>;
 
   constructor() {
     this.users = new Map();
     this.transactions = new Map();
     this.categories = new Map();
-    this.goals = new Map();
     
     // Initialize default categories
     this.initializeDefaultCategories();
@@ -140,47 +131,6 @@ export class MemStorage implements IStorage {
     return category;
   }
 
-  // Goal methods
-  async getGoals(): Promise<Goal[]> {
-    return Array.from(this.goals.values());
-  }
-
-  async getGoal(id: string): Promise<Goal | undefined> {
-    return this.goals.get(id);
-  }
-
-  async createGoal(insertGoal: InsertGoal): Promise<Goal> {
-    const id = randomUUID();
-    const goal: Goal = {
-      ...insertGoal,
-      id,
-      createdAt: new Date(),
-    };
-    this.goals.set(id, goal);
-    return goal;
-  }
-
-  async updateGoal(id: string, updates: Partial<InsertGoal>): Promise<Goal | undefined> {
-    const goal = this.goals.get(id);
-    if (!goal) return undefined;
-
-    const updatedGoal = { ...goal, ...updates };
-    this.goals.set(id, updatedGoal);
-    return updatedGoal;
-  }
-
-  async deleteGoal(id: string): Promise<boolean> {
-    return this.goals.delete(id);
-  }
-
-  async getActiveGoals(): Promise<Goal[]> {
-    const now = new Date();
-    return Array.from(this.goals.values()).filter(goal => 
-      goal.isActive === 'true' && 
-      new Date(goal.startDate) <= now && 
-      new Date(goal.endDate) >= now
-    );
-  }
 }
 
 export const storage = new MemStorage();

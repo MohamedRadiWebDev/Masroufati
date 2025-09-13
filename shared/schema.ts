@@ -22,18 +22,6 @@ export const categories = pgTable("categories", {
   color: varchar("color", { length: 20 }).notNull(),
 });
 
-export const goals = pgTable("goals", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  name: text("name").notNull(),
-  nameAr: text("name_ar").notNull(),
-  targetAmount: decimal("target_amount", { precision: 10, scale: 2 }).notNull(),
-  category: varchar("category", { length: 50 }),  // optional - can be for specific category
-  period: varchar("period", { length: 20 }).notNull(), // 'monthly', 'weekly', 'daily'
-  startDate: timestamp("start_date").notNull(),
-  endDate: timestamp("end_date").notNull(),
-  isActive: varchar("is_active", { length: 10 }).notNull().default('true'),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-});
 
 export const insertTransactionSchema = createInsertSchema(transactions).omit({
   id: true,
@@ -44,17 +32,11 @@ export const insertCategorySchema = createInsertSchema(categories).omit({
   id: true,
 });
 
-export const insertGoalSchema = createInsertSchema(goals).omit({
-  id: true,
-  createdAt: true,
-});
 
 export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
 export type Transaction = typeof transactions.$inferSelect;
 export type InsertCategory = z.infer<typeof insertCategorySchema>;
 export type Category = typeof categories.$inferSelect;
-export type InsertGoal = z.infer<typeof insertGoalSchema>;
-export type Goal = typeof goals.$inferSelect;
 
 // User schema (keeping existing)
 export const users = pgTable("users", {

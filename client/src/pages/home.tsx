@@ -9,14 +9,17 @@ import BottomNavigation from "@/components/bottom-navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mic, Plus, Minus, Search, Filter, X, Upload } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Mic, Plus, Minus, Search, Filter, X, Upload, Settings } from "lucide-react";
 import { type Transaction } from "@shared/schema";
+import { localStorageManager } from "@/lib/localStorage-storage";
 
 export default function Home() {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   
   // Filter states
   const [searchText, setSearchText] = useState("");
@@ -44,7 +47,8 @@ export default function Home() {
     // Apply search filter
     if (searchText.trim()) {
       filtered = filtered.filter(transaction =>
-        transaction.description && transaction.description.toLowerCase().includes(searchText.toLowerCase())
+        (transaction.note && transaction.note.toLowerCase().includes(searchText.toLowerCase())) ||
+        (transaction.category && transaction.category.toLowerCase().includes(searchText.toLowerCase()))
       );
     }
 
@@ -92,8 +96,13 @@ export default function Home() {
       <div className="bg-card border-b border-border p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-foreground">إدارة المصاريف</h1>
-          <Button variant="ghost" size="sm" data-testid="button-settings">
-            <i className="fas fa-cog"></i>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setIsSettingsModalOpen(true)}
+            data-testid="button-settings"
+          >
+            <Settings className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -271,6 +280,53 @@ export default function Home() {
         onClose={() => setIsImportModalOpen(false)}
         availableCategories={categories}
       />
+
+      {/* Settings Modal */}
+      <Dialog open={isSettingsModalOpen} onOpenChange={setIsSettingsModalOpen}>
+        <DialogContent className="sm:max-w-md" dir="rtl">
+          <DialogHeader>
+            <DialogTitle>الإعدادات</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex flex-col gap-3">
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  const data = localStorageManager.exportToJSON();
+                  const blob = new Blob([data], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = `backup_${new Date().toISOString().split('T')[0]}.json`;
+                  link.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="justify-start"
+              >
+                <Upload className="h-4 w-4 ml-2" />
+                تصدير نسخة احتياطية
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (confirm('هل أنت متأكد من مسح جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                    localStorageManager.clearAllData();
+                    window.location.reload();
+                  }
+                }}
+                className="justify-start text-destructive"
+              >
+                <X className="h-4 w-4 ml-2" />
+                مسح جميع البيانات
+              </Button>
+            </div>
+            <div className="text-sm text-muted-foreground text-center pt-4 border-t">
+              <p>إصدار التطبيق: 1.0.0</p>
+              <p>تطبيق إدارة المصاريف</p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
