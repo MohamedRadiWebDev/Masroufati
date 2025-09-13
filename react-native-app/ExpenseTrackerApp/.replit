@@ -1,0 +1,13 @@
+run = "cd react-native-app/ExpenseTrackerApp && npm start"
+entrypoint = "App.tsx"
+
+[nix]
+channel = "stable-22_11"
+
+[deployment]
+run = "cd react-native-app/ExpenseTrackerApp && npm start"
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 19006
+externalPort = 80
