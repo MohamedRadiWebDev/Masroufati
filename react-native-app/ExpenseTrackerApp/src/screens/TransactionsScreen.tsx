@@ -11,30 +11,24 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Transaction, Category } from '../types/schema';
-import { StorageManager } from '../utils/storage';
+import { useApp } from '../context/AppContext';
 import { Colors } from '../styles/colors';
 
 export default function TransactionsScreen() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const {
+    transactions,
+    categories,
+    isLoading,
+    deleteTransaction: deleteTransactionFromContext
+  } = useApp();
+  
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all');
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
     filterTransactions();
   }, [transactions, searchQuery, filterType]);
-
-  const loadData = async () => {
-    const loadedTransactions = await StorageManager.getTransactions();
-    const loadedCategories = await StorageManager.getCategories();
-    setTransactions(loadedTransactions);
-    setCategories(loadedCategories);
-  };
 
   const filterTransactions = () => {
     let filtered = [...transactions];
@@ -72,9 +66,11 @@ export default function TransactionsScreen() {
           text: 'حذف',
           style: 'destructive',
           onPress: async () => {
-            await StorageManager.deleteTransaction(id);
-            const updatedTransactions = transactions.filter(t => t.id !== id);
-            setTransactions(updatedTransactions);
+            try {
+              await deleteTransactionFromContext(id);
+            } catch (error) {
+              Alert.alert('خطأ', 'حدث خطأ أثناء حذف المعاملة');
+            }
           },
         },
       ]
@@ -97,6 +93,16 @@ export default function TransactionsScreen() {
       minute: '2-digit',
     });
   };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>جاري التحميل...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -405,5 +411,14 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
     textAlign: 'center',
     lineHeight: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: Colors.text.secondary,
   },
 });

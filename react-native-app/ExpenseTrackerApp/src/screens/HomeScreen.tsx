@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Transaction, TransactionType, Category } from '../types/schema';
-import { StorageManager } from '../utils/storage';
+import { TransactionType } from '../types/schema';
+import { useApp } from '../context/AppContext';
 import { Colors } from '../styles/colors';
 
 interface BalanceCardProps {
@@ -46,40 +46,21 @@ function BalanceCard({ totalIncome, totalExpense, balance }: BalanceCardProps) {
 }
 
 export default function HomeScreen() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { 
+    transactions, 
+    categories, 
+    isLoading,
+    addTransaction: addTransactionToContext,
+    getTotalIncome,
+    getTotalExpense,
+    getBalance
+  } = useApp();
+  
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [transactionType, setTransactionType] = useState<TransactionType>('expense');
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    const loadedTransactions = await StorageManager.getTransactions();
-    const loadedCategories = await StorageManager.getCategories();
-    setTransactions(loadedTransactions);
-    setCategories(loadedCategories);
-  };
-
-  const calculateTotals = () => {
-    const totalIncome = transactions
-      .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
-    const totalExpense = transactions
-      .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
-    return {
-      totalIncome,
-      totalExpense,
-      balance: totalIncome - totalExpense,
-    };
-  };
 
   const addTransaction = async () => {
     if (!amount || !selectedCategory) {
@@ -87,28 +68,39 @@ export default function HomeScreen() {
       return;
     }
 
-    const newTransaction: Transaction = {
-      id: StorageManager.generateId(),
-      amount: parseFloat(amount),
-      category: selectedCategory,
-      note: note || undefined,
-      type: transactionType,
-      date: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-    };
-
-    await StorageManager.saveTransaction(newTransaction);
-    setTransactions([...transactions, newTransaction]);
-    
-    // Reset form
-    setAmount('');
-    setNote('');
-    setSelectedCategory('');
-    setIsAddingTransaction(false);
+    try {
+      await addTransactionToContext({
+        amount: parseFloat(amount),
+        category: selectedCategory,
+        note: note || undefined,
+        type: transactionType,
+        date: new Date().toISOString(),
+      });
+      
+      // Reset form
+      setAmount('');
+      setNote('');
+      setSelectedCategory('');
+      setIsAddingTransaction(false);
+    } catch (error) {
+      Alert.alert('خطأ', 'حدث خطأ أثناء إضافة المعاملة');
+    }
   };
 
-  const { totalIncome, totalExpense, balance } = calculateTotals();
+  const totalIncome = getTotalIncome();
+  const totalExpense = getTotalExpense();
+  const balance = getBalance();
   const filteredCategories = categories.filter(c => c.type === transactionType);
+  
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>جاري التحميل...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -422,5 +414,14 @@ const styles = StyleSheet.create({
   transactionAmount: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: Colors.text.secondary,
   },
 });

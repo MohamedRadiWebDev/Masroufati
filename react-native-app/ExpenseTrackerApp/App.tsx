@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, I18nManager } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { AppProvider } from './src/context/AppContext';
 import HomeScreen from './src/screens/HomeScreen';
 import AnalyticsScreen from './src/screens/AnalyticsScreen';
 import TransactionsScreen from './src/screens/TransactionsScreen';
@@ -10,7 +11,7 @@ import BottomNavigation from './src/components/BottomNavigation';
 I18nManager.allowRTL(true);
 I18nManager.forceRTL(true);
 
-export default function App() {
+function MainApp() {
   const [activeTab, setActiveTab] = useState('home');
 
   const renderScreen = () => {
@@ -37,6 +38,14 @@ export default function App() {
         onTabPress={setActiveTab} 
       />
     </View>
+  );
+}
+
+export default function App() {
+  return (
+    <AppProvider>
+      <MainApp />
+    </AppProvider>
   );
 }
 

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Transaction, Category } from '../types/schema';
-import { StorageManager } from '../utils/storage';
+import { useApp } from '../context/AppContext';
 import { Colors } from '../styles/colors';
 
 const { width } = Dimensions.get('window');
@@ -72,22 +72,23 @@ function PieChart({ data, size }: PieChartProps) {
 }
 
 export default function AnalyticsScreen() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const {
+    transactions,
+    categories,
+    isLoading,
+    getTotalIncome,
+    getTotalExpense,
+    getBalance
+  } = useApp();
+  
   const [expenseAnalytics, setExpenseAnalytics] = useState<CategoryAnalytics[]>([]);
   const [incomeAnalytics, setIncomeAnalytics] = useState<CategoryAnalytics[]>([]);
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    const loadedTransactions = await StorageManager.getTransactions();
-    const loadedCategories = await StorageManager.getCategories();
-    setTransactions(loadedTransactions);
-    setCategories(loadedCategories);
-    calculateAnalytics(loadedTransactions, loadedCategories);
-  };
+    if (!isLoading && transactions.length >= 0 && categories.length > 0) {
+      calculateAnalytics(transactions, categories);
+    }
+  }, [transactions, categories, isLoading]);
 
   const calculateAnalytics = (txns: Transaction[], cats: Category[]) => {
     // Calculate expense analytics
@@ -138,15 +139,19 @@ export default function AnalyticsScreen() {
     setIncomeAnalytics(incomeData.sort((a, b) => b.amount - a.amount));
   };
 
-  const totalIncome = transactions
-    .filter(t => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0);
-  
-  const totalExpense = transactions
-    .filter(t => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0);
+  const totalIncome = getTotalIncome();
+  const totalExpense = getTotalExpense();
+  const balance = getBalance();
 
-  const balance = totalIncome - totalExpense;
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>جاري التحميل...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -398,5 +403,14 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
     textAlign: 'center',
     lineHeight: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: Colors.text.secondary,
   },
 });
