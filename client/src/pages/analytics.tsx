@@ -125,13 +125,12 @@ export default function Analytics() {
         return '';
       }
       
-      // Try Arabic locale formatting first
-      try {
-        return date.toLocaleDateString('ar-EG');
-      } catch {
-        // Fallback to ISO format if Arabic locale fails
-        return date.toISOString().split('T')[0];
-      }
+      // Format as dd/mm/yyyy using English numbers for compatibility with import
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      
+      return `${day}/${month}/${year}`;
     } catch (error) {
       console.warn('Date formatting error:', error, 'for value:', dateValue);
       return '';

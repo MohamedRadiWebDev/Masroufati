@@ -86,7 +86,7 @@ export function parseImportedData(data: ImportedTransaction[], availableCategori
         amount: amount!.toString(),
         category: category!,
         note: row.note?.trim() || null,
-        date: parsedDate!
+        date: new Date(parsedDate!)
       });
     }
   });
@@ -236,7 +236,13 @@ function normalizeCategory(category: string, availableCategories: string[]): str
 function parseDate(dateStr: string): string | null {
   if (!dateStr) return null;
   
-  const cleaned = dateStr.trim();
+  // Remove RTL marks and other special characters, normalize Arabic-Hindi numbers
+  const cleaned = dateStr.trim()
+    .replace(/[\u200F\u200E\u202B\u202C]/g, '') // Remove RTL/LTR marks
+    .replace(/[\u0660-\u0669]/g, (d: string) => 
+      String.fromCharCode(d.charCodeAt(0) - '\u0660'.charCodeAt(0) + '0'.charCodeAt(0))
+    )
+    .replace(/[‏]/g, ''); // Remove additional RTL marks
   
   // Try parsing as ISO date (yyyy-mm-dd)
   const isoMatch = cleaned.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
