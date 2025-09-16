@@ -152,24 +152,25 @@ export default function Analytics() {
       }
 
       // Prepare CSV data with proper escaping and sanitization
-      const csvHeaders = ['التاريخ', 'الوصف', 'المبلغ', 'النوع', 'التصنيف'];
+      // Using same format as import: النوع، المبلغ، التصنيف، الملاحظة، التاريخ
+      const csvHeaders = ['النوع', 'المبلغ', 'التصنيف', 'الملاحظة', 'التاريخ'];
       const csvRows = transactions.map((transaction: any) => {
         try {
           return [
-            escapeCSVField(safeFormatDate(transaction.date)),
-            escapeCSVField(transaction.note || ''),
-            escapeCSVField(transaction.amount?.toString() || '0'),
             escapeCSVField(transaction.type === 'income' ? 'دخل' : 'مصروف'),
-            escapeCSVField(transaction.category || '')
+            escapeCSVField(transaction.amount?.toString() || '0'),
+            escapeCSVField(transaction.category || ''),
+            escapeCSVField(transaction.note || ''),
+            escapeCSVField(safeFormatDate(transaction.date))
           ];
         } catch (rowError) {
           console.warn('Error processing transaction row:', rowError, transaction);
           return [
-            escapeCSVField(''),
-            escapeCSVField(transaction.note || ''),
-            escapeCSVField(transaction.amount?.toString() || '0'),
             escapeCSVField(transaction.type === 'income' ? 'دخل' : 'مصروف'),
-            escapeCSVField(transaction.category || '')
+            escapeCSVField(transaction.amount?.toString() || '0'),
+            escapeCSVField(transaction.category || ''),
+            escapeCSVField(transaction.note || ''),
+            escapeCSVField('')
           ];
         }
       });
