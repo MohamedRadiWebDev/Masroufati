@@ -1,0 +1,11 @@
+{
+  "buildCommand": "vite build --config vite.frontend.config.ts",
+  "outputDirectory": "dist",
+  "devCommand": "vite --config vite.frontend.config.ts",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "routes": [
+    {"handle": "filesystem"},
+    {"src": "/.*", "dest": "/index.html"}
+  ]
+}
