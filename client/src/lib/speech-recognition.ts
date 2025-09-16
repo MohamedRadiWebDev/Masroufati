@@ -44,7 +44,14 @@ export function startSpeechRecognition(
   }
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SpeechRecognition();
+  
+  try {
+    recognition = new SpeechRecognition();
+  } catch (error) {
+    console.error('Error creating SpeechRecognition:', error);
+    onError('فشل في إنشاء خدمة التعرف على الصوت');
+    return;
+  }
   
   // محاولة أفضل اللغات العربية المدعومة
   const arabicLanguages = ['ar-SA', 'ar-EG', 'ar-AE', 'ar-JO', 'ar-LB', 'ar'];
@@ -150,7 +157,12 @@ export function startSpeechRecognition(
     console.log('انتهى التسجيل');
   };
 
-  recognition.start();
+  try {
+    recognition.start();
+  } catch (error) {
+    console.error('Error starting speech recognition:', error);
+    onError('فشل في بدء التعرف على الصوت. تأكد من السماح بالوصول للميكروفون');
+  }
 }
 
 export function stopSpeechRecognition(): void {

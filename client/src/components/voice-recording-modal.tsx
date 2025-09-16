@@ -59,13 +59,17 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
     }
 
     if (open && isRecording) {
+      console.log('Starting speech recognition...');
       startSpeechRecognition(
         (text: string) => {
+          console.log('Speech recognized:', text);
           setRecognizedText(text);
           const parsed = parseArabicTransaction(text, categories);
+          console.log('Parsed transaction:', parsed);
           setParsedTransaction(parsed);
         },
         (error: string) => {
+          console.error('Speech recognition error:', error);
           setError(error);
           setIsRecording(false);
         }
@@ -79,9 +83,20 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
     };
   }, [open, isRecording, categories]);
 
-  const handleStartRecording = () => {
+  const handleStartRecording = async () => {
     if (!isSpeechRecognitionSupported()) {
       setError("متصفحك لا يدعم التعرف على الصوت");
+      return;
+    }
+    
+    // Check for microphone permissions first
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop()); // Release the stream immediately
+      console.log('Microphone permission granted');
+    } catch (permissionError) {
+      console.error('Microphone permission error:', permissionError);
+      setError("يرجى السماح بالوصول للميكروفون لاستخدام التسجيل الصوتي");
       return;
     }
     
@@ -130,10 +145,16 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
         
         <div className="text-center space-y-4">
           {error ? (
-            <div className="text-destructive text-sm">{error}</div>
+            <div className="text-destructive text-sm p-3 bg-destructive/10 rounded-lg border border-destructive/20">
+              <p className="font-medium">خطأ:</p>
+              <p>{error}</p>
+              {error.includes('متصفحك') && (
+                <p className="text-xs mt-2">جرب استخدام Chrome أو Edge للحصول على أفضل دعم</p>
+              )}
+            </div>
           ) : (
             <>
-              <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center ${isRecording ? 'bg-destructive voice-recording' : 'bg-primary'}`}>
+              <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center ${isRecording ? 'bg-destructive animate-pulse' : 'bg-primary'}`}>
                 {isRecording ? (
                   <Mic className="h-8 w-8 text-white" />
                 ) : (
