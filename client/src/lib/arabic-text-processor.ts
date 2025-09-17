@@ -13,6 +13,106 @@ interface ParsedTransactions {
   originalText: string;
 }
 
+// Unified Arabic text normalization function
+function normalizeArabic(text: string): string {
+  if (!text || typeof text !== 'string') return '';
+  
+  return text
+    // Convert Arabic-Indic digits to ASCII digits
+    .replace(/[٠-٩]/gu, (match) => String.fromCharCode(match.charCodeAt(0) - '٠'.charCodeAt(0) + '0'.charCodeAt(0)))
+    
+    // Normalize Arabic letters
+    .replace(/[إأآا]/gu, 'ا')  // Normalize Alif variations
+    .replace(/[ىئي]/gu, 'ي')   // Normalize Ya variations  
+    .replace(/ة/gu, 'ه')       // Normalize Ta Marbuta to Ha
+    .replace(/[ؤو]/gu, 'و')    // Normalize Waw variations
+    
+    // Remove diacritics (Tashkeel)
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/gu, '')
+    
+    // Normalize punctuation and spaces
+    .replace(/[،؛]/gu, '،')     // Normalize Arabic comma/semicolon
+    .replace(/[؟]/gu, '؟')      // Normalize Arabic question mark
+    .replace(/\s+/gu, ' ')      // Normalize multiple spaces
+    .trim();
+}
+
+// Common speech recognition errors and their corrections
+const speechErrors: Record<string, string> = {
+  // Numbers often misheard
+  'عشره جنيه': 'عشرة جنيه',
+  'عشرين جنيه': 'عشرين جنيه',
+  'تلاتين جنيه': 'ثلاثين جنيه',
+  'اربعين جنيه': 'أربعين جنيه',
+  'خمسين جنيه': 'خمسين جنيه',
+  
+  // Common word substitutions
+  'أشتري': 'اشتري',
+  'أشتريت': 'اشتريت',
+  'دافع': 'دفع',
+  'دافعت': 'دفعت',
+  'صارف': 'صرف',
+  'صارفت': 'صرفت',
+  'أكتر': 'اكتر',
+  'أول': 'اول',
+  'آخر': 'اخر',
+  
+  // Egyptian dialect corrections
+  'مشريت': 'مشتري',
+  'شاريت': 'شريت',
+  'بادي': 'بدي',
+  'عايز': 'عاوز',
+  'عايزه': 'عاوزة',
+  
+  // Category confusions
+  'موصلات': 'مواصلات',
+  'مصاريف': 'مصروفات',
+  'مشروبات': 'مشروب',
+  'مأكولات': 'اكل',
+  
+  // Common phrase corrections
+  'في المطعم': 'مطعم',
+  'في السوبر ماركت': 'سوبرماركت',
+  'في الصيدلية': 'صيدلية',
+  'في البقالة': 'بقالة',
+  'راحت على': 'راحت في',
+  'صرفت على': 'صرفت في',
+  'دفعت على': 'دفعت في',
+  
+  // Time expressions that get confused
+  'امبارح': 'أمس',
+  'النهارده': 'اليوم',
+  'بكره': 'غداً',
+  'الأسبوع الي فات': 'الأسبوع الماضي',
+  'الشهر الي فات': 'الشهر الماضي'
+};
+
+// Context indicators for better understanding
+const contextIndicators = {
+  timeReferences: [
+    'امبارح', 'أمس', 'البارحة', 'من شوية', 'من شوي', 'دلوقتي', 'دلوقت', 'حالاً', 'الحين',
+    'النهارده', 'اليوم', 'بكره', 'غداً', 'بعد كده', 'بعد شوية', 'قريب', 'ع الفطار', 'ع الغدا', 'ع العشا',
+    'الأسبوع ده', 'الأسبوع الي فات', 'الأسبوع الجاي', 'الشهر ده', 'الشهر الي فات', 'الشهر الجاي',
+    'السنة دي', 'السنة الي فاتت', 'السنة الجاية', 'في رمضان', 'في العيد', 'في المولد'
+  ],
+  locationReferences: [
+    'في البيت', 'في الشغل', 'في الشارع', 'في المول', 'في السوق', 'في النادي', 'في المطعم',
+    'في الكافيه', 'في الصيدلية', 'في البقالة', 'في السوبرماركت', 'في المستشفى', 'في العيادة',
+    'في المحطة', 'في المطار', 'في الجامعة', 'في المدرسة', 'في الكلية', 'في المكتب',
+    'قريب من البيت', 'جمب البيت', 'حوالين البيت', 'في المنطقة', 'في الحي'
+  ],
+  paymentMethods: [
+    'كاش', 'نقدي', 'نقداً', 'فيزا', 'كارت', 'بطاقة ائتمان', 'بطاقة', 'فودافون كاش', 'اورانج مني',
+    'انستاباي', 'باي موب', 'محفظة', 'محفظة رقمية', 'تحويل', 'تحويل بنكي', 'ويسترن يونيون',
+    'حوالة', 'شيك', 'قسط', 'أقساط', 'تقسيط', 'دفعة واحدة', 'مقدم', 'عربون'
+  ],
+  quantityIndicators: [
+    'كيلو', 'جرام', 'لتر', 'علبة', 'كرتونة', 'شنطة', 'كيس', 'زجاجة', 'عدد', 'قطعة', 'حتة',
+    'حبة', 'قطعتين', 'تلات قطع', 'شوية', 'كتير', 'قليل', 'بسيط', 'كبير', 'صغير',
+    'نص كيلو', 'ربع كيلو', 'كيلو ونص', 'اتنين كيلو', 'تلات كيلو'
+  ]
+};
+
 // Enhanced Arabic number words to digits mapping with colloquial variants
 const arabicNumbers: Record<string, number> = {
   // Basic numbers - Standard Arabic
@@ -73,10 +173,10 @@ const arabicNumbers: Record<string, number> = {
   'تلتين': 0.67, 'ثلثين': 0.67, 'ثلثان': 0.67,
 };
 
-// Enhanced Expense keywords with Egyptian colloquial variations
+// Enhanced Expense keywords with Egyptian colloquial variations - Pre-normalized
 const expenseKeywords = [
   // Standard Arabic
-  'صرف', 'صرفت', 'دفع', 'دفعت', 'اشترى', 'اشتريت', 'مصروف', 'مصاريف',
+  'صرف', 'صرفت', 'دفع', 'دفعت', 'اشتري', 'اشتريت', 'مصروف', 'مصاريف',
   'خرج', 'خرجت', 'انفق', 'انفقت', 'بلاش', 'اتحسب', 'طلع', 'طلعت', 'ادفع',
   
   // Egyptian colloquial - Future tense
@@ -88,10 +188,10 @@ const expenseKeywords = [
   
   // Egyptian colloquial - Past tense variations
   'اشتريت', 'صرفت', 'دفعت', 'طلعت', 'خلصت', 'اديت',
-  'شريت', 'صرّفت', 'دفّعت', 'طلّعت', 'خلّصت',
+  'شريت', 'صرفت', 'دفعت', 'طلعت', 'خلصت',
   
   // Context-aware expressions
-  'راح', 'راحت', 'اتصرف', 'اتدفع', 'خلاص', 'انتهى', 'فات',
+  'راح', 'راحت', 'اتصرف', 'اتدفع', 'خلاص', 'انتهي', 'فات',
   'ضاع', 'ضاعت', 'انفرط', 'انفرطت', 'فلت', 'فلتت',
   'مشتري', 'ماشي', 'تمام', 'اوكي', 'باي باي', 'يللا',
   
@@ -100,11 +200,11 @@ const expenseKeywords = [
   'المصاري راحت', 'المصاري طلعت', 'الفلوس خلاص', 'اتحرقت فلوس',
   
   // Specific purchasing contexts
-  'اشتري من', 'اشتري لـ', 'دفعت في', 'صرفت على', 'طلعت في',
-  'عملت حساب', 'دفعت حساب', 'سددت', 'قضيت', 'انفقت على'
-];
+  'اشتري من', 'اشتري ل', 'دفعت في', 'صرفت علي', 'طلعت في',
+  'عملت حساب', 'دفعت حساب', 'سددت', 'قضيت', 'انفقت علي'
+].map(keyword => normalizeArabic(keyword));
 
-// Enhanced Income keywords with Egyptian colloquial variations  
+// Enhanced Income keywords with Egyptian colloquial variations - Pre-normalized
 const incomeKeywords = [
   // Standard Arabic
   'دخل', 'دخول', 'استلم', 'استلمت', 'وصل', 'وصلت', 'ربح', 'ربحت',
@@ -112,69 +212,37 @@ const incomeKeywords = [
   
   // Egyptian colloquial - Past tense
   'اخد', 'اخدت', 'جاني', 'جالي', 'جه', 'جت', 'وصلني', 'وصلتني',
-  'خدت', 'استلمت', 'قبضت', 'حصلت على', 'جابوا', 'جابولي',
+  'خدت', 'استلمت', 'قبضت', 'حصلت علي', 'جابوا', 'جابولي',
   
   // Egyptian colloquial - Future tense
   'هاخد', 'هستلم', 'هقبض', 'حاخد', 'حستلم', 'حقبض',
-  'هيجي', 'هيجيلي', 'هيوصل', 'هيوصلي', 'هحصل على',
+  'هيجي', 'هيجيلي', 'هيوصل', 'هيوصلي', 'هحصل علي',
   
   // Egyptian colloquial - Present continuous
-  'باخد', 'بستلم', 'بقبض', 'بحصل على', 'بجيب', 'بكسب',
+  'باخد', 'بستلم', 'بقبض', 'بحصل علي', 'بجيب', 'بكسب',
   
   // Context-aware expressions
-  'واصل', 'واصلة', 'اتقبض', 'اتاخد', 'اتاستلم', 'اتحصل',
-  'اتسلم', 'اتجاب', 'اتوصل', 'اتسدد', 'اتعطى',
+  'واصل', 'واصله', 'اتقبض', 'اتاخد', 'اتاستلم', 'اتحصل',
+  'اتسلم', 'اتجاب', 'اتوصل', 'اتسدد', 'اتعطي',
   
   // Financial expressions
-  'فلوس جاية', 'فلوس داخلة', 'فلوس واصلة', 'جايني فلوس',
+  'فلوس جايه', 'فلوس داخله', 'فلوس واصله', 'جايني فلوس',
   'المصاري جت', 'المصاري وصلت', 'الفلوس وصلت', 'دخلت فلوس',
   'جاني راتب', 'جالي مرتب', 'قبضت راتب', 'استلمت مرتب',
   
   // Work-related income
-  'شغل', 'عمل', 'وظيفة', 'كسب', 'ربح', 'مكسب', 'عائد',
-  'مقابل', 'أجر', 'مكافأة', 'عمولة', 'حافز', 'بونص'
-];
+  'شغل', 'عمل', 'وظيفه', 'كسب', 'ربح', 'مكسب', 'عايد',
+  'مقابل', 'اجر', 'مكافاه', 'عموله', 'حافز', 'بونص'
+].map(keyword => normalizeArabic(keyword));
 
 function extractAmounts(text: string): number[] {
-  const amounts: number[] = [];
+  if (!text || typeof text !== 'string') return [];
   
-  // Remove common currency words and normalize
-  let normalizedText = text
-    .replace(/جنيه|جنية|ج\.م|ج|جم/g, ' ')
-    .replace(/ريال|ر\.س|درهم|دولار/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  // First extract all direct numbers
-  const regex = /\d+(?:\.\d+)?/g;
-  let match;
-  while ((match = regex.exec(normalizedText)) !== null) {
-    amounts.push(parseFloat(match[0]));
-  }
-
-  // Remove numeric values for Arabic word processing
-  const textWithoutNumbers = normalizedText.replace(/\d+(?:\.\d+)?/g, ' ').trim();
-  
-  // Enhanced Arabic number extraction with compound support
-  if (textWithoutNumbers) {
-    const arabicAmount = extractComplexArabicNumber(textWithoutNumbers);
-    if (arabicAmount && arabicAmount > 0) {
-      amounts.push(arabicAmount);
-    }
-  }
-
-  // Remove duplicates with tolerance for floating point precision
-  const uniqueAmounts: number[] = [];
-  for (const amount of amounts.filter(a => a > 0)) {
-    const isDuplicate = uniqueAmounts.some(existing => 
-      Math.abs(existing - amount) < 0.01
-    );
-    if (!isDuplicate) {
-      uniqueAmounts.push(amount);
-    }
-  }
-  
-  return uniqueAmounts;
+  // Apply unified processing pipeline: correction → normalization → context analysis → extraction
+  const correctedText = correctSpeechErrors(text);
+  const normalizedText = normalizeArabic(correctedText);
+  const context = analyzeContext(normalizedText);
+  return extractAmountsWithContext(normalizedText, context);
 }
 
 function extractComplexArabicNumber(text: string): number | null {
@@ -248,17 +316,25 @@ function extractComplexArabicNumber(text: string): number | null {
 }
 
 function detectTransactionType(text: string): 'income' | 'expense' {
-  const normalizedText = text.toLowerCase();
+  if (!text || typeof text !== 'string') return 'expense';
   
-  // Check for expense keywords
-  for (const keyword of expenseKeywords) {
+  // Apply unified normalization pipeline
+  const correctedText = correctSpeechErrors(text);
+  const normalizedText = normalizeArabic(correctedText.toLowerCase());
+  
+  // Normalize keywords for consistent matching
+  const normalizedExpenseKeywords = expenseKeywords.map(keyword => normalizeArabic(keyword.toLowerCase()));
+  const normalizedIncomeKeywords = incomeKeywords.map(keyword => normalizeArabic(keyword.toLowerCase()));
+  
+  // Check for expense keywords with normalized text
+  for (const keyword of normalizedExpenseKeywords) {
     if (normalizedText.includes(keyword)) {
       return 'expense';
     }
   }
   
-  // Check for income keywords
-  for (const keyword of incomeKeywords) {
+  // Check for income keywords with normalized text
+  for (const keyword of normalizedIncomeKeywords) {
     if (normalizedText.includes(keyword)) {
       return 'income';
     }
@@ -269,25 +345,37 @@ function detectTransactionType(text: string): 'income' | 'expense' {
 }
 
 function detectCategory(text: string, categories: Category[], transactionType: 'income' | 'expense'): string | null {
-  const normalizedText = text.toLowerCase();
+  if (!text || typeof text !== 'string') {
+    return transactionType === 'expense' ? 'other' : 'other_income';
+  }
+  
+  // Apply unified normalization pipeline
+  const correctedText = correctSpeechErrors(text);
+  const normalizedText = normalizeArabic(correctedText.toLowerCase());
   const relevantCategories = categories.filter(cat => cat.type === transactionType);
   
-  // Category keywords mapping
+  // Category keywords mapping with normalized keywords
   const categoryKeywords: Record<string, string[]> = {
-    'food': ['أكل', 'طعام', 'غداء', 'فطار', 'عشا', 'شاي', 'قهوة', 'مطعم', 'كافيه', 'وجبة'],
-    'transport': ['مواصلات', 'تاكسي', 'اوبر', 'كريم', 'اتوبيس', 'بنزين', 'وقود', 'سيارة'],
+    'food': ['اكل', 'طعام', 'غداء', 'فطار', 'عشا', 'شاي', 'قهوه', 'مطعم', 'كافيه', 'وجبه'],
+    'transport': ['مواصلات', 'تاكسي', 'اوبر', 'كريم', 'اتوبيس', 'بنزين', 'وقود', 'سياره'],
     'bills': ['فواتير', 'كهرباء', 'مياه', 'غاز', 'تليفون', 'نت', 'انترنت'],
     'shopping': ['تسوق', 'شراء', 'ملابس', 'حاجات', 'سوبرماركت'],
-    'entertainment': ['سينما', 'فيلم', 'لعبة', 'ترفيه', 'نادي', 'كورة'],
-    'health': ['دكتور', 'دوا', 'علاج', 'صيدلية', 'مستشفى', 'كشف'],
-    'salary': ['راتب', 'مرتب', 'شغل', 'عمل', 'وظيفة'],
+    'entertainment': ['سينما', 'فيلم', 'لعبه', 'ترفيه', 'نادي', 'كوره'],
+    'health': ['دكتور', 'دوا', 'علاج', 'صيدليه', 'مستشفي', 'كشف'],
+    'salary': ['راتب', 'مرتب', 'شغل', 'عمل', 'وظيفه'],
     'freelance': ['فري لانس', 'مشروع', 'شغل حر'],
-    'business': ['تجارة', 'بيع', 'ربح', 'محل'],
-    'gift': ['هدية', 'عيدية', 'مناسبة']
+    'business': ['تجاره', 'بيع', 'ربح', 'محل'],
+    'gift': ['هديه', 'عيديه', 'مناسبه']
   };
   
-  // Try to match category keywords
+  // Normalize all category keywords for consistent matching
+  const normalizedCategoryKeywords: Record<string, string[]> = {};
   for (const [categoryName, keywords] of Object.entries(categoryKeywords)) {
+    normalizedCategoryKeywords[categoryName] = keywords.map(keyword => normalizeArabic(keyword));
+  }
+  
+  // Try to match category keywords
+  for (const [categoryName, keywords] of Object.entries(normalizedCategoryKeywords)) {
     for (const keyword of keywords) {
       if (normalizedText.includes(keyword)) {
         const category = relevantCategories.find(cat => cat.name === categoryName);
@@ -302,33 +390,229 @@ function detectCategory(text: string, categories: Category[], transactionType: '
   return transactionType === 'expense' ? 'other' : 'other_income';
 }
 
-// Split complex sentences into multiple transactions
+// Smart text correction function - targeted corrections only
+function correctSpeechErrors(text: string): string {
+  if (!text || typeof text !== 'string') return '';
+  
+  let correctedText = text;
+  
+  // Apply targeted speech error corrections using Unicode-safe boundaries
+  for (const [error, correction] of Object.entries(speechErrors)) {
+    // Use Unicode-safe lookarounds instead of \b for Arabic text
+    const escapedError = error.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(?<!\\p{L})${escapedError}(?!\\p{L})`, 'gui');
+    correctedText = correctedText.replace(regex, correction);
+  }
+  
+  return correctedText;
+}
+
+// Enhanced context analysis function with unified normalization
+function analyzeContext(text: string): {
+  hasTimeReference: boolean;
+  hasLocationReference: boolean;
+  hasPaymentMethod: boolean;
+  hasQuantityIndicator: boolean;
+  confidence: number;
+} {
+  if (!text || typeof text !== 'string') {
+    return {
+      hasTimeReference: false,
+      hasLocationReference: false,
+      hasPaymentMethod: false,
+      hasQuantityIndicator: false,
+      confidence: 0
+    };
+  }
+  
+  const normalizedText = normalizeArabic(text.toLowerCase());
+  
+  // Normalize context indicators for consistent matching
+  const normalizedTimeRefs = contextIndicators.timeReferences.map(ref => normalizeArabic(ref.toLowerCase()));
+  const normalizedLocationRefs = contextIndicators.locationReferences.map(ref => normalizeArabic(ref.toLowerCase()));
+  const normalizedPaymentMethods = contextIndicators.paymentMethods.map(method => normalizeArabic(method.toLowerCase()));
+  const normalizedQuantityIndicators = contextIndicators.quantityIndicators.map(qty => normalizeArabic(qty.toLowerCase()));
+  
+  const hasTimeReference = normalizedTimeRefs.some(ref => 
+    normalizedText.includes(ref)
+  );
+  
+  const hasLocationReference = normalizedLocationRefs.some(ref => 
+    normalizedText.includes(ref)
+  );
+  
+  const hasPaymentMethod = normalizedPaymentMethods.some(method => 
+    normalizedText.includes(method)
+  );
+  
+  const hasQuantityIndicator = normalizedQuantityIndicators.some(qty => 
+    normalizedText.includes(qty)
+  );
+  
+  // Calculate confidence based on context completeness
+  let confidence = 0.5; // Base confidence
+  if (hasTimeReference) confidence += 0.1;
+  if (hasLocationReference) confidence += 0.2;
+  if (hasPaymentMethod) confidence += 0.1;
+  if (hasQuantityIndicator) confidence += 0.1;
+  
+  return {
+    hasTimeReference,
+    hasLocationReference,
+    hasPaymentMethod,
+    hasQuantityIndicator,
+    confidence: Math.min(confidence, 1.0)
+  };
+}
+
+// Advanced complex sentence splitting with context awareness
 function splitComplexSentence(text: string): string[] {
-  // Split on common separators that indicate multiple transactions
+  if (!text || typeof text !== 'string') return [];
+  
+  // Apply normalization first
+  const normalizedText = normalizeArabic(text);
+  
+  // First analyze the text for context
+  const context = analyzeContext(normalizedText);
+  
+  // Enhanced separators with context awareness using Unicode-safe patterns
   const separators = [
-    /\s+و\s+(?=\d|\w+\s+\d)/g, // "و" followed by number or word+number
-    /\s*،\s*/g, // Comma separator
-    /\s+كمان\s+/g, // "كمان" (also)
-    /\s+برضه\s+/g, // "برضه" (also)
-    /\s+وكمان\s+/g, // "وكمان" (and also)
+    // Strong separators (high confidence splits)
+    /\s*،\s*/gu, // Comma separator
+    /\s+و\s+(?=[\p{N}]+[\s\u0660-\u0669]*|\p{L}+\s+[\p{N}])/gu, // "و" followed by number
+    /\s+كمان\s+(?=[\p{N}]|\p{L}+\s+[\p{N}])/gu, // "كمان" with numbers
+    /\s+برضه\s+(?=[\p{N}]|\p{L}+\s+[\p{N}])/gu, // "برضه" with numbers  
+    /\s+وكمان\s+(?=[\p{N}]|\p{L}+\s+[\p{N}])/gu, // "وكمان" with numbers
+    
+    // Conditional separators (based on context)
+    ...(context.confidence > 0.7 ? [
+      /\s+و\s+(?=اشتريت|صرفت|دفعت|جبت)/gu, // "و" before action verbs
+      /\s+و\s+(?=في\s+)/gu, // "و" before location indicators
+      /\s+بعدين\s+/gu, // "بعدين" (then)
+      /\s+و\s*بعدها\s+/gu, // "وبعدها" (and after that)
+    ] : []),
+    
+    // Specific patterns for multiple purchases
+    /(?:و\s*)?(?:اشتريت|جبت|صرفت\s+علي)\s+/gu,
+    
+    // Time-based separators
+    /\s+في\s+نفس\s+اليوم\s+/gu,
+    /\s+بعد\s+كده\s+/gu,
   ];
   
-  let sentences = [text];
+  let sentences = [normalizedText];
   
   for (const separator of separators) {
     const newSentences: string[] = [];
     for (const sentence of sentences) {
-      newSentences.push(...sentence.split(separator));
+      const splits = sentence.split(separator);
+      // Only split if resulting sentences still make sense (have amounts or actions)
+      if (splits.length > 1 && splits.every(s => s.trim().length > 5)) {
+        newSentences.push(...splits);
+      } else {
+        newSentences.push(sentence);
+      }
     }
     sentences = newSentences;
   }
   
-  return sentences.filter(s => s.trim().length > 0);
+  // Clean up and validate sentences using Unicode-safe patterns
+  return sentences
+    .map(s => s.trim())
+    .filter(s => s.length > 3) // Filter very short fragments
+    .filter(s => /[\p{N}]+|واحد|اثنان|ثلاث|اربع|خمس|ست|سبع|تمان|تسع|عشر/gu.test(s)); // Must contain some form of number
+}
+
+// Enhanced amount extraction with context awareness
+function extractAmountsWithContext(text: string, context: any): number[] {
+  if (!text || typeof text !== 'string') return [];
+  
+  const amounts: number[] = [];
+  
+  // Apply unified processing pipeline: correction → normalization
+  const correctedText = correctSpeechErrors(text);
+  const normalizedText = normalizeArabic(correctedText);
+  
+  // Remove common currency words using precise boundaries to avoid breaking words like "جبنة"
+  let cleanText = normalizedText
+    .replace(/(?<!\p{L})(?:جنيه|ج\.م|ج|جم)(?!\p{L})/gu, ' ')
+    .replace(/(?<!\p{L})(?:ريال|ر\.س|درهم|دولار)(?!\p{L})/gu, ' ')
+    .replace(/\s+/gu, ' ')
+    .trim();
+
+  // Enhanced number extraction with context
+  if (context.hasQuantityIndicator) {
+    // Look for quantity-price patterns like "كيلو بـ عشرة جنيه" using Unicode-safe patterns
+    const quantityPricePattern = /(?:كيلو|جرام|لتر|قطعه|حبه)\s+(?:بـ|ب)\s*([\p{N}]+(?:\.[\p{N}]+)?|\p{L}+)/gu;
+    let match;
+    while ((match = quantityPricePattern.exec(cleanText)) !== null) {
+      const numMatch = match[1];
+      if (/^[\p{N}]+(?:\.[\p{N}]+)?$/u.test(numMatch)) {
+        const parsedAmount = parseFloat(numMatch);
+        if (Number.isFinite(parsedAmount)) {
+          amounts.push(parsedAmount);
+        }
+      } else {
+        const arabicAmount = extractComplexArabicNumber(numMatch);
+        if (arabicAmount && arabicAmount > 0) {
+          amounts.push(arabicAmount);
+        }
+      }
+    }
+  }
+  
+  // Standard number extraction using Unicode-safe patterns
+  const regex = /[\p{N}]+(?:\.[\p{N}]+)?/gu;
+  let match;
+  while ((match = regex.exec(cleanText)) !== null) {
+    const parsedAmount = parseFloat(match[0]);
+    if (Number.isFinite(parsedAmount)) {
+      amounts.push(parsedAmount);
+    }
+  }
+
+  // Enhanced Arabic number extraction
+  const textWithoutNumbers = cleanText.replace(/[\p{N}]+(?:\.[\p{N}]+)?/gu, ' ').trim();
+  if (textWithoutNumbers) {
+    const arabicAmount = extractComplexArabicNumber(textWithoutNumbers);
+    if (arabicAmount && arabicAmount > 0) {
+      amounts.push(arabicAmount);
+    }
+  }
+
+  // Context-based amount validation
+  const validAmounts = amounts.filter(amount => {
+    if (amount <= 0) return false;
+    if (amount > 1000000) return false; // Unreasonably large
+    if (context.confidence < 0.6 && amount > 10000) return false; // High amounts need high confidence
+    return true;
+  });
+
+  // Remove duplicates with tolerance
+  const uniqueAmounts: number[] = [];
+  for (const amount of validAmounts) {
+    const isDuplicate = uniqueAmounts.some(existing => 
+      Math.abs(existing - amount) < 0.01
+    );
+    if (!isDuplicate) {
+      uniqueAmounts.push(amount);
+    }
+  }
+  
+  return uniqueAmounts;
 }
 
 // Create a utility function to suggest category for any text input
 export function suggestCategoryFromText(text: string, categories: Category[], transactionType: 'income' | 'expense'): string | null {
-  return detectCategoryFuzzy(text, categories, transactionType);
+  if (!text || typeof text !== 'string') {
+    return transactionType === 'expense' ? 'other' : 'other_income';
+  }
+  
+  // Apply unified processing pipeline
+  const correctedText = correctSpeechErrors(text);
+  const normalizedText = normalizeArabic(correctedText);
+  
+  return detectCategoryFuzzy(normalizedText, categories, transactionType);
 }
 
 // Enhanced category detection with fuzzy matching
@@ -545,22 +829,33 @@ export function parseArabicTransactions(text: string, categories: Category[]): P
     return { transactions: [], originalText: text };
   }
 
-  // Split complex sentences
-  const sentences = splitComplexSentence(text);
+  // Apply speech error correction first
+  const correctedText = correctSpeechErrors(text);
+  
+  // Analyze context for better processing
+  const globalContext = analyzeContext(correctedText);
+  
+  // Split complex sentences with context awareness
+  const sentences = splitComplexSentence(correctedText);
   const transactions: ParsedTransaction[] = [];
 
   for (const sentence of sentences) {
-    const amounts = extractAmounts(sentence);
+    // Analyze context for each sentence individually
+    const sentenceContext = analyzeContext(sentence);
+    
+    // Extract amounts with context awareness
+    const amounts = extractAmountsWithContext(sentence, sentenceContext);
     
     if (amounts.length === 0) continue;
 
-    const type = detectTransactionType(sentence);
+    // Enhanced transaction type detection with context
+    const type = detectTransactionTypeWithContext(sentence, sentenceContext);
     
-    // If multiple amounts found, create separate transactions
+    // Enhanced category detection with context
     if (amounts.length > 1) {
       // Try to match amounts with different categories if possible
       for (const amount of amounts) {
-        const category = detectCategoryFuzzy(sentence, categories, type);
+        const category = detectCategoryWithContext(sentence, categories, type, sentenceContext);
         if (category) {
           const categoryInfo = categories.find(cat => cat.name === category);
           transactions.push({
@@ -573,9 +868,9 @@ export function parseArabicTransactions(text: string, categories: Category[]): P
         }
       }
     } else {
-      // Single amount
+      // Single amount with enhanced processing
       const amount = amounts[0];
-      const category = detectCategoryFuzzy(sentence, categories, type);
+      const category = detectCategoryWithContext(sentence, categories, type, sentenceContext);
       
       if (category) {
         const categoryInfo = categories.find(cat => cat.name === category);
@@ -590,6 +885,164 @@ export function parseArabicTransactions(text: string, categories: Category[]): P
     }
   }
 
+  return {
+    transactions,
+    originalText: text
+  };
+}
+
+// Enhanced transaction type detection with context
+function detectTransactionTypeWithContext(text: string, context: any): 'income' | 'expense' {
+  const normalizedText = text.toLowerCase();
+  
+  // Context-based type hints
+  if (context.hasLocationReference) {
+    // Location contexts usually indicate expenses
+    const expenseLocations = ['مطعم', 'مول', 'سوق', 'صيدلية', 'محطة'];
+    if (expenseLocations.some(loc => normalizedText.includes(loc))) {
+      return 'expense';
+    }
+  }
+  
+  if (context.hasPaymentMethod) {
+    // Payment method contexts can indicate both
+    const incomePayments = ['تحويل', 'حوالة', 'شيك'];
+    if (incomePayments.some(payment => normalizedText.includes(payment))) {
+      return 'income';
+    }
+  }
+  
+  // Enhanced keyword detection with confidence scoring
+  let expenseScore = 0;
+  let incomeScore = 0;
+  
+  // Check expense keywords with scoring
+  for (const keyword of expenseKeywords) {
+    if (normalizedText.includes(keyword)) {
+      expenseScore += keyword.length > 4 ? 2 : 1; // Longer keywords get higher score
+    }
+  }
+  
+  // Check income keywords with scoring
+  for (const keyword of incomeKeywords) {
+    if (normalizedText.includes(keyword)) {
+      incomeScore += keyword.length > 4 ? 2 : 1;
+    }
+  }
+  
+  // Decide based on scores and context confidence
+  if (incomeScore > expenseScore && context.confidence > 0.6) {
+    return 'income';
+  }
+  
+  // Default to expense with high confidence, or if expense score is higher
+  return 'expense';
+}
+
+// Enhanced category detection with context awareness  
+function detectCategoryWithContext(text: string, categories: Category[], transactionType: 'income' | 'expense', context: any): string | null {
+  // First try fuzzy matching
+  const fuzzyResult = detectCategoryFuzzy(text, categories, transactionType);
+  
+  // If fuzzy matching succeeded and context confidence is high, return it
+  if (fuzzyResult && context.confidence > 0.7) {
+    return fuzzyResult;
+  }
+  
+  // Enhanced context-based category detection
+  const normalizedText = text.toLowerCase();
+  
+  // Location-based category hints
+  if (context.hasLocationReference) {
+    if (normalizedText.includes('مطعم') || normalizedText.includes('كافيه')) {
+      const foodCategory = categories.find(cat => cat.name === 'food' && cat.type === transactionType);
+      if (foodCategory) return foodCategory.name;
+    }
+    
+    if (normalizedText.includes('صيدلية') || normalizedText.includes('مستشفى')) {
+      const healthCategory = categories.find(cat => cat.name === 'health' && cat.type === transactionType);
+      if (healthCategory) return healthCategory.name;
+    }
+    
+    if (normalizedText.includes('مول') || normalizedText.includes('سوق')) {
+      const shoppingCategory = categories.find(cat => cat.name === 'shopping' && cat.type === transactionType);
+      if (shoppingCategory) return shoppingCategory.name;
+    }
+  }
+  
+  // Quantity-based category hints
+  if (context.hasQuantityIndicator) {
+    if (normalizedText.includes('كيلو') || normalizedText.includes('جرام')) {
+      const foodCategory = categories.find(cat => cat.name === 'food' && cat.type === transactionType);
+      if (foodCategory) return foodCategory.name;
+    }
+    
+    if (normalizedText.includes('لتر')) {
+      if (normalizedText.includes('بنزين') || normalizedText.includes('وقود')) {
+        const transportCategory = categories.find(cat => cat.name === 'transport' && cat.type === transactionType);
+        if (transportCategory) return transportCategory.name;
+      }
+    }
+  }
+  
+  // Return fuzzy result or default
+  return fuzzyResult || (transactionType === 'expense' ? 'other' : 'other_income');
+}
+
+// Main Arabic text processing function with unified pipeline
+export function parseArabicTransactionText(text: string, categories: Category[]): ParsedTransactions {
+  if (!text || typeof text !== 'string') {
+    return {
+      transactions: [],
+      originalText: text || ''
+    };
+  }
+
+  // Step 1: Apply unified processing pipeline: correction → normalization
+  const correctedText = correctSpeechErrors(text);
+  const normalizedText = normalizeArabic(correctedText);
+  
+  // Step 2: Context analysis
+  const context = analyzeContext(normalizedText);
+  
+  // Step 3: Sentence splitting for complex inputs
+  const sentences = splitComplexSentence(normalizedText);
+  
+  // Step 4: Data extraction for each sentence
+  const transactions: ParsedTransaction[] = [];
+  
+  for (const sentence of sentences) {
+    const amounts = extractAmountsWithContext(sentence, context);
+    const transactionType = detectTransactionType(sentence);
+    const category = detectCategoryWithContext(sentence, categories, transactionType, context);
+    
+    // Create transactions for each amount found
+    for (const amount of amounts) {
+      transactions.push({
+        type: transactionType,
+        amount,
+        category: category || (transactionType === 'expense' ? 'other' : 'other_income'),
+        note: sentence.trim()
+      });
+    }
+  }
+  
+  // If no amounts found, try to extract from the full text as fallback
+  if (transactions.length === 0) {
+    const fallbackAmounts = extractAmountsWithContext(normalizedText, context);
+    const fallbackType = detectTransactionType(normalizedText);
+    const fallbackCategory = detectCategoryWithContext(normalizedText, categories, fallbackType, context);
+    
+    for (const amount of fallbackAmounts) {
+      transactions.push({
+        type: fallbackType,
+        amount,
+        category: fallbackCategory || (fallbackType === 'expense' ? 'other' : 'other_income'),
+        note: normalizedText.trim()
+      });
+    }
+  }
+  
   return {
     transactions,
     originalText: text
