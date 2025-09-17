@@ -200,7 +200,31 @@ export function startSpeechRecognition(
   }
 
   recognition.onstart = () => {
-    console.log('بدأ التسجيل...');
+    console.log('بدأ التسجيل بنجاح');
+  };
+  
+  recognition.onaudiostart = () => {
+    console.log('بدأ التقاط الصوت');
+  };
+  
+  recognition.onaudioend = () => {
+    console.log('انتهى التقاط الصوت');
+  };
+  
+  recognition.onsoundstart = () => {
+    console.log('تم رصد صوت');
+  };
+  
+  recognition.onsoundend = () => {
+    console.log('انتهى رصد الصوت');
+  };
+  
+  recognition.onspeechstart = () => {
+    console.log('بدأ رصد الكلام');
+  };
+  
+  recognition.onspeechend = () => {
+    console.log('انتهى رصد الكلام');
   };
 
   recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -293,11 +317,29 @@ export function startSpeechRecognition(
     console.log('انتهى التسجيل');
   };
 
+  // Add comprehensive pre-start checks
+  console.log('Attempting to start speech recognition...');
+  console.log('Current URL protocol:', window.location.protocol);
+  console.log('Is secure context:', window.isSecureContext);
+  
   try {
+    // Check microphone permission first
+    if (navigator.permissions) {
+      navigator.permissions.query({name: 'microphone' as PermissionName}).then(function(result) {
+        console.log('Microphone permission state:', result.state);
+        if (result.state === 'denied') {
+          onError('تم رفض الإذن للوصول للميكروفون. اضغط على أيقونة القفل في شريط العنوان واسمح بالوصول');
+          return;
+        }
+      }).catch(console.warn);
+    }
+    
     recognition.start();
+    console.log('Speech recognition started successfully');
   } catch (error) {
     console.error('Error starting speech recognition:', error);
-    onError('فشل في بدء التعرف على الصوت. تأكد من السماح بالوصول للميكروفون');
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    onError(`فشل في بدء التعرف على الصوت: ${errorMsg}. تأكد من السماح بالوصول للميكروفون`);
   }
 }
 
