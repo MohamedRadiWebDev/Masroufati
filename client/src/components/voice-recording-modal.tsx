@@ -144,7 +144,7 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
           <DialogTitle className="text-center">التعرف على الصوت</DialogTitle>
         </DialogHeader>
         
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 min-h-[200px] flex flex-col justify-center">
           {error ? (
             <div className="text-destructive text-sm p-3 bg-destructive/10 rounded-lg border border-destructive/20">
               <p className="font-medium">خطأ:</p>
@@ -154,8 +154,8 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
               )}
             </div>
           ) : (
-            <>
-              <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center ${isRecording ? 'bg-destructive animate-pulse' : 'bg-primary'}`}>
+            <div className="space-y-4">
+              <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center ${isRecording ? 'bg-red-500 animate-pulse' : 'bg-blue-500'}`}>
                 {isRecording ? (
                   <Mic className="h-8 w-8 text-white" />
                 ) : (
@@ -163,7 +163,7 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
                 )}
               </div>
               
-              <p className="text-muted-foreground text-sm">
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 {isRecording 
                   ? 'جاري الاستماع... قل شيئاً مثل "صرفت خمسين جنيه أكل"' 
                   : 'اضغط على زر الميكروفون لبدء التسجيل'
@@ -171,23 +171,23 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
               </p>
               
               {recognizedText && (
-                <div className="bg-accent p-3 rounded-lg">
-                  <p className="text-sm font-medium">النص المُعرّف:</p>
-                  <p className="text-sm" data-testid="text-recognized">{recognizedText}</p>
+                <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">النص المُعرّف:</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300" data-testid="text-recognized">{recognizedText}</p>
                 </div>
               )}
               
               {parsedTransaction && (
-                <div className="bg-card border border-border p-3 rounded-lg">
-                  <p className="text-sm font-medium mb-2">تم تحليل العملية:</p>
-                  <div className="text-right space-y-1 text-sm">
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-lg">
+                  <p className="text-sm font-medium mb-2 text-gray-900 dark:text-gray-100">تم تحليل العملية:</p>
+                  <div className="text-right space-y-1 text-sm text-gray-700 dark:text-gray-300">
                     <p><span className="font-medium">النوع:</span> {parsedTransaction.type === 'income' ? 'دخل' : 'مصروف'}</p>
                     <p><span className="font-medium">المبلغ:</span> {formatCurrency(parsedTransaction.amount)}</p>
                     <p><span className="font-medium">التصنيف:</span> {parsedTransaction.categoryAr || parsedTransaction.category}</p>
                   </div>
                 </div>
               )}
-            </>
+            </div>
           )}
           
           <div className="flex gap-3">
@@ -225,7 +225,7 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
                 
                 {parsedTransaction && !isRecording && (
                   <Button
-                    className="flex-1 bg-success"
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                     onClick={handleConfirm}
                     disabled={createTransaction.isPending}
                     data-testid="button-confirm-transaction"
