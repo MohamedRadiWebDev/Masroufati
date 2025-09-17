@@ -60,10 +60,6 @@ export function startSpeechRecognition(
   recognition.continuous = true; // استمرار في الاستماع
   recognition.interimResults = true; // عرض النتائج المؤقتة
   recognition.maxAlternatives = 3; // زيادة البدائل للدقة أكثر
-  
-  // تحسين الاستقرار
-  recognition.grammars = null;
-  recognition.serviceURI = null;
 
   recognition.onstart = () => {
     console.log('بدأ التسجيل...');

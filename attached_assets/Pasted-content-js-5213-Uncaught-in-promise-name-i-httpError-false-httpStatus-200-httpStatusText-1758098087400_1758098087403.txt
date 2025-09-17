@@ -1,0 +1,61 @@
+content.js:5213  Uncaught (in promise) {name: 'i', httpError: false, httpStatus: 200, httpStatusText: '', code: 403, …}
+init @ content.js:5213
+await in init
+init @ content.js:5177
+init @ content.js:5183
+initFirstLevelControllers @ content.js:5229
+await in initFirstLevelControllers
+init @ content.js:5768
+(anonymous) @ content.js:5768
+Promise.then
+TBt @ content.js:5768
+(anonymous) @ content.js:5768
+(anonymous) @ content.js:5768
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+(index):1  Uncaught (in promise) {name: 'i', httpError: false, httpStatus: 200, httpStatusText: '', code: 403, …}
+(index):1  Uncaught (in promise) {name: 'i', httpError: false, httpStatus: 200, httpStatusText: '', code: 403, …}
+index-DjiEiF11.js:342  Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-DjiEiF11.js:342
+qg @ index-DjiEiF11.js:40
+Gl @ index-DjiEiF11.js:40
+h7 @ index-DjiEiF11.js:40
+Hs @ index-DjiEiF11.js:40
+LA @ index-DjiEiF11.js:40
+Is @ index-DjiEiF11.js:38
+(anonymous) @ index-DjiEiF11.js:40
+index-DjiEiF11.js:342 Starting speech recognition...
+index-DjiEiF11.js:40  TypeError: Failed to set the 'grammars' property on 'SpeechRecognition': Failed to convert value to 'SpeechGrammarList'.
+    at qX (index-DjiEiF11.js:342:135388)
+    at index-DjiEiF11.js:342:137738
+    at qg (index-DjiEiF11.js:40:24283)
+    at Gl (index-DjiEiF11.js:40:42409)
+    at h7 (index-DjiEiF11.js:40:41231)
+    at Hs (index-DjiEiF11.js:40:40278)
+    at LA (index-DjiEiF11.js:40:36886)
+    at Is (index-DjiEiF11.js:38:3279)
+    at index-DjiEiF11.js:40:34263
+Dw @ index-DjiEiF11.js:40
+r.callback @ index-DjiEiF11.js:40
+xA @ index-DjiEiF11.js:38
+DA @ index-DjiEiF11.js:40
+y3 @ index-DjiEiF11.js:40
+c7 @ index-DjiEiF11.js:40
+h7 @ index-DjiEiF11.js:40
+Hs @ index-DjiEiF11.js:40
+LA @ index-DjiEiF11.js:40
+Is @ index-DjiEiF11.js:38
+(anonymous) @ index-DjiEiF11.js:40
+index-DjiEiF11.js:342  Uncaught TypeError: Failed to set the 'grammars' property on 'SpeechRecognition': Failed to convert value to 'SpeechGrammarList'.
+    at qX (index-DjiEiF11.js:342:135388)
+    at index-DjiEiF11.js:342:137738
+    at qg (index-DjiEiF11.js:40:24283)
+    at Gl (index-DjiEiF11.js:40:42409)
+    at h7 (index-DjiEiF11.js:40:41231)
+    at Hs (index-DjiEiF11.js:40:40278)
+    at LA (index-DjiEiF11.js:40:36886)
+    at Is (index-DjiEiF11.js:38:3279)
+    at index-DjiEiF11.js:40:34263
