@@ -108,12 +108,19 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
     [debouncedParseText]
   );
   
-  // Memoized error handler
+  // Memoized error handler with retry logic
   const handleSpeechError = useCallback(
     (error: string) => {
       console.error('Speech recognition error:', error);
       setError(error);
       setIsRecording(false);
+      
+      // Auto-retry for specific errors after a short delay
+      if (error.includes('خطأ مؤقت') || error.includes('حاول مرة أخرى')) {
+        setTimeout(() => {
+          setError('');
+        }, 3000); // Clear error after 3 seconds to allow retry
+      }
     },
     []
   );
@@ -241,6 +248,23 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
               <p>{error}</p>
               {error.includes('متصفحك') && (
                 <p className="text-xs mt-2">جرب استخدام Chrome أو Edge للحصول على أفضل دعم</p>
+              )}
+              {error.includes('حاول مرة أخرى') && (
+                <div className="mt-3">
+                  <Button 
+                    onClick={() => {
+                      setError('');
+                      if (!isRecording) {
+                        handleStartRecording();
+                      }
+                    }}
+                    size="sm"
+                    variant="outline"
+                    className="text-xs"
+                  >
+                    حاول الآن
+                  </Button>
+                </div>
               )}
             </div>
           ) : (

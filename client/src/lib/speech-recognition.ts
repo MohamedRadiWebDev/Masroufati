@@ -277,7 +277,8 @@ export function startSpeechRecognition(
         errorMessage = 'خدمة التعرف على الصوت غير متاحة. تأكد من أنك تستخدم HTTPS';
         break;
       case 'aborted':
-        errorMessage = 'تم إيقاف التعرف على الصوت';
+        errorMessage = 'حاول مرة أخرى. انقطع التسجيل بسبب خطأ مؤقت';
+        shouldRetry = true;
         break;
       default:
         errorMessage = `خطأ في التعرف على الصوت: ${event.error}. تأكد من السماح بالوصول للميكروفون`;
@@ -286,14 +287,6 @@ export function startSpeechRecognition(
     
     console.warn('Speech recognition error:', event.error, errorMessage);
     onError(errorMessage);
-    
-    // إعادة محاولة تلقائية للأخطاء القابلة للإصلاح
-    if (shouldRetry) {
-      setTimeout(() => {
-        console.log('محاولة إعادة تشغيل التعرف على الصوت...');
-        // يمكن إضافة منطق إعادة المحاولة هنا إذا لزم الأمر
-      }, 2000);
-    }
   };
 
   recognition.onend = () => {
