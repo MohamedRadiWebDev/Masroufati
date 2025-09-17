@@ -89,14 +89,15 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
       return;
     }
     
-    // Check for microphone permissions first
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(track => track.stop()); // Release the stream immediately
-      console.log('Microphone permission granted');
-    } catch (permissionError) {
-      console.error('Microphone permission error:', permissionError);
-      setError("يرجى السماح بالوصول للميكروفون لاستخدام التسجيل الصوتي");
+    // Check if we're in a secure context (required for microphone access)
+    if (!window.isSecureContext) {
+      setError("يجب استخدام اتصال آمن (HTTPS) للوصول للميكروفون");
+      return;
+    }
+    
+    // Check for media devices availability (optional check)
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setError("متصفحك لا يدعم الوصول للميكروفون");
       return;
     }
     

@@ -121,24 +121,27 @@ export function startSpeechRecognition(
         shouldRetry = true;
         break;
       case 'audio-capture':
-        errorMessage = 'لا يمكن الوصول للميكروفون. تأكد من أن الميكروفون متصل';
+        errorMessage = 'لا يمكن الوصول للميكروفون. تأكد من السماح بالوصول للميكروفون في المتصفح';
         break;
       case 'not-allowed':
-        errorMessage = 'تم رفض الإذن للوصول للميكروفون. اسمح بالوصول وأعد المحاولة';
+        errorMessage = 'تم رفض الإذن للوصول للميكروفون. اضغط على أيقونة الميكروفون في شريط العنوان واسمح بالوصول';
         break;
       case 'network':
         errorMessage = 'خطأ في الاتصال بالإنترنت. تحقق من اتصالك';
         shouldRetry = true;
         break;
       case 'language-not-supported':
-        errorMessage = 'اللغة العربية غير مدعومة في متصفحك';
+        errorMessage = 'اللغة العربية غير مدعومة في متصفحك. جرب استخدام Chrome أو Edge';
         break;
       case 'service-not-allowed':
-        errorMessage = 'خدمة التعرف على الصوت غير متاحة';
+        errorMessage = 'خدمة التعرف على الصوت غير متاحة. تأكد من أنك تستخدم HTTPS';
+        break;
+      case 'aborted':
+        errorMessage = 'تم إيقاف التعرف على الصوت';
         break;
       default:
-        errorMessage = `خطأ غير متوقع: ${event.error}`;
-        shouldRetry = true;
+        errorMessage = `خطأ في التعرف على الصوت: ${event.error}. تأكد من السماح بالوصول للميكروفون`;
+        shouldRetry = false;
     }
     
     console.warn('Speech recognition error:', event.error, errorMessage);
