@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { startSpeechRecognition, stopSpeechRecognition, isSpeechRecognitionSupported } from "@/lib/speech-recognition";
+import { startSpeechRecognition, stopSpeechRecognition, isSpeechRecognitionSupported, preloadSpeechRecognition, cleanupSpeechRecognition } from "@/lib/speech-recognition";
 import { parseArabicTransaction } from "@/lib/arabic-text-processor";
 import { type Category } from "@shared/schema";
 import { Mic, MicOff } from "lucide-react";
@@ -19,12 +19,28 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
   const [recognizedText, setRecognizedText] = useState("");
   const [parsedTransaction, setParsedTransaction] = useState<any>(null);
   const [error, setError] = useState("");
+  const [processingTimeout, setProcessingTimeout] = useState<NodeJS.Timeout | null>(null);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Preload speech recognition when modal opens for faster startup
+  useEffect(() => {
+    if (open && isSpeechRecognitionSupported()) {
+      preloadSpeechRecognition().then((success) => {
+        if (success) {
+          console.log('Speech recognition preloaded successfully');
+        }
+      }).catch(console.error);
+    }
+  }, [open]);
 
+  // Lazy load categories only when modal is open
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
+    enabled: open, // Only fetch when modal is open
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    gcTime: 10 * 60 * 1000, // Keep in garbage collection for 10 minutes
   });
 
   const createTransaction = useMutation({
@@ -32,9 +48,17 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
       return apiRequest("POST", "/api/transactions", data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/balance"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/analytics"] });
+      // Optimized query invalidation - only invalidate what's needed
+      const invalidationPromises = [
+        queryClient.invalidateQueries({ queryKey: ["/api/transactions"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/balance"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/analytics"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/analytics/monthly-trends"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/analytics/spending-patterns"] })
+      ];
+      
+      // Run invalidations in parallel
+      Promise.all(invalidationPromises).catch(console.error);
       
       toast({
         title: "تم بنجاح!",
@@ -52,6 +76,48 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
     },
   });
 
+  // Debounced parsing to avoid excessive processing
+  const debouncedParseText = useCallback(
+    (text: string) => {
+      // Clear existing timeout
+      if (processingTimeout) {
+        clearTimeout(processingTimeout);
+      }
+      
+      // Set new timeout for parsing
+      const timeout = setTimeout(() => {
+        if (categories.length > 0) {
+          const parsed = parseArabicTransaction(text, categories);
+          console.log('Parsed transaction:', parsed);
+          setParsedTransaction(parsed);
+        }
+      }, 300); // 300ms debounce
+      
+      setProcessingTimeout(timeout);
+    },
+    [categories, processingTimeout]
+  );
+  
+  // Memoized speech recognition result handler
+  const handleSpeechResult = useCallback(
+    (text: string) => {
+      console.log('Speech recognized:', text);
+      setRecognizedText(text);
+      debouncedParseText(text);
+    },
+    [debouncedParseText]
+  );
+  
+  // Memoized error handler
+  const handleSpeechError = useCallback(
+    (error: string) => {
+      console.error('Speech recognition error:', error);
+      setError(error);
+      setIsRecording(false);
+    },
+    []
+  );
+
   useEffect(() => {
     if (!isSpeechRecognitionSupported()) {
       setError("متصفحك لا يدعم التعرف على الصوت");
@@ -61,18 +127,8 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
     if (open && isRecording) {
       console.log('Starting speech recognition...');
       startSpeechRecognition(
-        (text: string) => {
-          console.log('Speech recognized:', text);
-          setRecognizedText(text);
-          const parsed = parseArabicTransaction(text, categories);
-          console.log('Parsed transaction:', parsed);
-          setParsedTransaction(parsed);
-        },
-        (error: string) => {
-          console.error('Speech recognition error:', error);
-          setError(error);
-          setIsRecording(false);
-        }
+        handleSpeechResult,
+        handleSpeechError
       );
     } else if (!isRecording) {
       stopSpeechRecognition();
@@ -80,10 +136,16 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
 
     return () => {
       stopSpeechRecognition();
+      // Clear any pending processing timeout
+      if (processingTimeout) {
+        clearTimeout(processingTimeout);
+        setProcessingTimeout(null);
+      }
     };
-  }, [open, isRecording, categories]);
+  }, [open, isRecording, handleSpeechResult, handleSpeechError, processingTimeout]);
 
-  const handleStartRecording = async () => {
+  // Memoized start recording handler
+  const handleStartRecording = useCallback(async () => {
     if (!isSpeechRecognitionSupported()) {
       setError("متصفحك لا يدعم التعرف على الصوت");
       return;
@@ -104,15 +166,30 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
     setError("");
     setRecognizedText("");
     setParsedTransaction(null);
+    
+    // Clear any pending processing
+    if (processingTimeout) {
+      clearTimeout(processingTimeout);
+      setProcessingTimeout(null);
+    }
+    
     setIsRecording(true);
-  };
+  }, [processingTimeout]);
 
-  const handleStopRecording = () => {
+  // Memoized stop recording handler
+  const handleStopRecording = useCallback(() => {
     setIsRecording(false);
     stopSpeechRecognition();
-  };
+    
+    // Clear any pending processing timeout
+    if (processingTimeout) {
+      clearTimeout(processingTimeout);
+      setProcessingTimeout(null);
+    }
+  }, [processingTimeout]);
 
-  const handleConfirm = () => {
+  // Memoized confirm handler
+  const handleConfirm = useCallback(() => {
     if (parsedTransaction) {
       createTransaction.mutate({
         type: parsedTransaction.type,
@@ -122,20 +199,33 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
         date: new Date().toISOString(),
       });
     }
-  };
+  }, [parsedTransaction, recognizedText, createTransaction]);
 
-  const handleClose = () => {
+  // Memoized close handler with cleanup
+  const handleClose = useCallback(() => {
     setIsRecording(false);
     setRecognizedText("");
     setParsedTransaction(null);
     setError("");
-    stopSpeechRecognition();
+    
+    // Clear any pending processing
+    if (processingTimeout) {
+      clearTimeout(processingTimeout);
+      setProcessingTimeout(null);
+    }
+    
+    // Cleanup speech recognition resources
+    cleanupSpeechRecognition();
+    
     onOpenChange(false);
-  };
+  }, [processingTimeout, onOpenChange]);
 
-  const formatCurrency = (amount: number) => {
-    return `${amount.toLocaleString('ar-EG')} ج.م`;
-  };
+  // Memoized currency formatter
+  const formatCurrency = useMemo(() => {
+    return (amount: number) => {
+      return `${amount.toLocaleString('ar-EG')} ج.م`;
+    };
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>

@@ -30,6 +30,8 @@ declare global {
 }
 
 let recognition: any = null;
+let preloadedRecognition: any = null;
+let isPreloading = false;
 
 // دالة مساعدة لاختيار أفضل بديل عربي
 function selectBestArabicAlternative(alternatives: string[], defaultChoice: string): string {
@@ -95,6 +97,52 @@ export function isSpeechRecognitionSupported(): boolean {
   return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
 }
 
+// Preload speech recognition for faster startup
+export function preloadSpeechRecognition(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (!isSpeechRecognitionSupported() || isPreloading || preloadedRecognition) {
+      resolve(!!preloadedRecognition);
+      return;
+    }
+    
+    isPreloading = true;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    try {
+      preloadedRecognition = new SpeechRecognition();
+      
+      // Pre-configure with optimized settings
+      preloadedRecognition.lang = 'ar-EG';
+      preloadedRecognition.continuous = true;
+      preloadedRecognition.interimResults = true;
+      preloadedRecognition.maxAlternatives = 3; // Reduced for better performance
+      
+      // Advanced audio processing setup if supported
+      try {
+        if ('noiseSuppression' in preloadedRecognition) {
+          preloadedRecognition.noiseSuppression = true;
+        }
+        if ('echoCancellation' in preloadedRecognition) {
+          preloadedRecognition.echoCancellation = true;
+        }
+        if ('autoGainControl' in preloadedRecognition) {
+          preloadedRecognition.autoGainControl = true;
+        }
+      } catch (error) {
+        console.warn('Advanced audio processing not supported:', error);
+      }
+      
+      isPreloading = false;
+      resolve(true);
+    } catch (error) {
+      console.warn('Failed to preload speech recognition:', error);
+      preloadedRecognition = null;
+      isPreloading = false;
+      resolve(false);
+    }
+  });
+}
+
 export function startSpeechRecognition(
   onResult: (transcript: string) => void,
   onError: (error: string) => void
@@ -104,23 +152,28 @@ export function startSpeechRecognition(
     return;
   }
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  
-  try {
-    recognition = new SpeechRecognition();
-  } catch (error) {
-    console.error('Error creating SpeechRecognition:', error);
-    onError('فشل في إنشاء خدمة التعرف على الصوت');
-    return;
+  // Use preloaded recognition if available for faster startup
+  if (preloadedRecognition && !recognition) {
+    recognition = preloadedRecognition;
+    preloadedRecognition = null; // Transfer ownership
+  } else {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    try {
+      recognition = new SpeechRecognition();
+    } catch (error) {
+      console.error('Error creating SpeechRecognition:', error);
+      onError('فشل في إنشاء خدمة التعرف على الصوت');
+      return;
+    }
+    
+    // Configure recognition if not using preloaded
+    const arabicLanguages = ['ar-EG', 'ar-SA', 'ar-AE', 'ar-JO', 'ar-LB', 'ar'];
+    recognition.lang = arabicLanguages[0];
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 3; // Reduced for better performance
   }
-  
-  // محاولة أفضل اللغات العربية المدعومة مع التركيز على المصرية
-  const arabicLanguages = ['ar-EG', 'ar-SA', 'ar-AE', 'ar-JO', 'ar-LB', 'ar'];
-  recognition.lang = arabicLanguages[0]; // نبدأ بالمصرية أولاً
-  
-  recognition.continuous = true; // استمرار في الاستماع
-  recognition.interimResults = true; // عرض النتائج المؤقتة
-  recognition.maxAlternatives = 5; // زيادة البدائل للدقة أكثر
   
   // تحسينات إضافية للأداء والدقة
   if ('grammars' in recognition && window.SpeechGrammarList) {
@@ -260,4 +313,16 @@ export function stopSpeechRecognition(): void {
     recognition.stop();
     recognition = null;
   }
+}
+
+// Clean up preloaded recognition
+export function cleanupSpeechRecognition(): void {
+  if (recognition) {
+    recognition.stop();
+    recognition = null;
+  }
+  if (preloadedRecognition) {
+    preloadedRecognition = null;
+  }
+  isPreloading = false;
 }
