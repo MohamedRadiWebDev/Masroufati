@@ -25,10 +25,71 @@ declare global {
   interface Window {
     SpeechRecognition: any;
     webkitSpeechRecognition: any;
+    SpeechGrammarList: any;
   }
 }
 
 let recognition: any = null;
+
+// دالة مساعدة لاختيار أفضل بديل عربي
+function selectBestArabicAlternative(alternatives: string[], defaultChoice: string): string {
+  if (!alternatives || alternatives.length === 0) return defaultChoice;
+  
+  const arabicScore = (text: string): number => {
+    let score = 0;
+    
+    // إعطاء نقاط للكلمات العربية المالية الشائعة
+    const financialKeywords = [
+      'صرف', 'دفع', 'اشتري', 'جنيه', 'ريال', 'درهم', 'دولار',
+      'أكل', 'مواصلات', 'فاتورة', 'راتب', 'مرتب'
+    ];
+    
+    financialKeywords.forEach(keyword => {
+      if (text.includes(keyword)) score += 10;
+    });
+    
+    // إعطاء نقاط للأرقام
+    const numberMatches = text.match(/\d+/g);
+    if (numberMatches) score += numberMatches.length * 5;
+    
+    // إعطاء نقاط للنص العربي
+    const arabicChars = text.match(/[\u0600-\u06FF]/g);
+    if (arabicChars) score += arabicChars.length;
+    
+    return score;
+  };
+  
+  let bestAlternative = defaultChoice;
+  let bestScore = arabicScore(defaultChoice);
+  
+  alternatives.forEach(alt => {
+    const score = arabicScore(alt);
+    if (score > bestScore) {
+      bestScore = score;
+      bestAlternative = alt;
+    }
+  });
+  
+  return bestAlternative;
+}
+
+// دالة لتحويل الأرقام الإنجليزية المنطوقة إلى أرقام ASCII
+function convertEnglishToArabicNumerals(text: string): string {
+  const englishToNumbers: Record<string, string> = {
+    'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5',
+    'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'ten': '10',
+    'twenty': '20', 'thirty': '30', 'forty': '40', 'fifty': '50',
+    'sixty': '60', 'seventy': '70', 'eighty': '80', 'ninety': '90',
+    'hundred': '100', 'thousand': '1000'
+  };
+  
+  let result = text.toLowerCase();
+  Object.entries(englishToNumbers).forEach(([eng, num]) => {
+    result = result.replace(new RegExp(`\\b${eng}\\b`, 'g'), num);
+  });
+  
+  return result;
+}
 
 export function isSpeechRecognitionSupported(): boolean {
   return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
@@ -53,13 +114,37 @@ export function startSpeechRecognition(
     return;
   }
   
-  // محاولة أفضل اللغات العربية المدعومة
-  const arabicLanguages = ['ar-SA', 'ar-EG', 'ar-AE', 'ar-JO', 'ar-LB', 'ar'];
-  recognition.lang = arabicLanguages[0]; // نبدأ بالسعودية
+  // محاولة أفضل اللغات العربية المدعومة مع التركيز على المصرية
+  const arabicLanguages = ['ar-EG', 'ar-SA', 'ar-AE', 'ar-JO', 'ar-LB', 'ar'];
+  recognition.lang = arabicLanguages[0]; // نبدأ بالمصرية أولاً
   
   recognition.continuous = true; // استمرار في الاستماع
   recognition.interimResults = true; // عرض النتائج المؤقتة
-  recognition.maxAlternatives = 3; // زيادة البدائل للدقة أكثر
+  recognition.maxAlternatives = 5; // زيادة البدائل للدقة أكثر
+  
+  // تحسينات إضافية للأداء والدقة
+  if ('grammars' in recognition && window.SpeechGrammarList) {
+    try {
+      recognition.grammars = new window.SpeechGrammarList();
+    } catch (error) {
+      console.warn('SpeechGrammarList not supported:', error);
+    }
+  }
+  
+  // تحسين معالجة الضوضاء (مع فحص الدعم)
+  try {
+    if ('noiseSuppression' in recognition) {
+      recognition.noiseSuppression = true;
+    }
+    if ('echoCancellation' in recognition) {
+      recognition.echoCancellation = true;
+    }
+    if ('autoGainControl' in recognition) {
+      recognition.autoGainControl = true;
+    }
+  } catch (error) {
+    console.warn('Advanced audio processing not supported:', error);
+  }
 
   recognition.onstart = () => {
     console.log('بدأ التسجيل...');
@@ -70,38 +155,44 @@ export function startSpeechRecognition(
     let interimTranscript = '';
 
     for (let i = event.resultIndex; i < event.results.length; i++) {
-      // نحاول الحصول على أفضل بديل
+      // نحاول الحصول على أفضل بديل مع تحليل متقدم
       let bestTranscript = '';
       let bestConfidence = 0;
+      let allAlternatives: string[] = [];
       
-      // فحص جميع البدائل
+      // جمع جميع البدائل للتحليل
       for (let j = 0; j < event.results[i].length; j++) {
         const alternative = event.results[i][j];
+        allAlternatives.push(alternative.transcript);
         if (alternative.confidence > bestConfidence) {
           bestConfidence = alternative.confidence;
           bestTranscript = alternative.transcript;
         }
       }
       
-      // إذا لم نجد بديل جيد، نأخذ الأول
-      const transcript = bestTranscript || event.results[i][0].transcript;
+      // معالجة ذكية للبدائل - اختيار الأفضل للغة العربية
+      const intelligentChoice = selectBestArabicAlternative(allAlternatives, bestTranscript);
+      const transcript = intelligentChoice || event.results[i][0].transcript;
       
       if (event.results[i].isFinal) {
-        finalTranscript += transcript;
+        finalTranscript += (finalTranscript ? ' ' : '') + transcript;
       } else {
-        interimTranscript += transcript;
+        interimTranscript += (interimTranscript ? ' ' : '') + transcript;
       }
     }
 
-    // تحسين النص العربي
-    const cleanText = (text: string) => {
+    // تحسين متقدم للنص العربي
+    const enhancedCleanText = (text: string) => {
       return text
         .replace(/\s+/g, ' ') // إزالة المسافات الزائدة
-        .replace(/[٠-٩]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - '٠'.charCodeAt(0) + '0'.charCodeAt(0))) // تحويل الأرقام العربية
+        .replace(/[A-Za-z]+/g, (match) => convertEnglishToArabicNumerals(match)) // تحويل الأرقام الإنجليزية المنطوقة
+        .replace(/[٠-٩]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - '٠'.charCodeAt(0) + '0'.charCodeAt(0))) // تحويل جميع الأرقام العربية للـ ASCII
+        .replace(/ه\s*(\d)/g, '$1') // إزالة "ه" قبل الأرقام (مثل "ه 50" -> "50")
+        .replace(/\b(\d+)\s*جنيه?\b/g, '$1') // تبسيط عبارات الجنيه
         .trim();
     };
 
-    const result = cleanText(finalTranscript || interimTranscript);
+    const result = enhancedCleanText(finalTranscript || interimTranscript);
     if (result.length > 0) {
       onResult(result);
     }
