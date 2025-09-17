@@ -120,7 +120,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
 
-  // Analytics endpoint
+  // Analytics endpoint (Enhanced with monthly data)
   app.get("/api/analytics", async (req, res) => {
     try {
       const transactions = await storage.getTransactions();
@@ -155,6 +155,151 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(500).json({ message: "Failed to get analytics" });
+    }
+  });
+
+  // Monthly spending trends endpoint
+  app.get("/api/analytics/monthly-trends", async (req, res) => {
+    try {
+      const transactions = await storage.getTransactions();
+      const months = parseInt(req.query.months as string) || 6; // Default to last 6 months
+      
+      // Get last N months
+      const now = new Date();
+      const monthlyData = [];
+      
+      for (let i = months - 1; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        
+        const monthTransactions = transactions.filter(t => {
+          const transactionDate = new Date(t.date);
+          return transactionDate.getFullYear() === date.getFullYear() && 
+                 transactionDate.getMonth() === date.getMonth();
+        });
+        
+        const income = monthTransactions
+          .filter(t => t.type === 'income')
+          .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+          
+        const expenses = monthTransactions
+          .filter(t => t.type === 'expense')
+          .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+        
+        const monthNameAr = [
+          'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+          'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+        ][date.getMonth()];
+        
+        monthlyData.push({
+          month: monthKey,
+          monthName: monthNameAr,
+          year: date.getFullYear(),
+          income,
+          expenses,
+          balance: income - expenses,
+          savings: income > 0 ? ((income - expenses) / income * 100) : 0
+        });
+      }
+      
+      res.json({ monthlyData });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get monthly trends" });
+    }
+  });
+
+  // Spending patterns analysis endpoint
+  app.get("/api/analytics/spending-patterns", async (req, res) => {
+    try {
+      const transactions = await storage.getTransactions();
+      const categories = await storage.getCategories();
+      
+      // Analyze by day of week
+      const dayOfWeekSpending = Array(7).fill(0);
+      const dayNames = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+      
+      // Analyze by time of month (first half vs second half)
+      let firstHalfSpending = 0;
+      let secondHalfSpending = 0;
+      
+      // Category trends over time
+      const categoryTrends: Record<string, number[]> = {};
+      const last6Months: Array<{year: number, month: number}> = [];
+      
+      // Get last 6 months for trends
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        last6Months.push({
+          year: date.getFullYear(),
+          month: date.getMonth()
+        });
+      }
+      
+      transactions.filter(t => t.type === 'expense').forEach(transaction => {
+        const date = new Date(transaction.date);
+        
+        // Day of week analysis
+        dayOfWeekSpending[date.getDay()] += parseFloat(transaction.amount);
+        
+        // First/Second half of month
+        if (date.getDate() <= 15) {
+          firstHalfSpending += parseFloat(transaction.amount);
+        } else {
+          secondHalfSpending += parseFloat(transaction.amount);
+        }
+        
+        // Category trends
+        if (!categoryTrends[transaction.category]) {
+          categoryTrends[transaction.category] = Array(6).fill(0);
+        }
+        
+        const monthIndex = last6Months.findIndex(m => 
+          m.year === date.getFullYear() && m.month === date.getMonth()
+        );
+        if (monthIndex >= 0) {
+          categoryTrends[transaction.category][monthIndex] += parseFloat(transaction.amount);
+        }
+      });
+      
+      // Format day of week data
+      const dayOfWeekData = dayOfWeekSpending.map((amount, index) => ({
+        day: dayNames[index],
+        amount,
+        dayIndex: index
+      }));
+      
+      // Format category trends with Arabic names
+      const categoryTrendsFormatted = Object.entries(categoryTrends).map(([categoryName, amounts]) => {
+        const category = categories.find(c => c.name === categoryName);
+        return {
+          category: categoryName,
+          categoryAr: category?.nameAr || categoryName,
+          color: category?.color || 'muted',
+          amounts
+        };
+      }).sort((a, b) => {
+        const aTotal = a.amounts.reduce((sum, amt) => sum + amt, 0);
+        const bTotal = b.amounts.reduce((sum, amt) => sum + amt, 0);
+        return bTotal - aTotal;
+      });
+      
+      res.json({
+        dayOfWeekSpending: dayOfWeekData,
+        monthHalfSpending: {
+          firstHalf: firstHalfSpending,
+          secondHalf: secondHalfSpending,
+          percentage: {
+            firstHalf: firstHalfSpending + secondHalfSpending > 0 ? 
+              (firstHalfSpending / (firstHalfSpending + secondHalfSpending) * 100) : 50,
+            secondHalf: firstHalfSpending + secondHalfSpending > 0 ? 
+              (secondHalfSpending / (firstHalfSpending + secondHalfSpending) * 100) : 50
+          }
+        },
+        categoryTrends: categoryTrendsFormatted
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get spending patterns" });
     }
   });
 

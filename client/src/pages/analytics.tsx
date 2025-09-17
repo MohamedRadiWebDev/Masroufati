@@ -1,12 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import BottomNavigation from "@/components/bottom-navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, Download, TrendingUp, BarChart3, Calendar, Activity } from "lucide-react";
 import { useLocation } from "wouter";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { 
+  PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip,
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  BarChart, Bar, Area, AreaChart
+} from "recharts";
 import { localStorageManager } from "@/lib/localStorage-storage";
-// Remove the invalid import - formatCurrency is defined locally
 import { analyticsQueryOptions } from "@/lib/queryClient";
+import { useState } from "react";
 
 interface AnalyticsData {
   categoryBreakdown: {
@@ -24,8 +28,43 @@ interface BalanceData {
   totalExpenses: number;
 }
 
+interface MonthlyTrendsData {
+  monthlyData: {
+    month: string;
+    monthName: string;
+    year: number;
+    income: number;
+    expenses: number;
+    balance: number;
+    savings: number;
+  }[];
+}
+
+interface SpendingPatternsData {
+  dayOfWeekSpending: {
+    day: string;
+    amount: number;
+    dayIndex: number;
+  }[];
+  monthHalfSpending: {
+    firstHalf: number;
+    secondHalf: number;
+    percentage: {
+      firstHalf: number;
+      secondHalf: number;
+    };
+  };
+  categoryTrends: {
+    category: string;
+    categoryAr: string;
+    color: string;
+    amounts: number[];
+  }[];
+}
+
 export default function Analytics() {
   const [, setLocation] = useLocation();
+  const [selectedView, setSelectedView] = useState<'overview' | 'trends' | 'patterns'>('overview');
 
   const { data: analytics, isLoading: analyticsLoading } = useQuery<AnalyticsData>({
     queryKey: ["/api/analytics"],
@@ -34,10 +73,20 @@ export default function Analytics() {
 
   const { data: balance, isLoading: balanceLoading } = useQuery<BalanceData>({
     queryKey: ["/api/balance"],
-    ...analyticsQueryOptions, // Balance also changes frequently like analytics
+    ...analyticsQueryOptions,
   });
 
-  const isLoading = analyticsLoading || balanceLoading;
+  const { data: monthlyTrends, isLoading: trendsLoading } = useQuery<MonthlyTrendsData>({
+    queryKey: ["/api/analytics/monthly-trends"],
+    ...analyticsQueryOptions,
+  });
+
+  const { data: spendingPatterns, isLoading: patternsLoading } = useQuery<SpendingPatternsData>({
+    queryKey: ["/api/analytics/spending-patterns"],
+    ...analyticsQueryOptions,
+  });
+
+  const isLoading = analyticsLoading || balanceLoading || trendsLoading || patternsLoading;
 
   if (isLoading) {
     return (
@@ -217,7 +266,7 @@ export default function Analytics() {
     <>
       <div className="p-4 pb-32">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl font-bold">التحليلات الشهرية</h1>
+          <h1 className="text-xl font-bold">التحليلات المتقدمة</h1>
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -239,98 +288,292 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Monthly Summary */}
+        {/* Navigation Tabs */}
+        <div className="flex gap-1 mb-6 bg-muted p-1 rounded-lg">
+          <Button
+            variant={selectedView === 'overview' ? 'default' : 'ghost'}
+            size="sm"
+            className="flex-1 text-sm"
+            onClick={() => setSelectedView('overview')}
+            data-testid="button-overview-tab"
+          >
+            <BarChart3 className="h-4 w-4 mr-2" />
+            نظرة عامة
+          </Button>
+          <Button
+            variant={selectedView === 'trends' ? 'default' : 'ghost'}
+            size="sm"
+            className="flex-1 text-sm"
+            onClick={() => setSelectedView('trends')}
+            data-testid="button-trends-tab"
+          >
+            <TrendingUp className="h-4 w-4 mr-2" />
+            الاتجاهات الشهرية
+          </Button>
+          <Button
+            variant={selectedView === 'patterns' ? 'default' : 'ghost'}
+            size="sm"
+            className="flex-1 text-sm"
+            onClick={() => setSelectedView('patterns')}
+            data-testid="button-patterns-tab"
+          >
+            <Activity className="h-4 w-4 mr-2" />
+            أنماط الإنفاق
+          </Button>
+        </div>
+
+        {/* Current Balance Summary - Always show */}
         <div className="bg-card rounded-lg border border-border p-4 mb-4">
-          <h3 className="font-semibold mb-3">ملخص العمليات</h3>
-          <div className="grid grid-cols-2 gap-4">
+          <h3 className="font-semibold mb-3">الوضع المالي الحالي</h3>
+          <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-success">
+              <p className="text-lg font-bold text-primary">
+                {balance ? formatCurrency(balance.currentBalance) : "٠ ج.م"}
+              </p>
+              <p className="text-xs text-muted-foreground">الرصيد الحالي</p>
+            </div>
+            <div className="text-center">
+              <p className="text-lg font-bold text-success">
                 {balance ? formatCurrency(balance.totalIncome) : "٠ ج.م"}
               </p>
-              <p className="text-sm text-muted-foreground">إجمالي الدخل</p>
+              <p className="text-xs text-muted-foreground">إجمالي الدخل</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-destructive">
+              <p className="text-lg font-bold text-destructive">
                 {balance ? formatCurrency(balance.totalExpenses) : "٠ ج.م"}
               </p>
-              <p className="text-sm text-muted-foreground">إجمالي المصروفات</p>
+              <p className="text-xs text-muted-foreground">إجمالي المصروفات</p>
             </div>
           </div>
         </div>
 
-        {/* Expense Distribution Chart */}
-        <div className="chart-container mb-4" data-testid="chart-expense-distribution">
-          <h3 className="font-semibold mb-3">توزيع المصروفات</h3>
-          {chartData.length === 0 ? (
-            <div className="h-64 bg-muted rounded-lg flex items-center justify-center" data-testid="chart-empty-state">
-              <div className="text-center text-muted-foreground">
-                <i className="fas fa-chart-pie text-4xl mb-2"></i>
-                <p>لا توجد مصروفات لعرضها</p>
-                <p className="text-xs mt-1">أضف مصروفات لترى التوزيع</p>
-              </div>
+        {/* Conditional Content Based on Selected View */}
+        {selectedView === 'overview' && (
+          <>
+            {/* Expense Distribution Chart */}
+            <div className="bg-card rounded-lg border border-border p-4 mb-4" data-testid="chart-expense-distribution">
+              <h3 className="font-semibold mb-3">توزيع المصروفات</h3>
+              {chartData.length === 0 ? (
+                <div className="h-64 bg-muted rounded-lg flex items-center justify-center" data-testid="chart-empty-state">
+                  <div className="text-center text-muted-foreground">
+                    <BarChart3 className="mx-auto h-12 w-12 mb-2" />
+                    <p>لا توجد مصروفات لعرضها</p>
+                    <p className="text-xs mt-1">أضف مصروفات لترى التوزيع</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-64 w-full" data-testid="pie-chart-container">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={false}
+                        labelLine={false}
+                      >
+                        {chartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="h-64 w-full" data-testid="pie-chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={chartData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={false}
-                    labelLine={false}
-                  >
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </div>
 
-        {/* Categories Breakdown with Enhanced Design */}
-        <div className="bg-card rounded-lg border border-border p-4">
-          <h3 className="font-semibold mb-4">تفصيل حسب التصنيفات</h3>
-          <div className="space-y-3">
-            {analytics?.categoryBreakdown.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>لا توجد مصروفات لعرضها</p>
-              </div>
-            ) : (
-              analytics?.categoryBreakdown.map((item, index) => {
-                const percentage = balance && balance.totalExpenses > 0 ? 
-                  ((item.amount / balance.totalExpenses) * 100).toFixed(1) : '0';
-                return (
-                  <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                    <div className="flex items-center gap-3 flex-1">
-                      <div 
-                        className="w-4 h-4 rounded-full flex-shrink-0" 
-                        style={{ backgroundColor: getChartColor(item.color) }}
-                      ></div>
-                      <div className="flex items-center gap-2 flex-1">
-                        <i className={`${item.icon} text-muted-foreground text-sm`}></i>
-                        <div className="flex-1">
-                          <span className="font-medium text-sm">{item.categoryAr}</span>
-                          <div className="text-xs text-muted-foreground">{percentage}% من إجمالي المصروفات</div>
+            {/* Categories Breakdown */}
+            <div className="bg-card rounded-lg border border-border p-4">
+              <h3 className="font-semibold mb-4">تفصيل حسب التصنيفات</h3>
+              <div className="space-y-3">
+                {analytics?.categoryBreakdown.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p>لا توجد مصروفات لعرضها</p>
+                  </div>
+                ) : (
+                  analytics?.categoryBreakdown.map((item, index) => {
+                    const percentage = balance && balance.totalExpenses > 0 ? 
+                      ((item.amount / balance.totalExpenses) * 100).toFixed(1) : '0';
+                    return (
+                      <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                        <div className="flex items-center gap-3 flex-1">
+                          <div 
+                            className="w-4 h-4 rounded-full flex-shrink-0" 
+                            style={{ backgroundColor: getChartColor(item.color) }}
+                          ></div>
+                          <div className="flex items-center gap-2 flex-1">
+                            <i className={`${item.icon} text-muted-foreground text-sm`}></i>
+                            <div className="flex-1">
+                              <span className="font-medium text-sm">{item.categoryAr}</span>
+                              <div className="text-xs text-muted-foreground">{percentage}% من إجمالي المصروفات</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-left">
+                          <div className="font-bold text-sm">{formatCurrency(item.amount)}</div>
+                          <div className="text-xs text-primary font-medium">{percentage}%</div>
                         </div>
                       </div>
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm">{formatCurrency(item.amount)}</div>
-                      <div className="text-xs text-primary font-medium">{percentage}%</div>
-                    </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </>
+        )}
+
+        {selectedView === 'trends' && (
+          <>
+            {/* Monthly Income vs Expenses Trend */}
+            <div className="bg-card rounded-lg border border-border p-4 mb-4">
+              <h3 className="font-semibold mb-3">الاتجاه الشهري: الدخل مقابل المصروفات</h3>
+              {monthlyTrends?.monthlyData?.length === 0 || !monthlyTrends ? (
+                <div className="h-64 bg-muted rounded-lg flex items-center justify-center">
+                  <div className="text-center text-muted-foreground">
+                    <TrendingUp className="mx-auto h-12 w-12 mb-2" />
+                    <p>لا توجد بيانات شهرية كافية</p>
+                    <p className="text-xs mt-1">أضف معاملات لمدة شهر على الأقل</p>
                   </div>
-                );
-              })
-            )}
-          </div>
-        </div>
+                </div>
+              ) : (
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={monthlyTrends.monthlyData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="monthName" />
+                      <YAxis />
+                      <Tooltip 
+                        formatter={(value, name) => [
+                          formatCurrency(Number(value)), 
+                          name === 'income' ? 'الدخل' : name === 'expenses' ? 'المصروفات' : 'الرصيد'
+                        ]}
+                      />
+                      <Line type="monotone" dataKey="income" stroke="#22c55e" strokeWidth={2} name="income" />
+                      <Line type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} name="expenses" />
+                      <Line type="monotone" dataKey="balance" stroke="#3b82f6" strokeWidth={2} name="balance" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
+
+            {/* Monthly Savings Rate */}
+            <div className="bg-card rounded-lg border border-border p-4">
+              <h3 className="font-semibold mb-3">معدل الادخار الشهري</h3>
+              {monthlyTrends?.monthlyData?.length === 0 || !monthlyTrends ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>لا توجد بيانات شهرية</p>
+                </div>
+              ) : (
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={monthlyTrends.monthlyData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="monthName" />
+                      <YAxis />
+                      <Tooltip formatter={(value) => [`${Number(value).toFixed(1)}%`, 'معدل الادخار']} />
+                      <Area type="monotone" dataKey="savings" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {selectedView === 'patterns' && (
+          <>
+            {/* Day of Week Spending */}
+            <div className="bg-card rounded-lg border border-border p-4 mb-4">
+              <h3 className="font-semibold mb-3">الإنفاق حسب أيام الأسبوع</h3>
+              {spendingPatterns?.dayOfWeekSpending?.length === 0 || !spendingPatterns ? (
+                <div className="h-64 bg-muted rounded-lg flex items-center justify-center">
+                  <div className="text-center text-muted-foreground">
+                    <Calendar className="mx-auto h-12 w-12 mb-2" />
+                    <p>لا توجد بيانات إنفاق كافية</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={spendingPatterns.dayOfWeekSpending}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="day" />
+                      <YAxis />
+                      <Tooltip formatter={(value) => [formatCurrency(Number(value)), 'الإنفاق']} />
+                      <Bar dataKey="amount" fill="#3b82f6" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
+
+            {/* Month Half Spending Analysis */}
+            <div className="bg-card rounded-lg border border-border p-4 mb-4">
+              <h3 className="font-semibold mb-3">الإنفاق: النصف الأول مقابل الثاني من الشهر</h3>
+              {spendingPatterns?.monthHalfSpending ? (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-4 bg-muted/30 rounded-lg">
+                    <p className="text-lg font-bold text-primary">
+                      {formatCurrency(spendingPatterns.monthHalfSpending.firstHalf)}
+                    </p>
+                    <p className="text-sm text-muted-foreground">النصف الأول</p>
+                    <p className="text-xs text-primary font-medium">
+                      {spendingPatterns.monthHalfSpending.percentage.firstHalf.toFixed(1)}%
+                    </p>
+                  </div>
+                  <div className="text-center p-4 bg-muted/30 rounded-lg">
+                    <p className="text-lg font-bold text-secondary">
+                      {formatCurrency(spendingPatterns.monthHalfSpending.secondHalf)}
+                    </p>
+                    <p className="text-sm text-muted-foreground">النصف الثاني</p>
+                    <p className="text-xs text-secondary font-medium">
+                      {spendingPatterns.monthHalfSpending.percentage.secondHalf.toFixed(1)}%
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>لا توجد بيانات كافية</p>
+                </div>
+              )}
+            </div>
+
+            {/* Category Trends Over Time */}
+            <div className="bg-card rounded-lg border border-border p-4">
+              <h3 className="font-semibold mb-3">اتجاهات التصنيفات خلال الأشهر الماضية</h3>
+              {spendingPatterns?.categoryTrends?.length === 0 || !spendingPatterns ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>لا توجد بيانات اتجاهات</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {spendingPatterns.categoryTrends.slice(0, 5).map((trend, index) => (
+                    <div key={index} className="p-3 bg-muted/30 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium text-sm">{trend.categoryAr}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {formatCurrency(trend.amounts.reduce((sum, amt) => sum + amt, 0))}
+                        </span>
+                      </div>
+                      <div className="h-16 w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={trend.amounts.map((amount, idx) => ({ month: idx + 1, amount }))}>
+                            <Area type="monotone" dataKey="amount" stroke={getChartColor(trend.color)} fill={getChartColor(trend.color)} fillOpacity={0.3} />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       <BottomNavigation activeTab="analytics" />
