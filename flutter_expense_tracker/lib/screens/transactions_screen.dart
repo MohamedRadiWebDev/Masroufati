@@ -6,7 +6,7 @@ import '../providers/offline_providers.dart';
 import '../widgets/transaction_item.dart';
 import '../widgets/add_transaction_modal.dart';
 import '../widgets/transaction_filters.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
   const TransactionsScreen({super.key});

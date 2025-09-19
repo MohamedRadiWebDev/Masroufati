@@ -8,7 +8,7 @@ import '../models/category.dart';
 import '../providers/offline_providers.dart';
 import '../utils/category_icons.dart';
 import '../widgets/receipt_image_viewer.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 
 class TransactionItem extends ConsumerWidget {
   final Transaction transaction;
