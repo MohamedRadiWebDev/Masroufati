@@ -1,0 +1,408 @@
+C:\Users\Radi\Downloads\flutter_expense_tracker\flutter_expense_tracker>flutter analyze
+Analyzing flutter_expense_tracker...
+
+warning - Unused import: 'package:hive_flutter/hive_flutter.dart' - lib\main.dart:5:8 - unused_import
+warning - The annotation 'JsonKey.new' can only be used on fields or getters - lib\models\transaction.dart:22:6 -
+       invalid_annotation_target
+warning - The annotation 'JsonKey.new' can only be used on fields or getters - lib\models\transaction.dart:24:6 -
+       invalid_annotation_target
+warning - The annotation 'JsonKey.new' can only be used on fields or getters - lib\models\transaction.dart:40:6 -
+       invalid_annotation_target
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\analytics_screen.dart:94:70 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\analytics_screen.dart:243:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\analytics_screen.dart:247:33 - deprecated_member_use
+  error - The getter 'chart' isn't defined for the type 'LucideIcons' - lib\screens\analytics_screen.dart:864:27 -
+         undefined_getter
+warning - The value of the local variable 'now' isn't used - lib\screens\analytics_screen.dart:884:11 -
+       unused_local_variable
+warning - The value of the local variable 'startDate' isn't used - lib\screens\analytics_screen.dart:885:14 -
+       unused_local_variable
+warning - Unused import: '../widgets/voice_input_modal.dart' - lib\screens\home_screen.dart:9:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\home_screen.dart:235:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\home_screen.dart:390:84 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the
+          form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\home_screen.dart:430:19 -
+          deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the
+          form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\home_screen.dart:457:19 -
+          deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the
+          form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\home_screen.dart:483:13 -
+          deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\home_screen.dart:530:79 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\home_screen.dart:600:67 - deprecated_member_use
+warning - The value of the local variable 'categories' isn't used - lib\screens\home_screen.dart:641:11 -
+       unused_local_variable
+   info - The private field _selectedCategory could be 'final' - lib\screens\reports_screen.dart:27:10 -
+          prefer_final_fields
+  error - Arguments of a constant creation must be constant expressions - lib\screens\reports_screen.dart:67:47 -
+         const_with_non_constant_argument
+  error - The getter 'chart' isn't defined for the type 'LucideIcons' - lib\screens\reports_screen.dart:67:59 -
+         undefined_getter
+  error - Arguments of a constant creation must be constant expressions - lib\screens\reports_screen.dart:69:47 -
+         const_with_non_constant_argument
+  error - The getter 'chart' isn't defined for the type 'LucideIcons' - lib\screens\reports_screen.dart:69:59 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:98:70 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:101:58 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the
+          form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\reports_screen.dart:109:15 -
+          deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the
+          form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\reports_screen.dart:135:15 -
+          deprecated_member_use
+  error - Arguments of a constant creation must be constant expressions - lib\screens\reports_screen.dart:139:40 -
+         const_with_non_constant_argument
+  error - The getter 'chart' isn't defined for the type 'LucideIcons' - lib\screens\reports_screen.dart:139:52 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:264:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:268:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:385:88 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:394:86 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:629:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:630:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:701:70 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:829:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:830:48 - deprecated_member_use
+   info - Use a 'SizedBox' to add whitespace to a layout - lib\screens\reports_screen.dart:856:14 -
+          sized_box_for_whitespace
+  error - The getter 'chart_3' isn't defined for the type 'LucideIcons' - lib\screens\reports_screen.dart:863:29 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\reports_screen.dart:865:71 - deprecated_member_use
+  error - The getter 'filter' isn't defined for the type 'LucideIcons' - lib\screens\transactions_screen.dart:44:58 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\transactions_screen.dart:70:82 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\screens\transactions_screen.dart:173:71 - deprecated_member_use
+warning - A value for optional parameter 'errorLogger' isn't ever given - lib\services\api_client.g.dart:15:10 -
+       unused_element_parameter
+warning - This default clause is covered by the previous cases - lib\services\error_handler.dart:37:7 -
+       unreachable_switch_default
+  error - The argument type 'String Function(dynamic)' can't be assigned to the parameter type 'String'.  -
+         lib\services\file_import_service.dart:183:49 - argument_type_not_assignable
+   info - The import of 'package:hive/hive.dart' is unnecessary because all of the used elements are also provided by
+          the import of 'package:hive_flutter/hive_flutter.dart' - lib\services\local_storage.dart:2:8 -
+          unnecessary_import
+   info - The imported package 'crypto' isn't a dependency of the importing package -
+          lib\services\local_storage.dart:4:8 - depend_on_referenced_packages
+warning - Unused import: 'package:crypto/crypto.dart' - lib\services\local_storage.dart:4:8 - unused_import
+warning - The operand can't be 'null', so the condition is always 'true' - lib\services\local_storage.dart:79:31 -
+       unnecessary_null_comparison
+warning - The '!' will have no effect because the receiver can't be null - lib\services\local_storage.dart:80:49 -
+       unnecessary_non_null_assertion
+warning - The operand can't be 'null', so the condition is always 'true' - lib\services\local_storage.dart:105:31 -
+       unnecessary_null_comparison
+warning - The '!' will have no effect because the receiver can't be null - lib\services\local_storage.dart:106:46 -
+       unnecessary_non_null_assertion
+warning - The operand can't be 'null', so the condition is always 'true' - lib\services\local_storage.dart:172:31 -
+       unnecessary_null_comparison
+warning - The '!' will have no effect because the receiver can't be null - lib\services\local_storage.dart:173:54 -
+       unnecessary_non_null_assertion
+warning - The receiver can't be null, so the null-aware operator '?[' is unnecessary -
+       lib\services\local_storage.dart:256:30 - invalid_null_aware_operator
+warning - The receiver can't be null, so the null-aware operator '?[' is unnecessary -
+       lib\services\local_storage.dart:261:33 - invalid_null_aware_operator
+warning - The receiver can't be null, so the null-aware operator '?[' is unnecessary -
+       lib\services\local_storage.dart:261:65 - invalid_null_aware_operator
+warning - The operand can't be 'null', so the condition is always 'true' - lib\services\local_storage.dart:266:18 -
+       unnecessary_null_comparison
+   info - 'partialResults' is deprecated and shouldn't be used. Use SpeechListenOptions.partialResults instead -
+          lib\services\speech_recognition_service.dart:62:9 - deprecated_member_use
+   info - 'cancelOnError' is deprecated and shouldn't be used. Use SpeechListenOptions.cancelOnError instead -
+          lib\services\speech_recognition_service.dart:64:9 - deprecated_member_use
+warning - Unused import: 'dart:math' - lib\services\sync_service.dart:2:8 - unused_import
+   info - The type of the right operand ('ConnectivityResult') isn't a subtype or a supertype of the left operand
+          ('List<ConnectivityResult>') - lib\services\sync_service.dart:54:24 - unrelated_type_equality_checks
+warning - The value of the local variable 'lastSync' isn't used - lib\services\sync_service.dart:128:13 -
+       unused_local_variable
+  error - Const variables must be initialized with a constant value - lib\utils\category_icons.dart:16:22 -
+         const_initialized_with_non_constant_value
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:16:22 -
+         non_constant_map_value
+  error - The getter 'shoppingCart' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:16:34 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:17:21 -
+         non_constant_map_value
+  error - The getter 'shoppingBag' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:17:33 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:23:18 -
+         non_constant_map_value
+  error - The getter 'gamepad2' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:23:30 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:32:23 -
+         non_constant_map_value
+  error - The getter 'graduationCap' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:32:35 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:33:18 -
+         non_constant_map_value
+  error - The getter 'bookOpen' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:33:30 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:46:20 -
+         non_constant_map_value
+  error - The getter 'creditCard' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:46:32 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:48:19 -
+         non_constant_map_value
+  error - The getter 'piggyBank' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:48:31 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:49:27 -
+         non_constant_map_value
+  error - The getter 'circleDollarSign' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:49:39 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:51:20 -
+         non_constant_map_value
+  error - The getter 'trendingUp' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:51:32 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:61:16 -
+         non_constant_map_value
+  error - The getter 'mapPin' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:61:28 -
+         undefined_getter
+  error - The values in a const map literal must be constant - lib\utils\category_icons.dart:87:13 -
+         non_constant_map_value
+  error - The getter 'edit' isn't defined for the type 'LucideIcons' - lib\utils\category_icons.dart:87:25 -
+         undefined_getter
+   info - The import of 'package:flutter/services.dart' is unnecessary because all of the used elements are also
+          provided by the import of 'package:flutter/foundation.dart' - lib\utils\performance_monitor.dart:3:8 -
+          unnecessary_import
+   info - The imported package 'crypto' isn't a dependency of the importing package - lib\utils\security_utils.dart:4:8
+          - depend_on_referenced_packages
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:99:69 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:169:70 - deprecated_member_use
+  error - The getter 'trendingDown' isn't defined for the type 'LucideIcons' -
+         lib\widgets\add_transaction_modal.dart:178:33 - undefined_getter
+  error - The getter 'trendingUp' isn't defined for the type 'LucideIcons' -
+         lib\widgets\add_transaction_modal.dart:186:33 - undefined_getter
+  error - The getter 'ltr' isn't defined for the type 'TextDirection' - lib\widgets\add_transaction_modal.dart:251:40 -
+         undefined_getter
+  error - The getter 'ltr' isn't defined for the type 'TextDirection' - lib\widgets\add_transaction_modal.dart:257:46 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:261:78 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:326:77 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:329:70 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the
+          form field. This feature was deprecated after v3.33.0-1.0.pre - lib\widgets\add_transaction_modal.dart:358:11
+          - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:374:78 - deprecated_member_use
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\add_transaction_modal.dart:431:36
+         - const_with_non_constant_argument
+  error - The getter 'fileText' isn't defined for the type 'LucideIcons' - lib\widgets\add_transaction_modal.dart:431:48
+         - undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:433:78 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:464:76 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:509:62 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\add_transaction_modal.dart:528:43 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check -
+          lib\widgets\add_transaction_modal.dart:654:9 - use_build_context_synchronously
+warning - Unused import: 'dart:io' - lib\widgets\file_import_modal.dart:6:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\file_import_modal.dart:38:69 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\file_import_modal.dart:88:60 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\file_import_modal.dart:93:74 - deprecated_member_use
+  error - The getter 'alert_triangle' isn't defined for the type 'LucideIcons' -
+         lib\widgets\file_import_modal.dart:186:66 - undefined_getter
+  error - The getter 'checkCircle' isn't defined for the type 'LucideIcons' - lib\widgets\file_import_modal.dart:236:31
+         - undefined_getter
+  error - The getter 'alertTriangle' isn't defined for the type 'LucideIcons' -
+         lib\widgets\file_import_modal.dart:245:31 - undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\file_import_modal.dart:280:81 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\file_import_modal.dart:283:74 - deprecated_member_use
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\file_import_modal.dart:340:34 -
+         const_with_non_constant_argument
+  error - The getter 'refresh' isn't defined for the type 'LucideIcons' - lib\widgets\file_import_modal.dart:340:46 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\file_import_modal.dart:362:22 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\file_import_modal.dart:364:41 - deprecated_member_use
+warning - Unused import: 'dart:typed_data' - lib\widgets\image_compression_widget.dart:3:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\image_compression_widget.dart:59:64 - deprecated_member_use
+  error - The getter 'loader2' isn't defined for the type 'LucideIcons' -
+         lib\widgets\image_compression_widget.dart:78:33 - undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\image_compression_widget.dart:122:73 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\image_compression_widget.dart:125:66 - deprecated_member_use
+  error - The getter 'checkCircle2' isn't defined for the type 'LucideIcons' -
+         lib\widgets\image_compression_widget.dart:133:39 - undefined_getter
+  error - The getter 'fileImage' isn't defined for the type 'LucideIcons' -
+         lib\widgets\image_compression_widget.dart:156:39 - undefined_getter
+  error - The getter 'trendingDown' isn't defined for the type 'LucideIcons' -
+         lib\widgets\image_compression_widget.dart:172:41 - undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\image_compression_widget.dart:198:71 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\image_compression_widget.dart:201:64 - deprecated_member_use
+  error - The getter 'alertCircle' isn't defined for the type 'LucideIcons' -
+         lib\widgets\image_compression_widget.dart:207:35 - undefined_getter
+warning - Unused import: 'dart:typed_data' - lib\widgets\receipt_image_viewer.dart:3:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\receipt_image_viewer.dart:27:39 - deprecated_member_use
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\receipt_image_viewer.dart:42:15 -
+         const_with_non_constant_argument
+  error - The getter 'share2' isn't defined for the type 'LucideIcons' - lib\widgets\receipt_image_viewer.dart:42:27 -
+         undefined_getter
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\receipt_image_viewer.dart:50:17 -
+         const_with_non_constant_argument
+  error - The getter 'trash2' isn't defined for the type 'LucideIcons' - lib\widgets\receipt_image_viewer.dart:50:29 -
+         undefined_getter
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\receipt_image_viewer.dart:57:15 -
+         const_with_non_constant_argument
+  error - The getter 'moreVertical' isn't defined for the type 'LucideIcons' -
+         lib\widgets\receipt_image_viewer.dart:57:27 - undefined_getter
+   info - Unnecessary instance of 'Container' - lib\widgets\receipt_image_viewer.dart:63:13 -
+          avoid_unnecessary_containers
+  error - The getter 'imageOff' isn't defined for the type 'LucideIcons' - lib\widgets\receipt_image_viewer.dart:96:33 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\receipt_image_viewer.dart:98:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\receipt_image_viewer.dart:104:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\receipt_image_viewer.dart:124:29 - deprecated_member_use
+  error - The getter 'share2' isn't defined for the type 'LucideIcons' - lib\widgets\receipt_image_viewer.dart:136:35 -
+         undefined_getter
+  error - The getter 'zoom' isn't defined for the type 'LucideIcons' - lib\widgets\receipt_image_viewer.dart:141:35 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\receipt_image_viewer.dart:297:71 - deprecated_member_use
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\receipt_image_viewer.dart:315:35 -
+         const_with_non_constant_argument
+  error - The getter 'share2' isn't defined for the type 'LucideIcons' - lib\widgets\receipt_image_viewer.dart:315:47 -
+         undefined_getter
+  error - The getter 'trash2' isn't defined for the type 'LucideIcons' - lib\widgets\receipt_image_viewer.dart:341:31 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_filters.dart:33:70 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_filters.dart:36:56 - deprecated_member_use
+  error - The getter 'filter' isn't defined for the type 'LucideIcons' - lib\widgets\transaction_filters.dart:45:29 -
+         undefined_getter
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the
+          form field. This feature was deprecated after v3.33.0-1.0.pre - lib\widgets\transaction_filters.dart:117:13 -
+          deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_filters.dart:125:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_filters.dart:131:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_filters.dart:243:53 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_filters.dart:270:53 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_item.dart:44:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_item.dart:60:85 - deprecated_member_use
+  error - The getter 'moreHorizontal' isn't defined for the type 'LucideIcons' -
+         lib\widgets\transaction_item.dart:159:35 - undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_item.dart:174:84 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_item.dart:183:86 - deprecated_member_use
+  error - The getter 'edit2' isn't defined for the type 'LucideIcons' - lib\widgets\transaction_item.dart:194:43 -
+         undefined_getter
+  error - The getter 'trash2' isn't defined for the type 'LucideIcons' - lib\widgets\transaction_item.dart:211:43 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_item.dart:372:69 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_item.dart:454:72 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\transaction_item.dart:481:69 - deprecated_member_use
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\transaction_item.dart:528:25 -
+         const_with_non_constant_argument
+  error - The getter 'imageOff' isn't defined for the type 'LucideIcons' - lib\widgets\transaction_item.dart:528:37 -
+         undefined_getter
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\transaction_item.dart:540:25 -
+         const_with_non_constant_argument
+  error - The getter 'imageOff' isn't defined for the type 'LucideIcons' - lib\widgets\transaction_item.dart:540:37 -
+         undefined_getter
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\transaction_item.dart:554:27 -
+         const_with_non_constant_argument
+  error - The getter 'imageOff' isn't defined for the type 'LucideIcons' - lib\widgets\transaction_item.dart:554:39 -
+         undefined_getter
+  error - Undefined name 'context' - lib\widgets\transaction_item.dart:560:27 - undefined_identifier
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\transaction_item.dart:562:25 -
+         const_with_non_constant_argument
+  error - The getter 'imageOff' isn't defined for the type 'LucideIcons' - lib\widgets\transaction_item.dart:562:37 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\voice_input_modal.dart:82:69 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\voice_input_modal.dart:167:70 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\voice_input_modal.dart:220:63 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\voice_input_modal.dart:223:56 - deprecated_member_use
+  error - The getter 'message' isn't defined for the type 'LucideIcons' - lib\widgets\voice_input_modal.dart:232:29 -
+         undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\voice_input_modal.dart:348:61 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss -
+          lib\widgets\voice_input_modal.dart:351:54 - deprecated_member_use
+  error - The getter 'alert_triangle' isn't defined for the type 'LucideIcons' -
+         lib\widgets\voice_input_modal.dart:357:25 - undefined_getter
+  error - Arguments of a constant creation must be constant expressions - lib\widgets\voice_input_modal.dart:396:34 -
+         const_with_non_constant_argument
+  error - The getter 'refresh' isn't defined for the type 'LucideIcons' - lib\widgets\voice_input_modal.dart:396:46 -
+         undefined_getter
+warning - The asset directory 'assets/images/' doesn't exist - pubspec.yaml:114:7 - asset_directory_does_not_exist
+warning - The asset directory 'assets/icons/' doesn't exist - pubspec.yaml:115:7 - asset_directory_does_not_exist
+  error - The named parameter 'nameAr' is required, but there's no corresponding argument -
+         test\services\arabic_text_processor_test.dart:13:9 - missing_required_argument
+  error - The named parameter 'type' is required, but there's no corresponding argument -
+         test\services\arabic_text_processor_test.dart:13:9 - missing_required_argument
+  error - The named parameter 'nameAr' is required, but there's no corresponding argument -
+         test\services\arabic_text_processor_test.dart:20:9 - missing_required_argument
+  error - The named parameter 'type' is required, but there's no corresponding argument -
+         test\services\arabic_text_processor_test.dart:20:9 - missing_required_argument
+  error - The named parameter 'nameAr' is required, but there's no corresponding argument -
+         test\services\arabic_text_processor_test.dart:27:9 - missing_required_argument
+  error - The named parameter 'type' is required, but there's no corresponding argument -
+         test\services\arabic_text_processor_test.dart:27:9 - missing_required_argument
+  error - The named parameter 'nameAr' is required, but there's no corresponding argument -
+         test\services\arabic_text_processor_test.dart:34:9 - missing_required_argument
+  error - The named parameter 'type' is required, but there's no corresponding argument -
+         test\services\arabic_text_processor_test.dart:34:9 - missing_required_argument
+   info - The imported package 'mockito' isn't a dependency of the importing package -
+          test\services\speech_recognition_service_test.dart:4:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:mockito/mockito.dart' -
+         test\services\speech_recognition_service_test.dart:4:8 - uri_does_not_exist
+warning - The value of the local variable 'errorCalled' isn't used -
+       test\services\speech_recognition_service_test.dart:25:11 - unused_local_variable
+
+202 issues found. (ran in 43.5s)
