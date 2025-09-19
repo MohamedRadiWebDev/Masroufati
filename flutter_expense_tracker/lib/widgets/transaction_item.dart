@@ -396,8 +396,8 @@ class _TransactionDetailsModal extends StatelessWidget {
                   'النوع',
                   transaction.type == TransactionType.income ? 'دخل' : 'مصروف',
                   icon: transaction.type == TransactionType.income
-                      ? LucideIcons.trendingUp
-                      : LucideIcons.trendingDown,
+                      ? Icons.trending_up
+                      : Icons.trending_down,
                 ),
 
                 _buildDetailRow(
@@ -523,9 +523,9 @@ class _TransactionDetailsModal extends StatelessWidget {
         imageData,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Container(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: Colors.grey[200],
           child: const Center(
-            child: Icon(LucideIcons.imageOff),
+            child: Icon(Icons.image_not_supported),
           ),
         ),
       );
@@ -535,9 +535,9 @@ class _TransactionDetailsModal extends StatelessWidget {
         File(imageData),
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Container(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: Colors.grey[200],
           child: const Center(
-            child: Icon(LucideIcons.imageOff),
+            child: Icon(Icons.image_not_supported),
           ),
         ),
       );
@@ -549,17 +549,17 @@ class _TransactionDetailsModal extends StatelessWidget {
           bytes,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => Container(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            color: Colors.grey[200],
             child: const Center(
-              child: Icon(LucideIcons.imageOff),
+              child: Icon(Icons.image_not_supported),
             ),
           ),
         );
       } catch (e) {
         return Container(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: Colors.grey[200],
           child: const Center(
-            child: Icon(LucideIcons.imageOff),
+            child: Icon(Icons.image_not_supported),
           ),
         );
       }

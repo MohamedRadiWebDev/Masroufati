@@ -13,14 +13,14 @@ class CategoryIcons {
     'fuel': LucideIcons.fuel,
     
     // Shopping
-    'shopping-cart': LucideIcons.shoppingCart,
-    'shopping-bag': LucideIcons.shoppingBag,
+    'shopping-cart': Icons.shopping_cart,
+    'shopping-bag': Icons.shopping_bag,
     'gift': LucideIcons.gift,
     'shirt': LucideIcons.shirt,
     'glasses': Icons.remove_red_eye,
     
     // Entertainment
-    'gamepad-2': LucideIcons.gamepad2,
+    'gamepad-2': Icons.games,
     'music': LucideIcons.music,
     'camera': LucideIcons.camera,
     'tv': LucideIcons.tv,
@@ -29,8 +29,8 @@ class CategoryIcons {
     'ticket': LucideIcons.ticket,
     
     // Education
-    'graduation-cap': LucideIcons.graduationCap,
-    'book-open': LucideIcons.bookOpen,
+    'graduation-cap': Icons.school,
+    'book-open': Icons.book,
     'pencil': LucideIcons.pencil,
     'calculator': LucideIcons.calculator,
     
@@ -43,12 +43,12 @@ class CategoryIcons {
     'smartphone': LucideIcons.smartphone,
     
     // Finance
-    'credit-card': LucideIcons.creditCard,
+    'credit-card': Icons.credit_card,
     'banknote': LucideIcons.banknote,
-    'piggy-bank': LucideIcons.piggyBank,
-    'circle-dollar-sign': LucideIcons.circleDollarSign,
+    'piggy-bank': Icons.savings,
+    'circle-dollar-sign': Icons.attach_money,
     'wallet': LucideIcons.wallet,
-    'trending-up': LucideIcons.trendingUp,
+    'trending-up': Icons.trending_up,
     'coins': LucideIcons.coins,
     
     // Health & Medical
@@ -58,7 +58,7 @@ class CategoryIcons {
     'activity': LucideIcons.activity,
     
     // Location & Travel
-    'map-pin': LucideIcons.mapPin,
+    'map-pin': Icons.location_pin,
     'compass': LucideIcons.compass,
     'luggage': LucideIcons.luggage,
     'tent': LucideIcons.tent,
@@ -84,8 +84,8 @@ class CategoryIcons {
     'alert-circle': Icons.error_outline,
     'filter': Icons.filter_list,
     'chart': Icons.bar_chart,
-    'edit': LucideIcons.edit,
-    'trash': LucideIcons.trash,
+    'edit': Icons.edit,
+    'trash': Icons.delete,
     'circle': LucideIcons.circle,
   };
 

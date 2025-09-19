@@ -42,7 +42,7 @@ class TransactionFilters extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                LucideIcons.filter,
+                Icons.filter_list,
                 size: 20,
                 color: Theme.of(context).colorScheme.primary,
               ),

@@ -39,7 +39,7 @@ class ReceiptImageViewer extends StatelessWidget {
           IconButton(
             onPressed: () => _shareImage(context),
             icon: const Icon(
-              LucideIcons.share2,
+              Icons.share,
               color: Colors.white,
             ),
           ),
@@ -47,14 +47,14 @@ class ReceiptImageViewer extends StatelessWidget {
             IconButton(
               onPressed: () => _showDeleteConfirmation(context),
               icon: const Icon(
-                LucideIcons.trash2,
+                Icons.delete,
                 color: Colors.white,
               ),
             ),
           IconButton(
             onPressed: () => _showImageOptions(context),
             icon: const Icon(
-              LucideIcons.moreVertical,
+              Icons.more_vert,
               color: Colors.white,
             ),
           ),
@@ -93,7 +93,7 @@ class ReceiptImageViewer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    LucideIcons.imageOff,
+                    Icons.image_not_supported,
                     size: 64,
                     color: Colors.white.withOpacity(0.7),
                   ),
@@ -128,17 +128,17 @@ class ReceiptImageViewer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildActionButton(
-                icon: LucideIcons.download,
+                icon: Icons.download,
                 label: 'حفظ',
                 onTap: () => _downloadImage(context),
               ),
               _buildActionButton(
-                icon: LucideIcons.share2,
+                icon: Icons.share,
                 label: 'مشاركة',
                 onTap: () => _shareImage(context),
               ),
               _buildActionButton(
-                icon: LucideIcons.zoom,
+                icon: Icons.zoom_out_map,
                 label: 'تكبير',
                 onTap: () => _showZoomInstructions(context),
               ),
@@ -300,7 +300,7 @@ class ReceiptImageViewer extends StatelessWidget {
             ),
 
             ListTile(
-              leading: const Icon(LucideIcons.download),
+              leading: const Icon(Icons.download),
               title: const Text(
                 'حفظ الصورة',
                 textDirection: TextDirection.rtl,
@@ -312,7 +312,7 @@ class ReceiptImageViewer extends StatelessWidget {
             ),
 
             ListTile(
-              leading: const Icon(LucideIcons.share2),
+              leading: const Icon(Icons.share),
               title: const Text(
                 'مشاركة الصورة',
                 textDirection: TextDirection.rtl,
@@ -324,7 +324,7 @@ class ReceiptImageViewer extends StatelessWidget {
             ),
 
             ListTile(
-              leading: const Icon(LucideIcons.copy),
+              leading: const Icon(Icons.copy),
               title: const Text(
                 'نسخ رابط الصورة',
                 textDirection: TextDirection.rtl,
@@ -338,7 +338,7 @@ class ReceiptImageViewer extends StatelessWidget {
             if (onDelete != null)
               ListTile(
                 leading: Icon(
-                  LucideIcons.trash2,
+                  Icons.delete,
                   color: Theme.of(context).colorScheme.error,
                 ),
                 title: Text(

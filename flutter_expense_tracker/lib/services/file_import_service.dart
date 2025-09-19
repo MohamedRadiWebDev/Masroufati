@@ -180,7 +180,7 @@ class FileImportService {
     String cleaned = amountStr
         .replaceAll(RegExp(r'[^\d.,\u0660-\u0669]'), '') // Keep only digits, dots, commas, and Arabic digits
         .replaceAll(',', '') // Remove thousands separators
-        .replaceAll(RegExp(r'[\u0660-\u0669]'), (match) {
+        .replaceAllMapped(RegExp(r'[\u0660-\u0669]'), (match) {
           // Convert Arabic-Indic digits to ASCII
           final arabicDigit = match.group(0)!;
           return String.fromCharCode(

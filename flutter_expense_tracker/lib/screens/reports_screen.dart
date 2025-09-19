@@ -136,7 +136,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               decoration: InputDecoration(
                 labelText: 'نوع الرسم',
                 labelStyle: const TextStyle(fontSize: 12),
-                prefixIcon: const Icon(LucideIcons.chart, size: 18),
+                prefixIcon: const Icon(Icons.bar_chart, size: 18),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(

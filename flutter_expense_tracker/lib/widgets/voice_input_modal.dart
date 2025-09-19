@@ -229,7 +229,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
           Row(
             children: [
               Icon(
-                LucideIcons.message,
+                Icons.message,
                 size: 20,
                 color: Theme.of(context).colorScheme.primary,
               ),
@@ -354,7 +354,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
       child: Row(
         children: [
           Icon(
-            LucideIcons.alert_triangle,
+            Icons.warning,
             size: 20,
             color: Theme.of(context).colorScheme.error,
           ),
@@ -393,7 +393,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: _clearResults,
-                icon: const Icon(LucideIcons.refresh),
+                icon: const Icon(Icons.refresh),
                 label: const Text('مسح النتائج'),
               ),
             ),

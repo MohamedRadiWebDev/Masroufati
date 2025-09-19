@@ -75,7 +75,7 @@ class _ImageCompressionWidgetState extends State<ImageCompressionWidget> {
               Row(
                 children: [
                   Icon(
-                    LucideIcons.loader2,
+                    Icons.hourglass_empty,
                     size: 20,
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -130,7 +130,7 @@ class _ImageCompressionWidgetState extends State<ImageCompressionWidget> {
                     Row(
                       children: [
                         Icon(
-                          LucideIcons.checkCircle2,
+                          Icons.check_circle,
                           color: Theme.of(context).colorScheme.primary,
                           size: 20,
                         ),
@@ -153,7 +153,7 @@ class _ImageCompressionWidgetState extends State<ImageCompressionWidget> {
                         _buildInfoItem(
                           'الحجم الأصلي',
                           _originalSize ?? '---',
-                          LucideIcons.fileImage,
+                          Icons.image,
                         ),
                         _buildInfoItem(
                           'الحجم المضغوط',
@@ -169,7 +169,7 @@ class _ImageCompressionWidgetState extends State<ImageCompressionWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            LucideIcons.trendingDown,
+                            Icons.trending_down,
                             color: Theme.of(context).colorScheme.primary,
                             size: 16,
                           ),
@@ -204,7 +204,7 @@ class _ImageCompressionWidgetState extends State<ImageCompressionWidget> {
                 child: Row(
                   children: [
                     Icon(
-                      LucideIcons.alertCircle,
+                      Icons.error,
                       color: Theme.of(context).colorScheme.error,
                       size: 20,
                     ),
