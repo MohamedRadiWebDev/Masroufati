@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "web", "flutter"]
+modules = ["nodejs-20", "cpp-clang14", "web"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
@@ -30,6 +30,10 @@ externalPort = 3000
 [[ports]]
 localPort = 42807
 externalPort = 3002
+
+[[ports]]
+localPort = 46301
+externalPort = 4200
 
 [env]
 PORT = "5000"
