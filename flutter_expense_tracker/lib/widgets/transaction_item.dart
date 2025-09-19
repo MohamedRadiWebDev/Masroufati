@@ -191,7 +191,7 @@ class TransactionItem extends ConsumerWidget {
                         child: Row(
                           children: [
                             Icon(
-                              LucideIcons.edit,
+                              Icons.edit,
                               size: 16,
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
@@ -419,7 +419,7 @@ class _TransactionDetailsModal extends StatelessWidget {
                     context,
                     'الملاحظة',
                     transaction.note!,
-                    icon: LucideIcons.fileText,
+                    icon: Icons.description,
                   ),
 
                 _buildDetailRow(
