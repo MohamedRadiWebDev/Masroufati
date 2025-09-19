@@ -171,7 +171,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
                     ] : null,
                   ),
                   child: Icon(
-                    _isListening ? LucideIcons.microphone_off : LucideIcons.mic,
+                    _isListening ? LucideIcons.mic_off : LucideIcons.mic,
                     size: 48,
                     color: _isListening 
                         ? Colors.white 

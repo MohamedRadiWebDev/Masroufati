@@ -59,10 +59,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.chart, size: 16)),
-            Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trending_up, size: 16)),
-            Tab(text: 'المقارنات', icon: Icon(LucideIcons.chart, size: 16)),
+          tabs: [
+            Tab(text: 'نظرة عامة', icon: Icon(Icons.pie_chart_outline, size: 16)),
+            Tab(text: 'الاتجاهات', icon: Icon(Icons.trending_up, size: 16)),
+            Tab(text: 'المقارنات', icon: Icon(Icons.bar_chart, size: 16)),
           ],
         ),
       ),
