@@ -6,12 +6,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'l10n/app_localizations.dart';
 
 import 'app/app.dart';
+import 'services/local_storage.dart';
+import 'providers/sync_providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Hive for local storage
-  await Hive.initFlutter();
+  // Initialize local storage system
+  await LocalStorage.initialize();
   
   runApp(
     ProviderScope(
@@ -20,11 +22,26 @@ void main() async {
   );
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    
+    // Initialize sync service on app startup
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(syncControllerProvider).initialize();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp.router(
       onGenerateTitle: (BuildContext context) => 
           AppLocalizations.of(context)!.appTitle,
