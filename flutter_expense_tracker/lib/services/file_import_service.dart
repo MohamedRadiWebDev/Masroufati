@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -10,9 +9,9 @@ import '../models/category.dart' as models;
 class FileImportService {
   // Supported file types
   static const List<String> supportedExtensions = ['csv', 'xlsx', 'xls'];
-  
+
   // Import transactions from file
-  static Future<ImportResult> importFile(List<Category> categories) async {
+  static Future<ImportResult> importFile(List<models.Category> categories) async {
     try {
       // Pick file
       final result = await FilePicker.platform.pickFiles(
@@ -20,34 +19,34 @@ class FileImportService {
         allowedExtensions: supportedExtensions,
         allowMultiple: false,
       );
-      
+
       if (result == null || result.files.isEmpty) {
         return ImportResult.cancelled();
       }
-      
+
       final file = result.files.first;
       final extension = file.extension?.toLowerCase();
-      
+
       if (!supportedExtensions.contains(extension)) {
         return ImportResult.error('نوع الملف غير مدعوم. يُدعم CSV وExcel فقط.');
       }
-      
+
       List<List<dynamic>>? rawData;
-      
+
       // Parse file based on type
       if (extension == 'csv') {
         rawData = await _parseCSV(file);
       } else {
         return ImportResult.error('ملفات Excel غير مدعومة حالياً. يُرجى استخدام CSV.');
       }
-      
+
       if (rawData == null || rawData.isEmpty) {
         return ImportResult.error('الملف فارغ أو تالف');
       }
-      
+
       // Process and validate data
       return _processImportData(rawData, categories);
-      
+
     } catch (e) {
       if (kDebugMode) {
         print('خطأ في استيراد الملف: $e');
@@ -55,12 +54,12 @@ class FileImportService {
       return ImportResult.error('خطأ في قراءة الملف: ${e.toString()}');
     }
   }
-  
+
   // Parse CSV file
   static Future<List<List<dynamic>>?> _parseCSV(PlatformFile file) async {
     try {
       String content;
-      
+
       if (file.bytes != null) {
         // Web platform
         content = utf8.decode(file.bytes!);
@@ -71,11 +70,11 @@ class FileImportService {
       } else {
         throw Exception('لا يمكن قراءة الملف');
       }
-      
+
       // Parse CSV
       const csvConverter = CsvToListConverter();
       return csvConverter.convert(content);
-      
+
     } catch (e) {
       if (kDebugMode) {
         print('خطأ في تحليل CSV: $e');
@@ -83,19 +82,19 @@ class FileImportService {
       return null;
     }
   }
-  
+
   // Process and validate imported data
-  static ImportResult _processImportData(List<List<dynamic>> rawData, List<Category> categories) {
+  static ImportResult _processImportData(List<List<dynamic>> rawData, List<models.Category> categories) {
     final errors = <ImportError>[];
     final validTransactions = <CreateTransactionRequest>[];
-    
+
     // Skip header row
     final dataRows = rawData.skip(1).toList();
-    
+
     for (int i = 0; i < dataRows.length; i++) {
       final row = dataRows[i];
       final rowNumber = i + 2; // +2 to account for header and 0-based index
-      
+
       try {
         final transaction = _parseTransactionRow(row, categories, rowNumber);
         if (transaction != null) {
@@ -109,28 +108,28 @@ class FileImportService {
         ));
       }
     }
-    
+
     return ImportResult.success(
       validTransactions: validTransactions,
       errors: errors,
       totalRows: dataRows.length,
     );
   }
-  
+
   // Parse a single transaction row
   static CreateTransactionRequest? _parseTransactionRow(
-    List<dynamic> row, 
-    List<Category> categories, 
+    List<dynamic> row,
+    List<models.Category> categories,
     int rowNumber
   ) {
     if (row.length < 4) {
       throw Exception('الصف لا يحتوي على البيانات المطلوبة (النوع، المبلغ، التصنيف، التاريخ)');
     }
-    
+
     // Parse transaction type
     final typeStr = row[0]?.toString().trim() ?? '';
     TransactionType? type;
-    
+
     if (typeStr == 'دخل' || typeStr == 'إيراد' || typeStr == 'income') {
       type = TransactionType.income;
     } else if (typeStr == 'مصروف' || typeStr == 'مصاريف' || typeStr == 'expense') {
@@ -138,31 +137,31 @@ class FileImportService {
     } else {
       throw Exception('نوع العملية غير صحيح: $typeStr');
     }
-    
+
     // Parse amount
     final amountStr = row[1]?.toString().trim() ?? '';
     final amount = _parseAmount(amountStr);
     if (amount == null || amount <= 0) {
       throw Exception('المبلغ غير صحيح: $amountStr');
     }
-    
+
     // Parse category
     final categoryStr = row[2]?.toString().trim() ?? '';
     final category = _findCategory(categoryStr, categories, type);
     if (category == null) {
       throw Exception('التصنيف غير موجود: $categoryStr');
     }
-    
+
     // Parse date
     final dateStr = row[3]?.toString().trim() ?? '';
     final date = _parseDate(dateStr);
     if (date == null) {
       throw Exception('التاريخ غير صحيح: $dateStr');
     }
-    
+
     // Parse note (optional)
     final note = row.length > 4 ? row[4]?.toString().trim() : null;
-    
+
     return CreateTransactionRequest(
       type: type,
       amount: amount,
@@ -172,11 +171,11 @@ class FileImportService {
       receiptImage: null,
     );
   }
-  
+
   // Parse amount from string
   static double? _parseAmount(String amountStr) {
     if (amountStr.isEmpty) return null;
-    
+
     // Remove currency symbols and normalize
     String cleaned = amountStr
         .replaceAll(RegExp(r'[^\d.,\u0660-\u0669]'), '') // Keep only digits, dots, commas, and Arabic digits
@@ -188,24 +187,24 @@ class FileImportService {
             arabicDigit.codeUnitAt(0) - '\u0660'.codeUnitAt(0) + '0'.codeUnitAt(0)
           );
         });
-    
+
     return double.tryParse(cleaned);
   }
-  
+
   // Find category by name or create suggestion
-  static Category? _findCategory(String categoryStr, List<Category> categories, TransactionType type) {
+  static models.Category? _findCategory(String categoryStr, List<models.Category> categories, TransactionType type) {
     if (categoryStr.isEmpty) return null;
-    
+
     // Exact match
     for (final category in categories) {
       if (category.name.toLowerCase() == categoryStr.toLowerCase()) {
         return category;
       }
     }
-    
+
     // Arabic name match (if implemented)
     // This would require adding Arabic names to categories
-    
+
     // Partial match
     for (final category in categories) {
       if (category.name.toLowerCase().contains(categoryStr.toLowerCase()) ||
@@ -213,15 +212,15 @@ class FileImportService {
         return category;
       }
     }
-    
+
     // Return null if not found - could be extended to suggest creating new category
     return null;
   }
-  
+
   // Parse date from string
   static DateTime? _parseDate(String dateStr) {
     if (dateStr.isEmpty) return null;
-    
+
     // Try different date formats
     final formats = [
       'yyyy-MM-dd',
@@ -230,7 +229,7 @@ class FileImportService {
       'MM/dd/yyyy',
       'MM-dd-yyyy',
     ];
-    
+
     for (final format in formats) {
       try {
         // Simple parsing - could be enhanced with proper date parsing library
@@ -260,7 +259,7 @@ class FileImportService {
         continue;
       }
     }
-    
+
     // Try built-in DateTime.parse as last resort
     try {
       return DateTime.parse(dateStr);
@@ -268,7 +267,7 @@ class FileImportService {
       return null;
     }
   }
-  
+
   // Generate sample CSV content
   static String generateSampleCSV() {
     return '''النوع,المبلغ,التصنيف,التاريخ,الملاحظة
@@ -288,7 +287,7 @@ class ImportResult {
   final List<ImportError> errors;
   final int totalRows;
   final bool isCancelled;
-  
+
   ImportResult._({
     required this.isSuccess,
     this.errorMessage,
@@ -297,7 +296,7 @@ class ImportResult {
     required this.totalRows,
     required this.isCancelled,
   });
-  
+
   factory ImportResult.success({
     required List<CreateTransactionRequest> validTransactions,
     required List<ImportError> errors,
@@ -311,7 +310,7 @@ class ImportResult {
       isCancelled: false,
     );
   }
-  
+
   factory ImportResult.error(String message) {
     return ImportResult._(
       isSuccess: false,
@@ -322,7 +321,7 @@ class ImportResult {
       isCancelled: false,
     );
   }
-  
+
   factory ImportResult.cancelled() {
     return ImportResult._(
       isSuccess: false,
@@ -338,7 +337,7 @@ class ImportError {
   final int row;
   final String message;
   final String data;
-  
+
   ImportError({
     required this.row,
     required this.message,

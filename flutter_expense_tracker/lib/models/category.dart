@@ -9,14 +9,13 @@ class Category with _$Category {
   const factory Category({
     required String id,
     required String name,
-    @JsonKey(name: 'name_ar')
     required String nameAr,
-    required TransactionType type,
     required String icon,
     required String color,
-    required bool isDefault,
+    required TransactionType type,
+    DateTime? createdAt,
     String? serverId,
-    required DateTime createdAt,
+    @Default(false) bool isDefault,
   }) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) =>

@@ -10,10 +10,10 @@ import '../services/local_storage.dart';
 class SyncService {
   final ApiClient _apiClient;
   final LocalStorage _localStorage;
-  
+
   Timer? _syncTimer;
   bool _isSyncing = false;
-  
+
   // Sync configuration
   static const Duration _syncInterval = Duration(minutes: 5);
   static const int _maxRetries = 3;
@@ -24,13 +24,13 @@ class SyncService {
   // Start automatic background sync
   void startAutoSync() {
     stopAutoSync(); // Stop any existing timer
-    
+
     _syncTimer = Timer.periodic(_syncInterval, (_) {
       if (!_isSyncing) {
         sync();
       }
     });
-    
+
     // Initial sync
     sync();
   }
@@ -47,7 +47,7 @@ class SyncService {
     }
 
     _isSyncing = true;
-    
+
     try {
       // Check network connectivity
       final connectivity = await Connectivity().checkConnectivity();
@@ -56,13 +56,13 @@ class SyncService {
       }
 
       final result = await _performSync();
-      
+
       if (result.success) {
         await _localStorage.updateLastSyncTime();
       }
-      
+
       return result;
-      
+
     } catch (e) {
       if (kDebugMode) {
         print('Sync error: $e');
@@ -81,7 +81,7 @@ class SyncService {
     try {
       // 1. Upload pending local changes
       final pendingItems = _localStorage.getPendingSyncItems();
-      
+
       for (final item in pendingItems) {
         try {
           if (item['action'] == 'delete') {
@@ -89,15 +89,15 @@ class SyncService {
           } else {
             await _handleUpload(item);
           }
-          
+
           await _localStorage.markAsSynced(item['type'], item['id']);
           uploadedCount++;
-          
+
         } catch (e) {
           if (kDebugMode) {
             print('Failed to sync item ${item['id']}: $e');
           }
-          
+
           // Implement retry logic with exponential backoff
           bool success = false;
           for (int retry = 0; retry < _maxRetries; retry++) {
@@ -116,7 +116,7 @@ class SyncService {
               }
             }
           }
-          
+
           if (!success) {
             // Skip this item after all retries failed
             continue;
@@ -126,7 +126,7 @@ class SyncService {
 
       // 2. Download latest data from server
       final lastSync = _localStorage.lastSyncTime;
-      
+
       // Get transactions and reconcile deletions
       final transactions = await _apiClient.getTransactions();
       conflictsResolved += await _resolveTransactionConflicts(transactions);
@@ -172,10 +172,10 @@ class SyncService {
             date: transaction.date,
             receiptImage: transaction.receiptImage,
           );
-          
+
           // Determine if this is a create or update based on sync history
           final isUpdate = _localStorage.wasEverSynced('transaction', id) || action == 'update';
-          
+
           Transaction response;
           if (isUpdate) {
             // Use server ID for updates
@@ -184,11 +184,11 @@ class SyncService {
           } else {
             // First time upload - create new
             response = await _apiClient.createTransaction(request);
-            
+
             // Mark as ever synced for future operations
             await _localStorage.markUpdateForSync('transaction', id, everSynced: true);
           }
-          
+
           // If server returns different ID, migrate the local record
           if (response.id != transaction.id) {
             await _localStorage.migrateLocalToServerId('transaction', transaction.id, response.id, response);
@@ -209,9 +209,9 @@ class SyncService {
             color: category.color,
             icon: category.icon,
           );
-          
+
           final isUpdate = _localStorage.wasEverSynced('category', id) || action == 'update';
-          
+
           Category response;
           if (isUpdate) {
             final serverId = _localStorage.getServerId('category', id) ?? id;
@@ -220,7 +220,7 @@ class SyncService {
             response = await _apiClient.createCategory(request);
             await _localStorage.markUpdateForSync('category', id, everSynced: true);
           }
-          
+
           if (response.id != category.id) {
             await _localStorage.migrateLocalToServerId('category', category.id, response.id, response);
           }
@@ -237,7 +237,7 @@ class SyncService {
   Future<void> _handleDelete(Map<String, dynamic> item) async {
     final type = item['type'] as String;
     final localId = item['id'] as String;
-    
+
     // Get the server ID if this was a mapped local item
     final serverId = _localStorage.getServerId(type, localId) ?? localId;
 
@@ -247,7 +247,7 @@ class SyncService {
       } else if (type == 'category') {
         await _apiClient.deleteCategory(serverId);
       }
-      
+
       // Clear the mapping after successful delete
       await _localStorage.clearIdMapping(type, localId);
     } catch (e) {
@@ -267,7 +267,7 @@ class SyncService {
 
     for (final serverTransaction in serverTransactions) {
       final localTransaction = localMap[serverTransaction.id];
-      
+
       if (localTransaction != null) {
         // Simple conflict resolution: check if local and server differ
         if (_hasConflict(localTransaction, serverTransaction)) {
@@ -279,7 +279,7 @@ class SyncService {
         }
       }
     }
-    
+
     return conflictsResolved;
   }
 
@@ -290,7 +290,7 @@ class SyncService {
 
     for (final serverCategory in serverCategories) {
       final localCategory = localMap[serverCategory.id];
-      
+
       if (localCategory != null) {
         if (_hasCategoryConflict(localCategory, serverCategory)) {
           if (kDebugMode) {
@@ -300,7 +300,7 @@ class SyncService {
         }
       }
     }
-    
+
     return conflictsResolved;
   }
 
