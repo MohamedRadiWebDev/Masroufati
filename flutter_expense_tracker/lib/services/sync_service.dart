@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../models/transaction.dart';
 import '../models/category.dart';
