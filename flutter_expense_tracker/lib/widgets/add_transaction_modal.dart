@@ -248,13 +248,13 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
         TextFormField(
           controller: _amountController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          textDirection: TextDirection.ltr,
+          textDirection: TextDirectionHelper.ltr,
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
           ],
           decoration: InputDecoration(
             hintText: '0.00',
-            hintTextDirection: TextDirection.ltr,
+            hintTextDirection: TextDirectionHelper.ltr,
             suffixText: 'ج.م',
             suffixIcon: const Icon(LucideIcons.banknote),
             filled: true,
