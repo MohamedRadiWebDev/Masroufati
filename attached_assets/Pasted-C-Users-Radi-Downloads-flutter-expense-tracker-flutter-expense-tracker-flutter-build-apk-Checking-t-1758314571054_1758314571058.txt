@@ -1,0 +1,668 @@
+C:\Users\Radi\Downloads\flutter_expense_tracker\flutter_expense_tracker>flutter build apk
+Checking the license for package Android SDK Platform 36 in C:\Users\Radi\AppData\Local\Android\sdk\licenses
+License for package Android SDK Platform 36 accepted.
+Preparing "Install Android SDK Platform 36 (revision 2)".
+"Install Android SDK Platform 36 (revision 2)" ready.
+Installing Android SDK Platform 36 in C:\Users\Radi\AppData\Local\Android\sdk\platforms\android-36
+"Install Android SDK Platform 36 (revision 2)" complete.
+"Install Android SDK Platform 36 (revision 2)" finished.
+lib/services/sync_service.dart:6:1: Error: 'Category' is imported from both 'package:flutter/src/foundation/annotations.dart' and 'package:flutter_expense_tracker/models/category.dart'.
+import '../models/category.dart';
+^^^^^^^^
+lib/services/file_import_service.dart:8:1: Error: 'Category' is imported from both 'package:flutter/src/foundation/annotations.dart' and 'package:flutter_expense_tracker/models/category.dart'.
+import '../models/category.dart';
+^^^^^^^^
+lib/utils/category_icons.dart:17:26: Error: Member not found: 'train'.
+    'train': LucideIcons.train,
+                         ^^^^^
+lib/utils/category_icons.dart:22:34: Error: Member not found: 'shoppingCart'.
+    'shopping-cart': LucideIcons.shoppingCart,
+                                 ^^^^^^^^^^^^
+lib/utils/category_icons.dart:23:33: Error: Member not found: 'shoppingBag'.
+    'shopping-bag': LucideIcons.shoppingBag,
+                                ^^^^^^^^^^^
+lib/utils/category_icons.dart:29:30: Error: Member not found: 'gamepad2'.
+    'gamepad-2': LucideIcons.gamepad2,
+                             ^^^^^^^^
+lib/utils/category_icons.dart:42:35: Error: Member not found: 'graduationCap'.
+    'graduation-cap': LucideIcons.graduationCap,
+                                  ^^^^^^^^^^^^^
+lib/utils/category_icons.dart:43:30: Error: Member not found: 'bookOpen'.
+    'book-open': LucideIcons.bookOpen,
+                             ^^^^^^^^
+lib/utils/category_icons.dart:48:25: Error: Member not found: 'home'.
+    'home': LucideIcons.home,
+                        ^^^^
+lib/utils/category_icons.dart:61:32: Error: Member not found: 'creditCard'.
+    'credit-card': LucideIcons.creditCard,
+                               ^^^^^^^^^^
+lib/utils/category_icons.dart:63:31: Error: Member not found: 'piggyBank'.
+    'piggy-bank': LucideIcons.piggyBank,
+                              ^^^^^^^^^
+lib/utils/category_icons.dart:64:39: Error: Member not found: 'circleDollarSign'.
+    'circle-dollar-sign': LucideIcons.circleDollarSign,
+                                      ^^^^^^^^^^^^^^^^
+lib/utils/category_icons.dart:66:32: Error: Member not found: 'trendingUp'.
+    'trending-up': LucideIcons.trendingUp,
+                               ^^^^^^^^^^
+lib/utils/category_icons.dart:75:28: Error: Member not found: 'mapPin'.
+    'map-pin': LucideIcons.mapPin,
+                           ^^^^^^
+lib/utils/category_icons.dart:83:29: Error: Member not found: 'football'.
+    'football': LucideIcons.football,
+                            ^^^^^^^^
+lib/utils/category_icons.dart:93:36: Error: Member not found: 'moreHorizontal'.
+    'more-horizontal': LucideIcons.moreHorizontal,
+                                   ^^^^^^^^^^^^^^
+lib/utils/category_icons.dart:95:32: Error: Member not found: 'helpCircle'.
+    'help-circle': LucideIcons.helpCircle,
+                               ^^^^^^^^^^
+lib/utils/category_icons.dart:97:33: Error: Member not found: 'alertCircle'.
+    'alert-circle': LucideIcons.alertCircle,
+                                ^^^^^^^^^^^
+lib/services/local_storage.dart:38:14: Error: A value of type 'List<int>' can't be returned from an async function with return type 'Future<Uint8List>'.
+ - 'List' is from 'dart:core'.
+ - 'Future' is from 'dart:async'.
+ - 'Uint8List' is from 'dart:typed_data'.
+      return key;
+             ^
+lib/screens/home_screen.dart:170:54: Error: Member not found: 'rtl'.
+                        textDirection: TextDirection.rtl,
+                                                     ^^^
+lib/screens/home_screen.dart:182:58: Error: Member not found: 'rtl'.
+                            textDirection: TextDirection.rtl,
+                                                         ^^^
+lib/screens/home_screen.dart:246:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/home_screen.dart:256:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/home_screen.dart:265:37: Error: Member not found: 'trendingUp'.
+                        LucideIcons.trendingUp,
+                                    ^^^^^^^^^^
+lib/screens/home_screen.dart:276:54: Error: Member not found: 'rtl'.
+                        textDirection: TextDirection.rtl,
+                                                     ^^^
+lib/screens/home_screen.dart:285:54: Error: Member not found: 'rtl'.
+                        textDirection: TextDirection.rtl,
+                                                     ^^^
+lib/screens/home_screen.dart:299:37: Error: Member not found: 'trendingDown'.
+                        LucideIcons.trendingDown,
+                                    ^^^^^^^^^^^^
+lib/screens/home_screen.dart:310:54: Error: Member not found: 'rtl'.
+                        textDirection: TextDirection.rtl,
+                                                     ^^^
+lib/screens/home_screen.dart:319:54: Error: Member not found: 'rtl'.
+                        textDirection: TextDirection.rtl,
+                                                     ^^^
+lib/screens/home_screen.dart:386:52: Error: Member not found: 'rtl'.
+                  hintTextDirection: TextDirection.rtl,
+                                                   ^^^
+lib/screens/home_screen.dart:395:46: Error: Member not found: 'rtl'.
+                textDirection: TextDirection.rtl,
+                                             ^^^
+lib/screens/home_screen.dart:411:29: Error: Member not found: 'filter'.
+                LucideIcons.filter,
+                            ^^^^^^
+lib/screens/home_screen.dart:443:79: Error: Member not found: 'rtl'.
+                      child: Text(category.name, textDirection: TextDirection.rtl),
+                                                                              ^^^
+lib/screens/home_screen.dart:517:9: Error: No named parameter with the name 'createdAt'.
+        createdAt: DateTime.now(),
+        ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/screens/home_screen.dart:540:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/screens/home_screen.dart:548:46: Error: Member not found: 'rtl'.
+                textDirection: TextDirection.rtl,
+                                             ^^^
+lib/screens/home_screen.dart:557:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/home_screen.dart:573:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/home_screen.dart:577:33: Error: Member not found: 'trendingUp'.
+                  ? LucideIcons.trendingUp
+                                ^^^^^^^^^^
+lib/screens/home_screen.dart:578:33: Error: Member not found: 'trendingDown'.
+                  : LucideIcons.trendingDown,
+                                ^^^^^^^^^^^^
+lib/screens/home_screen.dart:606:42: Error: Member not found: 'rtl'.
+            textDirection: TextDirection.rtl,
+                                         ^^^
+lib/screens/home_screen.dart:614:42: Error: Member not found: 'rtl'.
+            textDirection: TextDirection.rtl,
+                                         ^^^
+lib/screens/home_screen.dart:634:49: Error: No named parameter with the name 'initialType'.
+      builder: (context) => AddTransactionModal(initialType: type),
+                                                ^^^^^^^^^^^
+lib/widgets/add_transaction_modal.dart:17:9: Context: Found this candidate, but the arguments don't match.
+  const AddTransactionModal({
+        ^^^^^^^^^^^^^^^^^^^
+lib/screens/home_screen.dart:657:69: Error: Member not found: 'rtl'.
+        title: const Text('الإعدادات', textDirection: TextDirection.rtl),
+                                                                    ^^^
+lib/screens/home_screen.dart:663:73: Error: Member not found: 'rtl'.
+              title: Text('تخصيص الألوان', textDirection: TextDirection.rtl),
+                                                                        ^^^
+lib/screens/home_screen.dart:667:69: Error: Member not found: 'rtl'.
+              title: Text('الإشعارات', textDirection: TextDirection.rtl),
+                                                                    ^^^
+lib/screens/home_screen.dart:671:75: Error: Member not found: 'rtl'.
+              title: Text('النسخ الاحتياطي', textDirection: TextDirection.rtl),
+                                                                          ^^^
+lib/screens/transactions_screen.dart:43:58: Error: Member not found: 'filter'.
+              _showFilters ? LucideIcons.x : LucideIcons.filter,
+                                                         ^^^^^^
+lib/screens/transactions_screen.dart:62:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/transactions_screen.dart:66:50: Error: Member not found: 'rtl'.
+                hintTextDirection: TextDirection.rtl,
+                                                 ^^^
+lib/screens/transactions_screen.dart:188:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/transactions_screen.dart:196:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/transactions_screen.dart:219:27: Error: Member not found: 'searchX'.
+              LucideIcons.searchX,
+                          ^^^^^^^
+lib/screens/transactions_screen.dart:230:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/transactions_screen.dart:238:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/transactions_screen.dart:288:46: Error: Member not found: 'rtl'.
+                textDirection: TextDirection.rtl,
+                                             ^^^
+lib/screens/analytics_screen.dart:62:59: Error: Member not found: 'pie_chart'.
+            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.pie_chart, size: 16)),
+                                                          ^^^^^^^^^
+lib/screens/analytics_screen.dart:64:59: Error: Member not found: 'bar_chart_3'.
+            Tab(text: 'المقارنات', icon: Icon(LucideIcons.bar_chart_3, size: 16)),
+                                                          ^^^^^^^^^^^
+lib/screens/analytics_screen.dart:109:42: Error: Member not found: 'rtl'.
+            textDirection: TextDirection.rtl,
+                                         ^^^
+lib/screens/analytics_screen.dart:115:27: Error: Member not found: 'chevronDown'.
+              LucideIcons.chevronDown,
+                          ^^^^^^^^^^^
+lib/screens/analytics_screen.dart:209:25: Error: Member not found: 'trendingUp'.
+            LucideIcons.trendingUp,
+                        ^^^^^^^^^^
+lib/screens/analytics_screen.dart:218:25: Error: Member not found: 'trendingDown'.
+            LucideIcons.trendingDown,
+                        ^^^^^^^^^^^^
+lib/screens/analytics_screen.dart:261:42: Error: Member not found: 'rtl'.
+            textDirection: TextDirection.rtl,
+                                         ^^^
+lib/screens/analytics_screen.dart:271:42: Error: Member not found: 'rtl'.
+            textDirection: TextDirection.rtl,
+                                         ^^^
+lib/screens/analytics_screen.dart:300:11: Error: No named parameter with the name 'createdAt'.
+          createdAt: DateTime.now(),
+          ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/screens/analytics_screen.dart:321:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:361:21: Error: No named parameter with the name 'createdAt'.
+                    createdAt: DateTime.now(),
+                    ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/screens/analytics_screen.dart:388:54: Error: Member not found: 'rtl'.
+                        textDirection: TextDirection.rtl,
+                                                     ^^^
+lib/screens/analytics_screen.dart:442:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:514:64: Error: Member not found: 'rtl'.
+                    Text('الدخل', textDirection: TextDirection.rtl),
+                                                               ^^^
+lib/screens/analytics_screen.dart:526:68: Error: Member not found: 'rtl'.
+                    Text('المصرو�?ات', textDirection: TextDirection.rtl),
+                                                                   ^^^
+lib/screens/analytics_screen.dart:567:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:581:19: Error: No named parameter with the name 'createdAt'.
+                  createdAt: DateTime.now(),
+                  ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/screens/analytics_screen.dart:620:54: Error: Member not found: 'rtl'.
+                        textDirection: TextDirection.rtl,
+                                                     ^^^
+lib/screens/analytics_screen.dart:629:52: Error: Member not found: 'rtl'.
+                      textDirection: TextDirection.rtl,
+                                                   ^^^
+lib/screens/analytics_screen.dart:670:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:744:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:753:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:773:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:782:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:802:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:811:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:831:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:840:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:857:27: Error: Member not found: 'pieChart'.
+              LucideIcons.pieChart,
+                          ^^^^^^^^
+lib/screens/analytics_screen.dart:867:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/analytics_screen.dart:918:80: Error: Member not found: 'rtl'.
+                title: const Text('الشهر الحالي', textDirection: TextDirection.rtl),
+                                                                               ^^^
+lib/screens/analytics_screen.dart:929:81: Error: Member not found: 'rtl'.
+                title: const Text('السنة الحالية', textDirection: TextDirection.rtl),
+                                                                                ^^^
+lib/screens/analytics_screen.dart:940:80: Error: Member not found: 'rtl'.
+                title: const Text('جميع ال�?ترات', textDirection: TextDirection.rtl),
+                                                                               ^^^
+lib/screens/reports_screen.dart:66:59: Error: Member not found: 'pieChart'.
+            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.pieChart, size: 16)),
+                                                          ^^^^^^^^
+lib/screens/reports_screen.dart:67:59: Error: Member not found: 'trendingUp'.
+            Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trendingUp, size: 16)),
+                                                          ^^^^^^^^^^
+lib/screens/reports_screen.dart:68:59: Error: Member not found: 'barChart3'.
+            Tab(text: 'المقارنات', icon: Icon(LucideIcons.barChart3, size: 16)),
+                                                          ^^^^^^^^^
+lib/screens/reports_screen.dart:138:52: Error: Member not found: 'barChart3'.
+                prefixIcon: const Icon(LucideIcons.barChart3, size: 18),
+                                                   ^^^^^^^^^
+lib/screens/reports_screen.dart:229:23: Error: Member not found: 'trendingUp'.
+          LucideIcons.trendingUp,
+                      ^^^^^^^^^^
+lib/screens/reports_screen.dart:235:23: Error: Member not found: 'trendingDown'.
+          LucideIcons.trendingDown,
+                      ^^^^^^^^^^^^
+lib/screens/reports_screen.dart:283:42: Error: Member not found: 'rtl'.
+            textDirection: TextDirection.rtl,
+                                         ^^^
+lib/screens/reports_screen.dart:295:42: Error: Member not found: 'rtl'.
+            textDirection: TextDirection.rtl,
+                                         ^^^
+lib/screens/reports_screen.dart:318:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/reports_screen.dart:472:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/reports_screen.dart:498:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/reports_screen.dart:580:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/reports_screen.dart:592:19: Error: No named parameter with the name 'createdAt'.
+                  createdAt: DateTime.now(),
+                  ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/screens/reports_screen.dart:610:54: Error: Member not found: 'rtl'.
+                        textDirection: TextDirection.rtl,
+                                                     ^^^
+lib/screens/reports_screen.dart:619:52: Error: Member not found: 'rtl'.
+                      textDirection: TextDirection.rtl,
+                                                   ^^^
+lib/screens/reports_screen.dart:661:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/reports_screen.dart:672:33: Error: Member not found: 'trendingUp'.
+                    LucideIcons.trendingUp,
+                                ^^^^^^^^^^
+lib/screens/reports_screen.dart:681:33: Error: Member not found: 'trendingDown'.
+                    LucideIcons.trendingDown,
+                                ^^^^^^^^^^^^
+lib/screens/reports_screen.dart:711:46: Error: Member not found: 'rtl'.
+                textDirection: TextDirection.rtl,
+                                             ^^^
+lib/screens/reports_screen.dart:721:42: Error: Member not found: 'rtl'.
+            textDirection: TextDirection.rtl,
+                                         ^^^
+lib/screens/reports_screen.dart:727:42: Error: Member not found: 'arrowUp'.
+                isPositive ? LucideIcons.arrowUp : LucideIcons.arrowDown,
+                                         ^^^^^^^
+lib/screens/reports_screen.dart:727:64: Error: Member not found: 'arrowDown'.
+                isPositive ? LucideIcons.arrowUp : LucideIcons.arrowDown,
+                                                               ^^^^^^^^^
+lib/screens/reports_screen.dart:763:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/screens/reports_screen.dart:775:19: Error: No named parameter with the name 'createdAt'.
+                  createdAt: DateTime.now(),
+                  ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/screens/reports_screen.dart:795:58: Error: Member not found: 'rtl'.
+                            textDirection: TextDirection.rtl,
+                                                         ^^^
+lib/screens/reports_screen.dart:803:56: Error: Member not found: 'rtl'.
+                          textDirection: TextDirection.rtl,
+                                                       ^^^
+lib/screens/reports_screen.dart:817:58: Error: Member not found: 'rtl'.
+                            textDirection: TextDirection.rtl,
+                                                         ^^^
+lib/screens/reports_screen.dart:858:29: Error: Member not found: 'barChart3'.
+                LucideIcons.barChart3,
+                            ^^^^^^^^^
+lib/screens/reports_screen.dart:868:46: Error: Member not found: 'rtl'.
+                textDirection: TextDirection.rtl,
+                                             ^^^
+lib/screens/reports_screen.dart:888:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/services/sync_service.dart:207:48: Error: Required named parameter 'nameAr' must be provided.
+          final request = CreateCategoryRequest(
+                                               ^
+lib/models/category.dart:25:17: Context: Found this candidate, but the arguments don't match.
+  const factory CreateCategoryRequest({
+                ^
+lib/services/sync_service.dart:218:41: Error: The method 'updateCategory' isn't defined for the type 'ApiClient'.
+ - 'ApiClient' is from 'package:flutter_expense_tracker/services/api_client.dart' ('lib/services/api_client.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'updateCategory'.
+            response = await _apiClient.updateCategory(serverId, request);
+                                        ^^^^^^^^^^^^^^
+lib/services/sync_service.dart:248:26: Error: The method 'deleteCategory' isn't defined for the type 'ApiClient'.
+ - 'ApiClient' is from 'package:flutter_expense_tracker/services/api_client.dart' ('lib/services/api_client.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'deleteCategory'.
+        await _apiClient.deleteCategory(serverId);
+                         ^^^^^^^^^^^^^^
+lib/providers/offline_providers.dart:149:7: Error: No named parameter with the name 'createdAt'.
+      createdAt: DateTime.now(),
+      ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/widgets/add_transaction_modal.dart:65:11: Error: No named parameter with the name 'createdAt'.
+          createdAt: DateTime.now(),
+          ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/widgets/add_transaction_modal.dart:112:52: Error: Member not found: 'rtl'.
+                      textDirection: TextDirection.rtl,
+                                                   ^^^
+lib/widgets/add_transaction_modal.dart:171:33: Error: Member not found: 'trendingDown'.
+              icon: LucideIcons.trendingDown,
+                                ^^^^^^^^^^^^
+lib/widgets/add_transaction_modal.dart:179:33: Error: Member not found: 'trendingUp'.
+              icon: LucideIcons.trendingUp,
+                                ^^^^^^^^^^
+lib/widgets/add_transaction_modal.dart:219:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/widgets/add_transaction_modal.dart:237:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/widgets/add_transaction_modal.dart:244:40: Error: Member not found: 'ltr'.
+          textDirection: TextDirection.ltr,
+                                       ^^^
+lib/widgets/add_transaction_modal.dart:250:46: Error: Member not found: 'ltr'.
+            hintTextDirection: TextDirection.ltr,
+                                             ^^^
+lib/widgets/add_transaction_modal.dart:287:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/widgets/add_transaction_modal.dart:340:56: Error: Member not found: 'rtl'.
+                          textDirection: TextDirection.rtl,
+                                                       ^^^
+lib/widgets/add_transaction_modal.dart:354:46: Error: Member not found: 'rtl'.
+            hintTextDirection: TextDirection.rtl,
+                                             ^^^
+lib/widgets/add_transaction_modal.dart:385:48: Error: Member not found: 'rtl'.
+                  textDirection: TextDirection.rtl,
+                                               ^^^
+lib/widgets/add_transaction_modal.dart:412:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/widgets/add_transaction_modal.dart:418:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/widgets/add_transaction_modal.dart:423:46: Error: Member not found: 'rtl'.
+            hintTextDirection: TextDirection.rtl,
+                                             ^^^
+lib/widgets/add_transaction_modal.dart:424:48: Error: Member not found: 'fileText'.
+            prefixIcon: const Icon(LucideIcons.fileText),
+                                               ^^^^^^^^
+lib/widgets/add_transaction_modal.dart:447:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/widgets/add_transaction_modal.dart:470:48: Error: Member not found: 'rtl'.
+                  textDirection: TextDirection.rtl,
+                                               ^^^
+lib/widgets/add_transaction_modal.dart:490:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/widgets/add_transaction_modal.dart:702:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/widgets/add_transaction_modal.dart:743:46: Error: Member not found: 'rtl'.
+                textDirection: TextDirection.rtl,
+                                             ^^^
+lib/widgets/add_transaction_modal.dart:766:46: Error: Member not found: 'rtl'.
+                textDirection: TextDirection.rtl,
+                                             ^^^
+lib/widgets/add_transaction_modal.dart:782:44: Error: Member not found: 'rtl'.
+              textDirection: TextDirection.rtl,
+                                           ^^^
+lib/widgets/voice_input_modal.dart:174:48: Error: Member not found: 'micOff'.
+                    _isListening ? LucideIcons.micOff : LucideIcons.mic,
+                                               ^^^^^^
+lib/widgets/voice_input_modal.dart:232:29: Error: Member not found: 'messageSquare'.
+                LucideIcons.messageSquare,
+                            ^^^^^^^^^^^^^
+lib/widgets/voice_input_modal.dart:273:29: Error: Member not found: 'checkCircle2'.
+                LucideIcons.checkCircle2,
+                            ^^^^^^^^^^^^
+lib/widgets/voice_input_modal.dart:357:25: Error: Member not found: 'alertCircle'.
+            LucideIcons.alertCircle,
+                        ^^^^^^^^^^^
+lib/widgets/voice_input_modal.dart:396:46: Error: Member not found: 'refreshCw'.
+                icon: const Icon(LucideIcons.refreshCw),
+                                             ^^^^^^^^^
+lib/widgets/file_import_modal.dart:186:46: Error: Member not found: 'checkCircle2'.
+              result.isSuccess ? LucideIcons.checkCircle2 : LucideIcons.alertCircle,
+                                             ^^^^^^^^^^^^
+lib/widgets/file_import_modal.dart:186:73: Error: Member not found: 'alertCircle'.
+              result.isSuccess ? LucideIcons.checkCircle2 : LucideIcons.alertCircle,
+                                                                        ^^^^^^^^^^^
+lib/widgets/file_import_modal.dart:227:31: Error: Member not found: 'fileText'.
+                  LucideIcons.fileText,
+                              ^^^^^^^^
+lib/widgets/file_import_modal.dart:236:31: Error: Member not found: 'checkCircle'.
+                  LucideIcons.checkCircle,
+                              ^^^^^^^^^^^
+lib/widgets/file_import_modal.dart:245:31: Error: Member not found: 'alertTriangle'.
+                  LucideIcons.alertTriangle,
+                              ^^^^^^^^^^^^^
+lib/widgets/file_import_modal.dart:340:46: Error: Member not found: 'refreshCw'.
+                icon: const Icon(LucideIcons.refreshCw),
+                                             ^^^^^^^^^
+lib/widgets/transaction_item.dart:31:9: Error: No named parameter with the name 'createdAt'.
+        createdAt: DateTime.now(),
+        ^^^^^^^^^
+lib/models/category.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory Category({
+                ^
+lib/widgets/transaction_item.dart:83:58: Error: Member not found: 'rtl'.
+                            textDirection: TextDirection.rtl,
+                                                         ^^^
+lib/widgets/transaction_item.dart:116:56: Error: Member not found: 'rtl'.
+                          textDirection: TextDirection.rtl,
+                                                       ^^^
+lib/widgets/transaction_item.dart:128:52: Error: Member not found: 'rtl'.
+                      textDirection: TextDirection.rtl,
+                                                   ^^^
+lib/widgets/transaction_item.dart:148:50: Error: Member not found: 'rtl'.
+                    textDirection: TextDirection.rtl,
+                                                 ^^^
+lib/widgets/transaction_item.dart:156:35: Error: Member not found: 'moreHorizontal'.
+                      LucideIcons.moreHorizontal,
+                                  ^^^^^^^^^^^^^^
+lib/widgets/transaction_item.dart:176:60: Error: Member not found: 'rtl'.
+                              textDirection: TextDirection.rtl,
+                                                           ^^^
+lib/widgets/transaction_item.dart:191:43: Error: Member not found: 'edit2'.
+                              LucideIcons.edit2,
+                                          ^^^^^
+lib/widgets/transaction_item.dart:198:60: Error: Member not found: 'rtl'.
+                              textDirection: TextDirection.rtl,
+                                                           ^^^
+lib/widgets/transaction_item.dart:208:43: Error: Member not found: 'trash2'.
+                              LucideIcons.trash2,
+                                          ^^^^^^
+lib/widgets/transaction_item.dart:215:60: Error: Member not found: 'rtl'.
+                              textDirection: TextDirection.rtl,
+                                                           ^^^
+lib/widgets/transaction_item.dart:302:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/widgets/transaction_item.dart:306:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/widgets/transaction_item.dart:335:40: Error: Member not found: 'rtl'.
+          textDirection: TextDirection.rtl,
+                                       ^^^
+lib/widgets/transaction_item.dart:385:48: Error: Member not found: 'rtl'.
+                  textDirection: TextDirection.rtl,
+                                               ^^^
+lib/widgets/transaction_item.dart:396:37: Error: Member not found: 'trendingUp'.
+                      ? LucideIcons.trendingUp
+                                    ^^^^^^^^^^
+lib/widgets/transaction_item.dart:397:37: Error: Member not found: 'trendingDown'.
+                      : LucideIcons.trendingDown,
+                                    ^^^^^^^^^^^^
+lib/widgets/transaction_item.dart:419:39: Error: Member not found: 'fileText'.
+                    icon: LucideIcons.fileText,
+                                      ^^^^^^^^
+lib/widgets/transaction_item.dart:498:48: Error: Member not found: 'rtl'.
+                  textDirection: TextDirection.rtl,
+                                               ^^^
+lib/widgets/transaction_item.dart:506:48: Error: Member not found: 'rtl'.
+                  textDirection: TextDirection.rtl,
+                                               ^^^
+lib/widgets/transaction_item.dart:525:37: Error: Member not found: 'imageOff'.
+            child: Icon(LucideIcons.imageOff),
+                                    ^^^^^^^^
+lib/widgets/transaction_item.dart:537:37: Error: Member not found: 'imageOff'.
+            child: Icon(LucideIcons.imageOff),
+                                    ^^^^^^^^
+lib/widgets/transaction_item.dart:551:39: Error: Member not found: 'imageOff'.
+              child: Icon(LucideIcons.imageOff),
+                                      ^^^^^^^^
+lib/widgets/transaction_item.dart:559:37: Error: Member not found: 'imageOff'.
+            child: Icon(LucideIcons.imageOff),
+                                    ^^^^^^^^
+lib/widgets/transaction_item.dart:557:27: Error: The getter 'context' isn't defined for the type '_TransactionDetailsModal'.
+ - '_TransactionDetailsModal' is from 'package:flutter_expense_tracker/widgets/transaction_item.dart' ('lib/widgets/transaction_item.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'context'.
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          ^^^^^^^
+lib/widgets/transaction_filters.dart:45:29: Error: Member not found: 'filter'.
+                LucideIcons.filter,
+                            ^^^^^^
+lib/widgets/transaction_filters.dart:89:29: Error: Member not found: 'trendingUp'.
+                LucideIcons.trendingUp,
+                            ^^^^^^^^^^
+lib/widgets/transaction_filters.dart:97:29: Error: Member not found: 'trendingDown'.
+                LucideIcons.trendingDown,
+                            ^^^^^^^^^^^^
+lib/widgets/image_compression_widget.dart:78:33: Error: Member not found: 'loader2'.
+                    LucideIcons.loader2,
+                                ^^^^^^^
+lib/widgets/image_compression_widget.dart:133:39: Error: Member not found: 'checkCircle2'.
+                          LucideIcons.checkCircle2,
+                                      ^^^^^^^^^^^^
+lib/widgets/image_compression_widget.dart:156:39: Error: Member not found: 'fileImage'.
+                          LucideIcons.fileImage,
+                                      ^^^^^^^^^
+lib/widgets/image_compression_widget.dart:172:41: Error: Member not found: 'trendingDown'.
+                            LucideIcons.trendingDown,
+                                        ^^^^^^^^^^^^
+lib/widgets/image_compression_widget.dart:207:35: Error: Member not found: 'alertCircle'.
+                      LucideIcons.alertCircle,
+                                  ^^^^^^^^^^^
+lib/services/arabic_text_processor.dart:63:39: Error: The argument type 'String Function(dynamic)' can't be assigned to the parameter type 'String'.
+        .replaceAll(RegExp(r'[٠-٩]'), (match) {
+                                      ^
+lib/services/file_import_service.dart:184:49: Error: The argument type 'String Function(dynamic)' can't be assigned to the parameter type 'String'.
+        .replaceAll(RegExp(r'[\u0660-\u0669]'), (match) {
+                                                ^
+lib/widgets/receipt_image_viewer.dart:42:27: Error: Member not found: 'share2'.
+              LucideIcons.share2,
+                          ^^^^^^
+lib/widgets/receipt_image_viewer.dart:50:29: Error: Member not found: 'trash2'.
+                LucideIcons.trash2,
+                            ^^^^^^
+lib/widgets/receipt_image_viewer.dart:57:27: Error: Member not found: 'moreVertical'.
+              LucideIcons.moreVertical,
+                          ^^^^^^^^^^^^
+lib/widgets/receipt_image_viewer.dart:96:33: Error: Member not found: 'imageOff'.
+                    LucideIcons.imageOff,
+                                ^^^^^^^^
+lib/widgets/receipt_image_viewer.dart:136:35: Error: Member not found: 'share2'.
+                icon: LucideIcons.share2,
+                                  ^^^^^^
+lib/widgets/receipt_image_viewer.dart:141:35: Error: Member not found: 'zoom'.
+                icon: LucideIcons.zoom,
+                                  ^^^^
+lib/widgets/receipt_image_viewer.dart:315:47: Error: Member not found: 'share2'.
+              leading: const Icon(LucideIcons.share2),
+                                              ^^^^^^
+lib/widgets/receipt_image_viewer.dart:341:31: Error: Member not found: 'trash2'.
+                  LucideIcons.trash2,
+                              ^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildRelease'.
+> Process 'command 'C:\flutter\src\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 12m 26s
+Running Gradle task 'assembleRelease'...                          747.1s
+Gradle task assembleRelease failed with exit code 1
