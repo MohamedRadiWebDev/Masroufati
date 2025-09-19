@@ -78,11 +78,11 @@ class CategoryIcons {
     'wine': LucideIcons.wine,
     
     // Default & Misc
-    'more-horizontal': LucideIcons.more_horizontal,
+    'more-horizontal': LucideIcons.moreHorizontal,
     'star': LucideIcons.star,
-    'help-circle': LucideIcons.help_circle,
+    'help-circle': LucideIcons.helpCircle,
     'settings': LucideIcons.settings,
-    'alert-circle': LucideIcons.alert_circle,
+    'alert-circle': LucideIcons.alertCircle,
   };
 
   static IconData getIcon(String iconName) {
