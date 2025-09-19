@@ -45,6 +45,15 @@ abstract class ApiClient {
   @POST('/api/categories')
   Future<Category> createCategory(@Body() CreateCategoryRequest request);
 
+  @PUT('/api/categories/{id}')
+  Future<Category> updateCategory(
+    @Path('id') String id,
+    @Body() CreateCategoryRequest request,
+  );
+
+  @DELETE('/api/categories/{id}')
+  Future<void> deleteCategory(@Path('id') String id);
+
   // User/Auth endpoints
   @POST('/api/auth/login')
   Future<AuthResponse> login(@Body() LoginRequest request);
