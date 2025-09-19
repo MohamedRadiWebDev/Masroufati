@@ -14,6 +14,9 @@ class Category with _$Category {
     required TransactionType type,
     required String icon,
     required String color,
+    required bool isDefault,
+    String? serverId,
+    required DateTime createdAt,
   }) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) =>

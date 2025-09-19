@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
 import '../models/transaction.dart';
-import '../models/category.dart';
+import '../models/category.dart' as models;
 
 class FileImportService {
   // Supported file types

@@ -9,54 +9,54 @@ class CategoryIcons {
     'wine': LucideIcons.wine,
     'pizza': LucideIcons.pizza,
     'apple': LucideIcons.apple,
-    
+
     // Transportation
     'car': LucideIcons.car,
     'bus': LucideIcons.bus,
     'plane': LucideIcons.plane,
-    'train': LucideIcons.train,
+    'train': LucideIcons.zap,
     'bike': LucideIcons.bike,
     'fuel': LucideIcons.fuel,
-    
+
     // Shopping
     'shopping-cart': LucideIcons.shoppingCart,
     'shopping-bag': LucideIcons.shoppingBag,
     'shirt': LucideIcons.shirt,
     'gift': LucideIcons.gift,
     'tag': LucideIcons.tag,
-    
+
     // Entertainment
     'gamepad-2': LucideIcons.gamepad2,
     'music': LucideIcons.music,
     'film': LucideIcons.film,
     'headphones': LucideIcons.headphones,
     'camera': LucideIcons.camera,
-    
+
     // Health & Medical
     'heart': LucideIcons.heart,
     'activity': LucideIcons.activity,
     'pills': LucideIcons.pill,
     'stethoscope': LucideIcons.stethoscope,
-    
+
     // Education
     'graduation-cap': LucideIcons.graduationCap,
     'book-open': LucideIcons.bookOpen,
     'pencil': LucideIcons.pencil,
     'calculator': LucideIcons.calculator,
-    
+
     // Home & Utilities
     'home': LucideIcons.home,
     'lightbulb': LucideIcons.lightbulb,
     'droplets': LucideIcons.droplets,
     'wifi': LucideIcons.wifi,
     'zap': LucideIcons.zap,
-    
+
     // Work & Business
     'briefcase': LucideIcons.briefcase,
     'laptop': LucideIcons.laptop,
     'monitor': LucideIcons.monitor,
     'printer': LucideIcons.printer,
-    
+
     // Finance & Banking
     'credit-card': LucideIcons.creditCard,
     'banknote': LucideIcons.banknote,
@@ -64,25 +64,25 @@ class CategoryIcons {
     'circle-dollar-sign': LucideIcons.circleDollarSign,
     'wallet': LucideIcons.wallet,
     'trending-up': LucideIcons.trendingUp,
-    
+
     // Technology
     'smartphone': LucideIcons.smartphone,
     'tablet': LucideIcons.tablet,
     'headphones': LucideIcons.headphones,
     'watch': LucideIcons.watch,
-    
+
     // Travel & Hotels
     'map-pin': LucideIcons.mapPin,
     'compass': LucideIcons.compass,
     'luggage': LucideIcons.luggage,
     'bed': LucideIcons.bed,
-    
+
     // Sports & Fitness
     'dumbbell': LucideIcons.dumbbell,
     'bike': LucideIcons.bike,
     'football': LucideIcons.football,
     'trophy': LucideIcons.trophy,
-    
+
     // Miscellaneous
     'circle': LucideIcons.circle,
     'square': LucideIcons.square,
@@ -154,7 +154,7 @@ class CategoryIcons {
   // Get a suggested icon based on category name (Arabic)
   static String getSuggestedIcon(String categoryName) {
     final name = categoryName.toLowerCase();
-    
+
     // Food and dining suggestions
     if (name.contains('طعام') || name.contains('أكل') || name.contains('مطعم') || 
         name.contains('إفطار') || name.contains('غداء') || name.contains('عشاء')) {
@@ -163,7 +163,7 @@ class CategoryIcons {
     if (name.contains('قهوة') || name.contains('شاي') || name.contains('مشروب')) {
       return 'coffee';
     }
-    
+
     // Transportation suggestions
     if (name.contains('سيارة') || name.contains('وقود') || name.contains('بنزين')) {
       return 'car';
@@ -174,7 +174,7 @@ class CategoryIcons {
     if (name.contains('طيران') || name.contains('سفر')) {
       return 'plane';
     }
-    
+
     // Shopping suggestions
     if (name.contains('تسوق') || name.contains('شراء') || name.contains('سوق')) {
       return 'shopping-cart';
@@ -185,7 +185,7 @@ class CategoryIcons {
     if (name.contains('هدية') || name.contains('هدايا')) {
       return 'gift';
     }
-    
+
     // Entertainment suggestions
     if (name.contains('ألعاب') || name.contains('لعب')) {
       return 'gamepad-2';
@@ -196,19 +196,19 @@ class CategoryIcons {
     if (name.contains('سينما') || name.contains('فيلم')) {
       return 'film';
     }
-    
+
     // Health suggestions
     if (name.contains('صحة') || name.contains('طبيب') || name.contains('دواء') || 
         name.contains('مستشفى') || name.contains('علاج')) {
       return 'heart';
     }
-    
+
     // Education suggestions
     if (name.contains('تعليم') || name.contains('مدرسة') || name.contains('جامعة') || 
         name.contains('دراسة') || name.contains('كتب')) {
       return 'graduation-cap';
     }
-    
+
     // Home and utilities suggestions
     if (name.contains('منزل') || name.contains('بيت') || name.contains('إيجار')) {
       return 'home';
@@ -222,12 +222,12 @@ class CategoryIcons {
     if (name.contains('إنترنت') || name.contains('واي فاي')) {
       return 'wifi';
     }
-    
+
     // Work suggestions
     if (name.contains('عمل') || name.contains('وظيفة') || name.contains('راتب')) {
       return 'briefcase';
     }
-    
+
     // Finance suggestions
     if (name.contains('بنك') || name.contains('فيزا') || name.contains('ماستر') || 
         name.contains('بطاقة')) {
@@ -239,7 +239,7 @@ class CategoryIcons {
     if (name.contains('دخل') || name.contains('راتب') || name.contains('مرتب')) {
       return 'trending-up';
     }
-    
+
     // Technology suggestions
     if (name.contains('هاتف') || name.contains('موبايل') || name.contains('جوال')) {
       return 'smartphone';
@@ -247,7 +247,7 @@ class CategoryIcons {
     if (name.contains('كمبيوتر') || name.contains('لاب توب')) {
       return 'laptop';
     }
-    
+
     // Default icon
     return 'circle';
   }
