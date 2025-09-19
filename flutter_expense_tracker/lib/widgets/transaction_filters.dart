@@ -86,7 +86,7 @@ class TransactionFilters extends ConsumerWidget {
                 'دخل',
                 selectedType == TransactionType.income,
                 () => onTypeChanged(TransactionType.income),
-                LucideIcons.trendingUp,
+                LucideIcons.trending_up,
                 color: Theme.of(context).colorScheme.primary,
               ),
               _buildTypeChip(
@@ -94,7 +94,7 @@ class TransactionFilters extends ConsumerWidget {
                 'مصروف',
                 selectedType == TransactionType.expense,
                 () => onTypeChanged(TransactionType.expense),
-                LucideIcons.trendingDown,
+                LucideIcons.trending_down,
                 color: Theme.of(context).colorScheme.error,
               ),
             ],

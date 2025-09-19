@@ -171,7 +171,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
                     ] : null,
                   ),
                   child: Icon(
-                    _isListening ? LucideIcons.micOff : LucideIcons.mic,
+                    _isListening ? LucideIcons.mic_off : LucideIcons.mic,
                     size: 48,
                     color: _isListening 
                         ? Colors.white 
@@ -229,7 +229,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
           Row(
             children: [
               Icon(
-                LucideIcons.messageSquare,
+                LucideIcons.message_square,
                 size: 20,
                 color: Theme.of(context).colorScheme.primary,
               ),
@@ -270,7 +270,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
           Row(
             children: [
               Icon(
-                LucideIcons.checkCircle2,
+                LucideIcons.check_circle_2,
                 size: 20,
                 color: Colors.green.shade600,
               ),
@@ -354,7 +354,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
       child: Row(
         children: [
           Icon(
-            LucideIcons.alertCircle,
+            LucideIcons.alert_circle,
             size: 20,
             color: Theme.of(context).colorScheme.error,
           ),
@@ -393,7 +393,7 @@ class _VoiceInputModalState extends ConsumerState<VoiceInputModal>
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: _clearResults,
-                icon: const Icon(LucideIcons.refreshCw),
+                icon: const Icon(LucideIcons.refresh_cw),
                 label: const Text('مسح النتائج'),
               ),
             ),

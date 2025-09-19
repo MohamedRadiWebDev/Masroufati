@@ -65,8 +65,10 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
         orElse: () => categories.isNotEmpty ? categories.first : Category(
           id: 'temp',
           name: transaction.category,
+          nameAr: transaction.category,
           color: '#6B7280',
           icon: 'circle',
+          type: TransactionType.expense,
           createdAt: DateTime.now(),
         ),
       );
@@ -173,7 +175,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             child: _buildTypeButton(
               type: TransactionType.expense,
               label: 'مصروف',
-              icon: LucideIcons.trendingDown,
+              icon: LucideIcons.trending_down,
               color: Theme.of(context).colorScheme.error,
             ),
           ),
@@ -181,7 +183,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             child: _buildTypeButton(
               type: TransactionType.income,
               label: 'دخل',
-              icon: LucideIcons.trendingUp,
+              icon: LucideIcons.trending_up,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
@@ -426,7 +428,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
           decoration: InputDecoration(
             hintText: 'أضف ملاحظة أو وصف للعملية...',
             hintTextDirection: TextDirectionHelper.rtl,
-            prefixIcon: const Icon(LucideIcons.fileText),
+            prefixIcon: const Icon(LucideIcons.file_text),
             filled: true,
             fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
             border: OutlineInputBorder(

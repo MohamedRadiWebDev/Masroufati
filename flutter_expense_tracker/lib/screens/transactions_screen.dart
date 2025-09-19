@@ -217,7 +217,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.searchX,
+              LucideIcons.search_x,
               size: 64,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

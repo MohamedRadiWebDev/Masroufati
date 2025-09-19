@@ -396,8 +396,8 @@ class _TransactionDetailsModal extends StatelessWidget {
                   'النوع',
                   transaction.type == TransactionType.income ? 'دخل' : 'مصروف',
                   icon: transaction.type == TransactionType.income
-                      ? LucideIcons.trendingUp
-                      : LucideIcons.trendingDown,
+                      ? LucideIcons.trending_up
+                      : LucideIcons.trending_down,
                 ),
 
                 _buildDetailRow(
@@ -419,7 +419,7 @@ class _TransactionDetailsModal extends StatelessWidget {
                     context,
                     'الملاحظة',
                     transaction.note!,
-                    icon: LucideIcons.fileText,
+                    icon: LucideIcons.file_text,
                   ),
 
                 _buildDetailRow(

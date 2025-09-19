@@ -60,9 +60,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.chartPie, size: 16)),
+            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.pie_chart, size: 16)),
             Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trending_up, size: 16)),
-            Tab(text: 'المقارنات', icon: Icon(LucideIcons.chartBar, size: 16)),
+            Tab(text: 'المقارنات', icon: Icon(LucideIcons.bar_chart, size: 16)),
           ],
         ),
       ),
@@ -113,7 +113,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           IconButton(
             onPressed: _showPeriodSelector,
             icon: Icon(
-              LucideIcons.chevronDown,
+              LucideIcons.chevron_down,
               size: 16,
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -207,7 +207,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           child: _buildSummaryCard(
             'إجمالي الدخل',
             totalIncome,
-            LucideIcons.trendingUp,
+            LucideIcons.trending_up,
             Theme.of(context).colorScheme.primary,
           ),
         ),
@@ -216,7 +216,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           child: _buildSummaryCard(
             'إجمالي المصروفات',
             totalExpense,
-            LucideIcons.trendingDown,
+            LucideIcons.trending_down,
             Theme.of(context).colorScheme.error,
           ),
         ),
@@ -861,7 +861,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.chartPie,
+              LucideIcons.pie_chart,
               size: 48,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

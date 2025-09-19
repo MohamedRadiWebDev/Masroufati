@@ -64,9 +64,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.chartPie, size: 16)),
-            Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trendingUp, size: 16)),
-            Tab(text: 'المقارنات', icon: Icon(LucideIcons.chartBar, size: 16)),
+            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.pie_chart, size: 16)),
+            Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trending_up, size: 16)),
+            Tab(text: 'المقارنات', icon: Icon(LucideIcons.bar_chart, size: 16)),
           ],
         ),
       ),
@@ -136,7 +136,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               decoration: InputDecoration(
                 labelText: 'نوع الرسم',
                 labelStyle: const TextStyle(fontSize: 12),
-                prefixIcon: const Icon(LucideIcons.chartBar, size: 18),
+                prefixIcon: const Icon(LucideIcons.bar_chart, size: 18),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(
@@ -227,13 +227,13 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         _buildSummaryCard(
           'إجمالي الدخل',
           overview.totalIncome,
-          LucideIcons.trendingUp,
+          LucideIcons.trending_up,
           Theme.of(context).colorScheme.primary,
         ),
         _buildSummaryCard(
           'إجمالي المصروفات',
           overview.totalExpenses,
-          LucideIcons.trendingDown,
+          LucideIcons.trending_down,
           Theme.of(context).colorScheme.error,
         ),
         _buildSummaryCard(
@@ -672,7 +672,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                     'الدخل',
                     comparison.income,
                     comparison.changePercent,
-                    LucideIcons.trendingUp,
+                    LucideIcons.trending_up,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -681,7 +681,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                     'المصروفات',
                     comparison.expenses,
                     -comparison.changePercent, // Negative for expenses
-                    LucideIcons.trendingDown,
+                    LucideIcons.trending_down,
                   ),
                 ),
               ],
@@ -727,7 +727,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
           Row(
             children: [
               Icon(
-                isPositive ? LucideIcons.arrowUp : LucideIcons.arrowDown,
+                isPositive ? LucideIcons.arrow_up : LucideIcons.arrow_down,
                 size: 14,
                 color: isPositive ? Colors.green : Colors.red,
               ),
@@ -773,8 +773,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 orElse: () => Category(
                   id: 'default',
                   name: comparison.category,
+                  nameAr: comparison.category,
                   color: '#6B7280',
                   icon: 'circle',
+                  type: TransactionType.expense,
                   createdAt: DateTime.now(),
                 ),
               );
@@ -858,7 +860,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                LucideIcons.barChart3,
+                LucideIcons.bar_chart_3,
                 size: 48,
                 color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
               ),

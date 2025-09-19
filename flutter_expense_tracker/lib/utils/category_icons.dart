@@ -13,14 +13,14 @@ class CategoryIcons {
     'fuel': LucideIcons.fuel,
     
     // Shopping
-    'shopping-cart': LucideIcons.shoppingCart,
-    'shopping-bag': LucideIcons.shoppingBag,
+    'shopping-cart': LucideIcons.shopping_cart,
+    'shopping-bag': LucideIcons.shopping_bag,
     'gift': LucideIcons.gift,
     'shirt': LucideIcons.shirt,
     'glasses': LucideIcons.glasses,
     
     // Entertainment
-    'gamepad-2': LucideIcons.gamepad2,
+    'gamepad-2': LucideIcons.gamepad_2,
     'music': LucideIcons.music,
     'camera': LucideIcons.camera,
     'tv': LucideIcons.tv,
@@ -29,8 +29,8 @@ class CategoryIcons {
     'ticket': LucideIcons.ticket,
     
     // Education
-    'graduation-cap': LucideIcons.graduationCap,
-    'book-open': LucideIcons.bookOpen,
+    'graduation-cap': LucideIcons.graduation_cap,
+    'book-open': LucideIcons.book_open,
     'pencil': LucideIcons.pencil,
     'calculator': LucideIcons.calculator,
     
@@ -43,12 +43,12 @@ class CategoryIcons {
     'smartphone': LucideIcons.smartphone,
     
     // Finance
-    'credit-card': LucideIcons.creditCard,
+    'credit-card': LucideIcons.credit_card,
     'banknote': LucideIcons.banknote,
-    'piggy-bank': LucideIcons.piggyBank,
-    'circle-dollar-sign': LucideIcons.circleDollarSign,
+    'piggy-bank': LucideIcons.piggy_bank,
+    'circle-dollar-sign': LucideIcons.circle_dollar_sign,
     'wallet': LucideIcons.wallet,
-    'trending-up': LucideIcons.trendingUp,
+    'trending-up': LucideIcons.trending_up,
     'coins': LucideIcons.coins,
     
     // Health & Medical
@@ -58,7 +58,7 @@ class CategoryIcons {
     'activity': LucideIcons.activity,
     
     // Location & Travel
-    'map-pin': LucideIcons.mapPin,
+    'map-pin': LucideIcons.map_pin,
     'compass': LucideIcons.compass,
     'luggage': LucideIcons.luggage,
     'tent': LucideIcons.tent,
