@@ -1,0 +1,156 @@
+C:\Users\Radi\Downloads\flutter_expense_tracker\flutter_expense_tracker>flutter build apk
+lib/utils/category_icons.dart:16:34: Error: Member not found: 'shoppingCart'.
+    'shopping-cart': LucideIcons.shoppingCart,
+                                 ^^^^^^^^^^^^
+lib/utils/category_icons.dart:17:33: Error: Member not found: 'shoppingBag'.
+    'shopping-bag': LucideIcons.shoppingBag,
+                                ^^^^^^^^^^^
+lib/utils/category_icons.dart:23:30: Error: Member not found: 'gamepad2'.
+    'gamepad-2': LucideIcons.gamepad2,
+                             ^^^^^^^^
+lib/utils/category_icons.dart:32:35: Error: Member not found: 'graduationCap'.
+    'graduation-cap': LucideIcons.graduationCap,
+                                  ^^^^^^^^^^^^^
+lib/utils/category_icons.dart:33:30: Error: Member not found: 'bookOpen'.
+    'book-open': LucideIcons.bookOpen,
+                             ^^^^^^^^
+lib/utils/category_icons.dart:46:32: Error: Member not found: 'creditCard'.
+    'credit-card': LucideIcons.creditCard,
+                               ^^^^^^^^^^
+lib/utils/category_icons.dart:48:31: Error: Member not found: 'piggyBank'.
+    'piggy-bank': LucideIcons.piggyBank,
+                              ^^^^^^^^^
+lib/utils/category_icons.dart:49:39: Error: Member not found: 'circleDollarSign'.
+    'circle-dollar-sign': LucideIcons.circleDollarSign,
+                                      ^^^^^^^^^^^^^^^^
+lib/utils/category_icons.dart:51:32: Error: Member not found: 'trendingUp'.
+    'trending-up': LucideIcons.trendingUp,
+                               ^^^^^^^^^^
+lib/utils/category_icons.dart:61:28: Error: Member not found: 'mapPin'.
+    'map-pin': LucideIcons.mapPin,
+                           ^^^^^^
+lib/utils/category_icons.dart:87:25: Error: Member not found: 'edit'.
+    'edit': LucideIcons.edit,
+                        ^^^^
+lib/screens/reports_screen.dart:139:52: Error: Member not found: 'chart'.
+                prefixIcon: const Icon(LucideIcons.chart, size: 18),
+                                                   ^^^^^
+lib/widgets/add_transaction_modal.dart:251:40: Error: Member not found: 'ltr'.
+          textDirection: TextDirection.ltr,
+                                       ^^^
+lib/widgets/add_transaction_modal.dart:257:46: Error: Member not found: 'ltr'.
+            hintTextDirection: TextDirection.ltr,
+                                             ^^^
+lib/widgets/voice_input_modal.dart:232:29: Error: Member not found: 'message'.
+                LucideIcons.message,
+                            ^^^^^^^
+lib/widgets/voice_input_modal.dart:357:25: Error: Member not found: 'alert_triangle'.
+            LucideIcons.alert_triangle,
+                        ^^^^^^^^^^^^^^
+lib/widgets/voice_input_modal.dart:396:46: Error: Member not found: 'refresh'.
+                icon: const Icon(LucideIcons.refresh),
+                                             ^^^^^^^
+lib/widgets/file_import_modal.dart:186:66: Error: Member not found: 'alert_triangle'.
+              result.isSuccess ? LucideIcons.check : LucideIcons.alert_triangle,
+                                                                 ^^^^^^^^^^^^^^
+lib/widgets/file_import_modal.dart:236:31: Error: Member not found: 'checkCircle'.
+                  LucideIcons.checkCircle,
+                              ^^^^^^^^^^^
+lib/widgets/file_import_modal.dart:245:31: Error: Member not found: 'alertTriangle'.
+                  LucideIcons.alertTriangle,
+                              ^^^^^^^^^^^^^
+lib/widgets/file_import_modal.dart:340:46: Error: Member not found: 'refresh'.
+                icon: const Icon(LucideIcons.refresh),
+                                             ^^^^^^^
+lib/widgets/transaction_item.dart:194:43: Error: Member not found: 'edit'.
+                              LucideIcons.edit,
+                                          ^^^^
+lib/widgets/transaction_item.dart:399:37: Error: Member not found: 'trendingUp'.
+                      ? LucideIcons.trendingUp
+                                    ^^^^^^^^^^
+lib/widgets/transaction_item.dart:400:37: Error: Member not found: 'trendingDown'.
+                      : LucideIcons.trendingDown,
+                                    ^^^^^^^^^^^^
+lib/widgets/transaction_item.dart:422:39: Error: Member not found: 'fileText'.
+                    icon: LucideIcons.fileText,
+                                      ^^^^^^^^
+lib/widgets/transaction_item.dart:528:37: Error: Member not found: 'imageOff'.
+            child: Icon(LucideIcons.imageOff),
+                                    ^^^^^^^^
+lib/widgets/transaction_item.dart:540:37: Error: Member not found: 'imageOff'.
+            child: Icon(LucideIcons.imageOff),
+                                    ^^^^^^^^
+lib/widgets/transaction_item.dart:554:39: Error: Member not found: 'imageOff'.
+              child: Icon(LucideIcons.imageOff),
+                                      ^^^^^^^^
+lib/widgets/transaction_item.dart:562:37: Error: Member not found: 'imageOff'.
+            child: Icon(LucideIcons.imageOff),
+                                    ^^^^^^^^
+lib/widgets/transaction_item.dart:560:27: Error: The getter 'context' isn't defined for the type '_TransactionDetailsModal'.
+ - '_TransactionDetailsModal' is from 'package:flutter_expense_tracker/widgets/transaction_item.dart' ('lib/widgets/transaction_item.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'context'.
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          ^^^^^^^
+lib/widgets/transaction_filters.dart:45:29: Error: Member not found: 'filter'.
+                LucideIcons.filter,
+                            ^^^^^^
+lib/widgets/image_compression_widget.dart:78:33: Error: Member not found: 'loader2'.
+                    LucideIcons.loader2,
+                                ^^^^^^^
+lib/widgets/image_compression_widget.dart:133:39: Error: Member not found: 'checkCircle2'.
+                          LucideIcons.checkCircle2,
+                                      ^^^^^^^^^^^^
+lib/widgets/image_compression_widget.dart:156:39: Error: Member not found: 'fileImage'.
+                          LucideIcons.fileImage,
+                                      ^^^^^^^^^
+lib/widgets/image_compression_widget.dart:172:41: Error: Member not found: 'trendingDown'.
+                            LucideIcons.trendingDown,
+                                        ^^^^^^^^^^^^
+lib/widgets/image_compression_widget.dart:207:35: Error: Member not found: 'alertCircle'.
+                      LucideIcons.alertCircle,
+                                  ^^^^^^^^^^^
+lib/services/file_import_service.dart:183:49: Error: The argument type 'String Function(dynamic)' can't be assigned to the parameter type 'String'.
+        .replaceAll(RegExp(r'[\u0660-\u0669]'), (match) {
+                                                ^
+lib/widgets/receipt_image_viewer.dart:42:27: Error: Member not found: 'share2'.
+              LucideIcons.share2,
+                          ^^^^^^
+lib/widgets/receipt_image_viewer.dart:50:29: Error: Member not found: 'trash2'.
+                LucideIcons.trash2,
+                            ^^^^^^
+lib/widgets/receipt_image_viewer.dart:57:27: Error: Member not found: 'moreVertical'.
+              LucideIcons.moreVertical,
+                          ^^^^^^^^^^^^
+lib/widgets/receipt_image_viewer.dart:96:33: Error: Member not found: 'imageOff'.
+                    LucideIcons.imageOff,
+                                ^^^^^^^^
+lib/widgets/receipt_image_viewer.dart:136:35: Error: Member not found: 'share2'.
+                icon: LucideIcons.share2,
+                                  ^^^^^^
+lib/widgets/receipt_image_viewer.dart:141:35: Error: Member not found: 'zoom'.
+                icon: LucideIcons.zoom,
+                                  ^^^^
+lib/widgets/receipt_image_viewer.dart:315:47: Error: Member not found: 'share2'.
+              leading: const Icon(LucideIcons.share2),
+                                              ^^^^^^
+lib/widgets/receipt_image_viewer.dart:341:31: Error: Member not found: 'trash2'.
+                  LucideIcons.trash2,
+                              ^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildRelease'.
+> Process 'command 'C:\flutter\src\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 38s
+Running Gradle task 'assembleRelease'...                           38.8s
+Gradle task assembleRelease failed with exit code 1
