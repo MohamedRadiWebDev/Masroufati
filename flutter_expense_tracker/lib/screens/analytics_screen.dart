@@ -295,8 +295,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         orElse: () => Category(
           id: 'default',
           name: transaction.category,
+          nameAr: transaction.category,
           color: '#6B7280',
           icon: 'circle',
+          type: TransactionType.expense,
           createdAt: DateTime.now(),
         ),
       );
@@ -356,8 +358,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   orElse: () => Category(
                     id: 'default',
                     name: entry.key,
+                    nameAr: entry.key,
                     color: '#6B7280',
                     icon: 'circle',
+                    type: TransactionType.expense,
                     createdAt: DateTime.now(),
                   ),
                 );
@@ -576,8 +580,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 orElse: () => Category(
                   id: 'default',
                   name: categoryEntry.key,
+                  nameAr: categoryEntry.key,
                   color: '#6B7280',
                   icon: 'circle',
+                  type: TransactionType.expense,
                   createdAt: DateTime.now(),
                 ),
               );
