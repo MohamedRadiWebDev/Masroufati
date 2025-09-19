@@ -27,7 +27,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   Widget build(BuildContext context) {
     final transactions = ref.watch(localTransactionsProvider);
     final filteredTransactions = _filterTransactions(transactions);
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -41,7 +41,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
           IconButton(
             onPressed: () => setState(() => _showFilters = !_showFilters),
             icon: Icon(
-              _showFilters ? LucideIcons.x : LucideIcons.filter,
+              _showFilters ? LucideIcons.x : Icons.filter_list,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
@@ -259,7 +259,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     // Group transactions by date for better organization
     final groupedTransactions = <String, List<Transaction>>{};
     final dateFormatter = DateFormat('yyyy-MM-dd');
-    
+
     for (final transaction in transactions) {
       final dateKey = dateFormatter.format(transaction.date);
       groupedTransactions[dateKey] ??= [];

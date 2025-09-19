@@ -86,7 +86,7 @@ class TransactionItem extends ConsumerWidget {
                             textDirection: TextDirectionHelper.rtl,
                           ),
                         ),
-                        
+
                         // Receipt Image Indicator
                         if (transaction.receiptImage != null)
                           Container(
@@ -156,7 +156,7 @@ class TransactionItem extends ConsumerWidget {
                   PopupMenuButton<String>(
                     onSelected: (value) => _handleMenuAction(context, ref, value),
                     icon: Icon(
-                      LucideIcons.moreHorizontal,
+                      Icons.more_horiz,
                       size: 16,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -191,7 +191,7 @@ class TransactionItem extends ConsumerWidget {
                         child: Row(
                           children: [
                             Icon(
-                              LucideIcons.edit2,
+                              LucideIcons.edit,
                               size: 16,
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
@@ -208,7 +208,7 @@ class TransactionItem extends ConsumerWidget {
                         child: Row(
                           children: [
                             Icon(
-                              LucideIcons.trash2,
+                              LucideIcons.trash,
                               size: 16,
                               color: Theme.of(context).colorScheme.error,
                             ),
@@ -330,7 +330,7 @@ class TransactionItem extends ConsumerWidget {
 
   void _deleteTransaction(BuildContext context, WidgetRef ref) {
     ref.read(transactionRepositoryProvider).deleteTransaction(transaction.id);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text(
@@ -396,8 +396,8 @@ class _TransactionDetailsModal extends StatelessWidget {
                   'النوع',
                   transaction.type == TransactionType.income ? 'دخل' : 'مصروف',
                   icon: transaction.type == TransactionType.income
-                      ? LucideIcons.trending_up
-                      : LucideIcons.trending_down,
+                      ? LucideIcons.trendingUp
+                      : LucideIcons.trendingDown,
                 ),
 
                 _buildDetailRow(
@@ -419,7 +419,7 @@ class _TransactionDetailsModal extends StatelessWidget {
                     context,
                     'الملاحظة',
                     transaction.note!,
-                    icon: LucideIcons.file_text,
+                    icon: LucideIcons.fileText,
                   ),
 
                 _buildDetailRow(

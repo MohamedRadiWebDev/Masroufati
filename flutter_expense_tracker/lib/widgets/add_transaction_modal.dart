@@ -175,7 +175,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             child: _buildTypeButton(
               type: TransactionType.expense,
               label: 'مصروف',
-              icon: LucideIcons.trendingDown,
+              icon: Icons.trending_down,
               color: Theme.of(context).colorScheme.error,
             ),
           ),
@@ -183,7 +183,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             child: _buildTypeButton(
               type: TransactionType.income,
               label: 'دخل',
-              icon: LucideIcons.trendingUp,
+              icon: Icons.trending_up,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
@@ -428,7 +428,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
           decoration: InputDecoration(
             hintText: 'أضف ملاحظة أو وصف للعملية...',
             hintTextDirection: TextDirectionHelper.rtl,
-            prefixIcon: const Icon(LucideIcons.fileText),
+            prefixIcon: const Icon(Icons.description),
             filled: true,
             fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
             border: OutlineInputBorder(

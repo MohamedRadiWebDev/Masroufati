@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -19,7 +18,7 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
 
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     with SingleTickerProviderStateMixin {
-  
+
   late TabController _tabController;
   String _selectedPeriod = 'month'; // month, year, all
   DateTime _selectedDate = DateTime.now();
@@ -40,9 +39,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   Widget build(BuildContext context) {
     final transactions = ref.watch(localTransactionsProvider);
     final categories = ref.watch(localCategoriesProvider);
-    
+
     final filteredTransactions = _filterTransactionsByPeriod(transactions);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -70,7 +69,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         children: [
           // Period selector
           _buildPeriodHeader(),
-          
+
           // Tab content
           Expanded(
             child: TabBarView(
@@ -127,28 +126,28 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final totalIncome = transactions
         .where((t) => t.type == TransactionType.income)
         .fold(0.0, (sum, t) => sum + t.amount);
-    
+
     final totalExpense = transactions
         .where((t) => t.type == TransactionType.expense)
         .fold(0.0, (sum, t) => sum + t.amount);
-    
+
     final balance = totalIncome - totalExpense;
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           // Summary cards
           _buildSummaryCards(totalIncome, totalExpense, balance),
-          
+
           const SizedBox(height: 24),
-          
+
           // Expense breakdown pie chart
           if (transactions.where((t) => t.type == TransactionType.expense).isNotEmpty)
             _buildExpenseBreakdownChart(transactions, categories),
-          
+
           const SizedBox(height: 24),
-          
+
           // Top categories
           _buildTopCategoriesSection(transactions, categories),
         ],
@@ -163,14 +162,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         children: [
           // Monthly trend line chart
           _buildMonthlyTrendChart(transactions),
-          
+
           const SizedBox(height: 24),
-          
+
           // Weekly spending pattern
           _buildWeeklyPatternChart(transactions),
-          
+
           const SizedBox(height: 24),
-          
+
           // Category trends
           _buildCategoryTrendsSection(transactions, categories),
         ],
@@ -185,14 +184,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         children: [
           // Income vs Expenses comparison
           _buildIncomeExpenseComparison(transactions),
-          
+
           const SizedBox(height: 24),
-          
+
           // Category comparison
           _buildCategoryComparison(transactions, categories),
-          
+
           const SizedBox(height: 24),
-          
+
           // Period comparison
           _buildPeriodComparison(transactions),
         ],
@@ -278,7 +277,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   Widget _buildExpenseBreakdownChart(List<Transaction> transactions, List<Category> categories) {
     final expenseTransactions = transactions.where((t) => t.type == TransactionType.expense).toList();
-    
+
     if (expenseTransactions.isEmpty) {
       return _buildEmptyChart('لا توجد مصروفات لعرضها');
     }
@@ -286,11 +285,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     // Group by category
     final Map<String, double> categoryTotals = {};
     final Map<String, Color> categoryColors = {};
-    
+
     for (final transaction in expenseTransactions) {
-      categoryTotals[transaction.category] = 
+      categoryTotals[transaction.category] =
           (categoryTotals[transaction.category] ?? 0) + transaction.amount;
-      
+
       final category = categories.firstWhere(
         (c) => c.name == transaction.category,
         orElse: () => Category(
@@ -309,7 +308,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     }
 
     final total = categoryTotals.values.fold(0.0, (sum, amount) => sum + amount);
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -324,7 +323,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             SizedBox(
               height: 250,
               child: PieChart(
@@ -348,9 +347,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Legend
             Wrap(
               children: categoryTotals.entries.map((entry) {
@@ -366,7 +365,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                     createdAt: DateTime.now(),
                   ),
                 );
-                
+
                 return Container(
                   margin: const EdgeInsets.only(left: 8, bottom: 8),
                   child: Row(
@@ -408,31 +407,31 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final months = <DateTime>[];
     final incomeData = <FlSpot>[];
     final expenseData = <FlSpot>[];
-    
+
     // Get last 12 months
     for (int i = 11; i >= 0; i--) {
       final month = DateTime(now.year, now.month - i, 1);
       months.add(month);
     }
-    
+
     // Calculate monthly totals
     for (int i = 0; i < months.length; i++) {
       final month = months[i];
       final monthTransactions = transactions.where((t) =>
           t.date.year == month.year && t.date.month == month.month).toList();
-      
+
       final monthlyIncome = monthTransactions
           .where((t) => t.type == TransactionType.income)
           .fold(0.0, (sum, t) => sum + t.amount);
-      
+
       final monthlyExpense = monthTransactions
           .where((t) => t.type == TransactionType.expense)
           .fold(0.0, (sum, t) => sum + t.amount);
-      
+
       incomeData.add(FlSpot(i.toDouble(), monthlyIncome));
       expenseData.add(FlSpot(i.toDouble(), monthlyExpense));
     }
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -447,7 +446,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             SizedBox(
               height: 250,
               child: LineChart(
@@ -501,9 +500,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Legend
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -541,7 +540,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   Widget _buildTopCategoriesSection(List<Transaction> transactions, List<Category> categories) {
     final expenseTransactions = transactions.where((t) => t.type == TransactionType.expense).toList();
-    
+
     if (expenseTransactions.isEmpty) {
       return _buildEmptyChart('لا توجد مصروفات لعرضها');
     }
@@ -549,15 +548,15 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     // Group and sort by total amount
     final Map<String, double> categoryTotals = {};
     for (final transaction in expenseTransactions) {
-      categoryTotals[transaction.category] = 
+      categoryTotals[transaction.category] =
           (categoryTotals[transaction.category] ?? 0) + transaction.amount;
     }
-    
+
     final sortedCategories = categoryTotals.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     final topCategories = sortedCategories.take(5).toList();
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -572,7 +571,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             ...topCategories.asMap().entries.map((entry) {
               final index = entry.key;
               final categoryEntry = entry.value;
@@ -588,7 +587,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   createdAt: DateTime.now(),
                 ),
               );
-              
+
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: Row(
@@ -647,12 +646,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   Widget _buildWeeklyPatternChart(List<Transaction> transactions) {
     final weeklyData = <int, double>{};
-    
+
     // Initialize week days (0 = Sunday, 6 = Saturday)
     for (int i = 0; i < 7; i++) {
       weeklyData[i] = 0.0;
     }
-    
+
     // Calculate spending by day of week
     for (final transaction in transactions) {
       if (transaction.type == TransactionType.expense) {
@@ -660,9 +659,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         weeklyData[dayOfWeek] = weeklyData[dayOfWeek]! + transaction.amount;
       }
     }
-    
+
     final dayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -677,7 +676,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             SizedBox(
               height: 250,
               child: BarChart(
@@ -861,7 +860,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.chart,
+              Icons.bar_chart,
               size: 48,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -883,17 +882,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
   List<Transaction> _filterTransactionsByPeriod(List<Transaction> transactions) {
     final now = DateTime.now();
     DateTime startDate;
-    
+
     switch (_selectedPeriod) {
       case 'month':
         startDate = DateTime(_selectedDate.year, _selectedDate.month, 1);
         return transactions.where((t) =>
-            t.date.year == _selectedDate.year && 
+            t.date.year == _selectedDate.year &&
             t.date.month == _selectedDate.month).toList();
-      
+
       case 'year':
         return transactions.where((t) => t.date.year == _selectedDate.year).toList();
-      
+
       case 'all':
       default:
         return transactions;

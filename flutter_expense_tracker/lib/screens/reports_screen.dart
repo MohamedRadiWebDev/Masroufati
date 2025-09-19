@@ -21,7 +21,7 @@ class ReportsScreen extends ConsumerStatefulWidget {
 
 class _ReportsScreenState extends ConsumerState<ReportsScreen>
     with TickerProviderStateMixin {
-  
+
   TimeRange _selectedTimeRange = TimeRange.month;
   ChartType _selectedChartType = ChartType.area;
   String _selectedCategory = 'all';
@@ -43,10 +43,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
   Widget build(BuildContext context) {
     final transactions = ref.watch(localTransactionsProvider);
     final categories = ref.watch(localCategoriesProvider);
-    
+
     final filteredTransactions = _filterTransactionsByTimeRange(transactions);
     final reportData = _generateReportData(filteredTransactions, categories);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -64,9 +64,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.chart, size: 16)),
+            Tab(text: 'نظرة عامة', icon: Icon(Icons.bar_chart, size: 16)),
             Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trending_up, size: 16)),
-            Tab(text: 'المقارنات', icon: Icon(LucideIcons.chart, size: 16)),
+            Tab(text: 'المقارنات', icon: Icon(Icons.bar_chart, size: 16)),
           ],
         ),
       ),
@@ -74,7 +74,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         children: [
           // Filter controls
           _buildFilterControls(),
-          
+
           // Content
           Expanded(
             child: TabBarView(
@@ -165,14 +165,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         children: [
           // Summary cards
           _buildSummaryCards(reportData.overview),
-          
+
           const SizedBox(height: 24),
-          
+
           // Cash flow chart
           _buildCashFlowChart(reportData.trends.daily),
-          
+
           const SizedBox(height: 24),
-          
+
           // Category breakdown
           _buildCategoryBreakdown(reportData.trends.categoryTrends, categories),
         ],
@@ -187,9 +187,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         children: [
           // Daily trends chart
           _buildDailyTrendsChart(reportData.trends.daily),
-          
+
           const SizedBox(height: 24),
-          
+
           // Monthly comparison
           if (reportData.trends.monthly.isNotEmpty)
             _buildMonthlyTrendsChart(reportData.trends.monthly),
@@ -205,9 +205,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         children: [
           // Period comparison
           _buildPeriodComparison(reportData.comparisons.previousPeriod),
-          
+
           const SizedBox(height: 24),
-          
+
           // Category comparison
           _buildCategoryComparison(reportData.comparisons.categoryComparison, categories),
         ],
@@ -319,7 +319,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             SizedBox(
               height: 250,
               child: _selectedChartType == ChartType.bar
@@ -336,7 +336,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
     final incomeSpots = data.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value.income);
     }).toList();
-    
+
     final expenseSpots = data.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value.expenses);
     }).toList();
@@ -473,7 +473,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             SizedBox(
               height: 250,
               child: _buildLineChart(data),
@@ -499,7 +499,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             SizedBox(
               height: 250,
               child: LineChart(
@@ -581,7 +581,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             ...categoryTrends.take(5).map((trend) {
               final category = categories.firstWhere(
                 (c) => c.name == trend.category,
@@ -595,7 +595,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                   createdAt: DateTime.now(),
                 ),
               );
-              
+
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: Row(
@@ -664,7 +664,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             Row(
               children: [
                 Expanded(
@@ -694,7 +694,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
 
   Widget _buildComparisonCard(String title, double amount, double changePercent, IconData icon) {
     final isPositive = changePercent >= 0;
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -766,7 +766,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
-            
+
             ...comparisons.take(5).map((comparison) {
               final category = categories.firstWhere(
                 (c) => c.name == comparison.category,
@@ -780,7 +780,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                   createdAt: DateTime.now(),
                 ),
               );
-              
+
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: Column(
@@ -860,7 +860,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                LucideIcons.chart_3,
+                Icons.pie_chart,
                 size: 48,
                 color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
               ),
@@ -907,7 +907,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
   List<Transaction> _filterTransactionsByTimeRange(List<Transaction> transactions) {
     final now = DateTime.now();
     final DateTime startDate;
-    
+
     switch (_selectedTimeRange) {
       case TimeRange.week:
         startDate = now.subtract(const Duration(days: 7));
@@ -940,17 +940,17 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
     final totalIncome = transactions
         .where((t) => t.type == TransactionType.income)
         .fold(0.0, (sum, t) => sum + t.amount);
-    
+
     final totalExpenses = transactions
         .where((t) => t.type == TransactionType.expense)
         .fold(0.0, (sum, t) => sum + t.amount);
-    
+
     final netCashFlow = totalIncome - totalExpenses;
     final transactionCount = transactions.length;
     final avgDailySpend = transactions.isNotEmpty 
         ? totalExpenses / _getDaysInRange()
         : 0.0;
-    
+
     // Get top category
     final categoryTotals = <String, double>{};
     for (final transaction in transactions.where((t) => t.type == TransactionType.expense)) {
@@ -999,10 +999,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
 
   List<DailyTrend> _generateDailyTrends(List<Transaction> transactions) {
     final dailyData = <String, DailyTrend>{};
-    
+
     for (final transaction in transactions) {
       final dateKey = DateFormat('yyyy-MM-dd').format(transaction.date);
-      
+
       if (!dailyData.containsKey(dateKey)) {
         dailyData[dateKey] = DailyTrend(
           date: dateKey,
@@ -1011,7 +1011,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
           net: 0,
         );
       }
-      
+
       if (transaction.type == TransactionType.income) {
         dailyData[dateKey] = dailyData[dateKey]!.copyWith(
           income: dailyData[dateKey]!.income + transaction.amount,
@@ -1021,24 +1021,24 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
           expenses: dailyData[dateKey]!.expenses + transaction.amount,
         );
       }
-      
+
       dailyData[dateKey] = dailyData[dateKey]!.copyWith(
         net: dailyData[dateKey]!.income - dailyData[dateKey]!.expenses,
       );
     }
-    
+
     final sortedEntries = dailyData.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
-    
+
     return sortedEntries.map((entry) => entry.value).toList();
   }
 
   List<MonthlyTrend> _generateMonthlyTrends(List<Transaction> transactions) {
     final monthlyData = <String, MonthlyTrend>{};
-    
+
     for (final transaction in transactions) {
       final monthKey = DateFormat('yyyy-MM').format(transaction.date);
-      
+
       if (!monthlyData.containsKey(monthKey)) {
         monthlyData[monthKey] = MonthlyTrend(
           month: DateFormat('MMM', 'ar').format(transaction.date),
@@ -1047,7 +1047,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
           net: 0,
         );
       }
-      
+
       if (transaction.type == TransactionType.income) {
         monthlyData[monthKey] = monthlyData[monthKey]!.copyWith(
           income: monthlyData[monthKey]!.income + transaction.amount,
@@ -1057,29 +1057,29 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
           expenses: monthlyData[monthKey]!.expenses + transaction.amount,
         );
       }
-      
+
       monthlyData[monthKey] = monthlyData[monthKey]!.copyWith(
         net: monthlyData[monthKey]!.income - monthlyData[monthKey]!.expenses,
       );
     }
-    
+
     final sortedEntries = monthlyData.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
-    
+
     return sortedEntries.map((entry) => entry.value).toList();
   }
 
   List<CategoryTrend> _generateCategoryTrends(List<Transaction> transactions) {
     final categoryData = <String, double>{};
-    
+
     for (final transaction in transactions.where((t) => t.type == TransactionType.expense)) {
       categoryData[transaction.category] = 
           (categoryData[transaction.category] ?? 0) + transaction.amount;
     }
-    
+
     final sortedEntries = categoryData.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     return sortedEntries.map((entry) => CategoryTrend(
       category: entry.key,
       amount: entry.value,
@@ -1098,12 +1098,12 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
 
   List<CategoryComparison> _generateCategoryComparisons(List<Transaction> transactions) {
     final categoryData = <String, double>{};
-    
+
     for (final transaction in transactions.where((t) => t.type == TransactionType.expense)) {
       categoryData[transaction.category] = 
           (categoryData[transaction.category] ?? 0) + transaction.amount;
     }
-    
+
     return categoryData.entries.map((entry) => CategoryComparison(
       category: entry.key,
       current: entry.value,
