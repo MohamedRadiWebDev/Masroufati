@@ -60,7 +60,7 @@ class ArabicTextProcessor {
   static String _normalizeText(String text) {
     return text
         .toLowerCase()
-        .replaceAll(RegExp(r'[٠-٩]'), (match) {
+        .replaceAllMapped(RegExp(r'[٠-٩]'), (match) {
           // Convert Arabic-Indic digits to ASCII
           final arabicDigit = match.group(0)!;
           final asciiDigit = String.fromCharCode(

@@ -9,18 +9,18 @@ class CategoryIcons {
     'plane': LucideIcons.plane,
     'bus': LucideIcons.bus,
     'bike': LucideIcons.bike,
-    'train': Icons.train, // fallback to Material Icons
+    'train': Icons.train,
     'fuel': LucideIcons.fuel,
     
     // Shopping
-    'shopping-cart': LucideIcons.shopping_cart,
-    'shopping-bag': LucideIcons.shopping_bag,
+    'shopping-cart': LucideIcons.shoppingCart,
+    'shopping-bag': LucideIcons.shoppingBag,
     'gift': LucideIcons.gift,
     'shirt': LucideIcons.shirt,
-    'glasses': LucideIcons.glasses,
+    'glasses': Icons.remove_red_eye,
     
     // Entertainment
-    'gamepad-2': LucideIcons.gamepad_2,
+    'gamepad-2': LucideIcons.gamepad2,
     'music': LucideIcons.music,
     'camera': LucideIcons.camera,
     'tv': LucideIcons.tv,
@@ -29,13 +29,13 @@ class CategoryIcons {
     'ticket': LucideIcons.ticket,
     
     // Education
-    'graduation-cap': LucideIcons.graduation_cap,
-    'book-open': LucideIcons.book_open,
+    'graduation-cap': LucideIcons.graduationCap,
+    'book-open': LucideIcons.bookOpen,
     'pencil': LucideIcons.pencil,
     'calculator': LucideIcons.calculator,
     
     // Home & Utilities
-    'home': Icons.home, // fallback to Material Icons
+    'home': Icons.home,
     'zap': LucideIcons.zap,
     'droplets': LucideIcons.droplets,
     'wifi': LucideIcons.wifi,
@@ -43,12 +43,12 @@ class CategoryIcons {
     'smartphone': LucideIcons.smartphone,
     
     // Finance
-    'credit-card': LucideIcons.credit_card,
+    'credit-card': LucideIcons.creditCard,
     'banknote': LucideIcons.banknote,
-    'piggy-bank': LucideIcons.piggy_bank,
-    'circle-dollar-sign': LucideIcons.circle_dollar_sign,
+    'piggy-bank': LucideIcons.piggyBank,
+    'circle-dollar-sign': LucideIcons.circleDollarSign,
     'wallet': LucideIcons.wallet,
-    'trending-up': LucideIcons.trending_up,
+    'trending-up': LucideIcons.trendingUp,
     'coins': LucideIcons.coins,
     
     // Health & Medical
@@ -58,7 +58,7 @@ class CategoryIcons {
     'activity': LucideIcons.activity,
     
     // Location & Travel
-    'map-pin': LucideIcons.map_pin,
+    'map-pin': LucideIcons.mapPin,
     'compass': LucideIcons.compass,
     'luggage': LucideIcons.luggage,
     'tent': LucideIcons.tent,
@@ -66,8 +66,7 @@ class CategoryIcons {
     
     // Sports & Fitness
     'dumbbell': LucideIcons.dumbbell,
-    'football': Icons.sports_football, // fallback to Material Icons
-    'bike': LucideIcons.bike,
+    'football': Icons.sports_football,
     'trophy': LucideIcons.trophy,
     
     // Food & Dining
@@ -78,11 +77,16 @@ class CategoryIcons {
     'wine': LucideIcons.wine,
     
     // Default & Misc
-    'more-horizontal': LucideIcons.more_horizontal,
+    'more-horizontal': Icons.more_horiz,
     'star': LucideIcons.star,
-    'help-circle': LucideIcons.help_circle,
+    'help-circle': Icons.help_outline,
     'settings': LucideIcons.settings,
-    'alert-circle': LucideIcons.alert_circle,
+    'alert-circle': Icons.error_outline,
+    'filter': Icons.filter_list,
+    'chart': Icons.bar_chart,
+    'edit': LucideIcons.edit,
+    'trash': LucideIcons.trash,
+    'circle': LucideIcons.circle,
   };
 
   static IconData getIcon(String iconName) {

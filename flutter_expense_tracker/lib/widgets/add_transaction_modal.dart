@@ -175,7 +175,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             child: _buildTypeButton(
               type: TransactionType.expense,
               label: 'مصروف',
-              icon: LucideIcons.trending_down,
+              icon: LucideIcons.trendingDown,
               color: Theme.of(context).colorScheme.error,
             ),
           ),
@@ -183,7 +183,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             child: _buildTypeButton(
               type: TransactionType.income,
               label: 'دخل',
-              icon: LucideIcons.trending_up,
+              icon: LucideIcons.trendingUp,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
@@ -297,7 +297,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             if (_showCategorySuggestions && _suggestedCategories.isNotEmpty)
               TextButton.icon(
                 onPressed: () => setState(() => _showCategorySuggestions = false),
-                icon: const Icon(LucideIcons.x, size: 16),
+                icon: const Icon(Icons.close, size: 16),
                 label: const Text('إخفاء الاقتراحات'),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -428,7 +428,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
           decoration: InputDecoration(
             hintText: 'أضف ملاحظة أو وصف للعملية...',
             hintTextDirection: TextDirectionHelper.rtl,
-            prefixIcon: const Icon(LucideIcons.file_text),
+            prefixIcon: const Icon(LucideIcons.fileText),
             filled: true,
             fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
             border: OutlineInputBorder(
@@ -534,7 +534,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
                         _compressedImageBase64 = null;
                       }),
                       icon: const Icon(
-                        LucideIcons.x,
+                        Icons.close,
                         color: Colors.white,
                         size: 20,
                       ),
