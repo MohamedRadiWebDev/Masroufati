@@ -13,14 +13,14 @@ class CategoryIcons {
     'fuel': LucideIcons.fuel,
     
     // Shopping
-    'shopping-cart': LucideIcons.shopping_cart,
-    'shopping-bag': LucideIcons.shopping_bag,
+    'shopping-cart': LucideIcons.shoppingCart,
+    'shopping-bag': LucideIcons.shoppingBag,
     'gift': LucideIcons.gift,
     'shirt': LucideIcons.shirt,
     'glasses': LucideIcons.glasses,
     
     // Entertainment
-    'gamepad-2': LucideIcons.gamepad_2,
+    'gamepad-2': LucideIcons.gamepad2,
     'music': LucideIcons.music,
     'camera': LucideIcons.camera,
     'tv': LucideIcons.tv,
@@ -29,8 +29,8 @@ class CategoryIcons {
     'ticket': LucideIcons.ticket,
     
     // Education
-    'graduation-cap': LucideIcons.graduation_cap,
-    'book-open': LucideIcons.book_open,
+    'graduation-cap': LucideIcons.graduationCap,
+    'book-open': LucideIcons.bookOpen,
     'pencil': LucideIcons.pencil,
     'calculator': LucideIcons.calculator,
     
@@ -43,12 +43,12 @@ class CategoryIcons {
     'smartphone': LucideIcons.smartphone,
     
     // Finance
-    'credit-card': LucideIcons.credit_card,
+    'credit-card': LucideIcons.creditCard,
     'banknote': LucideIcons.banknote,
-    'piggy-bank': LucideIcons.piggy_bank,
-    'circle-dollar-sign': LucideIcons.circle_dollar_sign,
+    'piggy-bank': LucideIcons.piggyBank,
+    'circle-dollar-sign': LucideIcons.circleDollarSign,
     'wallet': LucideIcons.wallet,
-    'trending-up': LucideIcons.trending_up,
+    'trending-up': LucideIcons.trendingUp,
     'coins': LucideIcons.coins,
     
     // Health & Medical
@@ -58,7 +58,7 @@ class CategoryIcons {
     'activity': LucideIcons.activity,
     
     // Location & Travel
-    'map-pin': LucideIcons.map_pin,
+    'map-pin': LucideIcons.mapPin,
     'compass': LucideIcons.compass,
     'luggage': LucideIcons.luggage,
     'tent': LucideIcons.tent,
@@ -78,11 +78,11 @@ class CategoryIcons {
     'wine': LucideIcons.wine,
     
     // Default & Misc
-    'more-horizontal': LucideIcons.moreHorizontal,
+    'more-horizontal': LucideIcons.more_horizontal,
     'star': LucideIcons.star,
-    'help-circle': LucideIcons.helpCircle,
+    'help-circle': LucideIcons.help_circle,
     'settings': LucideIcons.settings,
-    'alert-circle': LucideIcons.alertCircle,
+    'alert-circle': LucideIcons.alert_circle,
   };
 
   static IconData getIcon(String iconName) {

@@ -22,11 +22,13 @@ Category _$CategoryFromJson(Map<String, dynamic> json) {
 mixin _$Category {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  @JsonKey(name: 'name_ar')
   String get nameAr => throw _privateConstructorUsedError;
-  TransactionType get type => throw _privateConstructorUsedError;
   String get icon => throw _privateConstructorUsedError;
   String get color => throw _privateConstructorUsedError;
+  TransactionType get type => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  String? get serverId => throw _privateConstructorUsedError;
+  bool get isDefault => throw _privateConstructorUsedError;
 
   /// Serializes this Category to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,10 +48,13 @@ abstract class $CategoryCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      @JsonKey(name: 'name_ar') String nameAr,
-      TransactionType type,
+      String nameAr,
       String icon,
-      String color});
+      String color,
+      TransactionType type,
+      DateTime? createdAt,
+      String? serverId,
+      bool isDefault});
 }
 
 /// @nodoc
@@ -70,9 +75,12 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
     Object? id = null,
     Object? name = null,
     Object? nameAr = null,
-    Object? type = null,
     Object? icon = null,
     Object? color = null,
+    Object? type = null,
+    Object? createdAt = freezed,
+    Object? serverId = freezed,
+    Object? isDefault = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -87,10 +95,6 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
           ? _value.nameAr
           : nameAr // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as TransactionType,
       icon: null == icon
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
@@ -99,6 +103,22 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as TransactionType,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      serverId: freezed == serverId
+          ? _value.serverId
+          : serverId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isDefault: null == isDefault
+          ? _value.isDefault
+          : isDefault // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -114,10 +134,13 @@ abstract class _$$CategoryImplCopyWith<$Res>
   $Res call(
       {String id,
       String name,
-      @JsonKey(name: 'name_ar') String nameAr,
-      TransactionType type,
+      String nameAr,
       String icon,
-      String color});
+      String color,
+      TransactionType type,
+      DateTime? createdAt,
+      String? serverId,
+      bool isDefault});
 }
 
 /// @nodoc
@@ -136,9 +159,12 @@ class __$$CategoryImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? nameAr = null,
-    Object? type = null,
     Object? icon = null,
     Object? color = null,
+    Object? type = null,
+    Object? createdAt = freezed,
+    Object? serverId = freezed,
+    Object? isDefault = null,
   }) {
     return _then(_$CategoryImpl(
       id: null == id
@@ -153,10 +179,6 @@ class __$$CategoryImplCopyWithImpl<$Res>
           ? _value.nameAr
           : nameAr // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as TransactionType,
       icon: null == icon
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
@@ -165,6 +187,22 @@ class __$$CategoryImplCopyWithImpl<$Res>
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as TransactionType,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      serverId: freezed == serverId
+          ? _value.serverId
+          : serverId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isDefault: null == isDefault
+          ? _value.isDefault
+          : isDefault // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -175,10 +213,13 @@ class _$CategoryImpl implements _Category {
   const _$CategoryImpl(
       {required this.id,
       required this.name,
-      @JsonKey(name: 'name_ar') required this.nameAr,
-      required this.type,
+      required this.nameAr,
       required this.icon,
-      required this.color});
+      required this.color,
+      required this.type,
+      this.createdAt,
+      this.serverId,
+      this.isDefault = false});
 
   factory _$CategoryImpl.fromJson(Map<String, dynamic> json) =>
       _$$CategoryImplFromJson(json);
@@ -188,18 +229,24 @@ class _$CategoryImpl implements _Category {
   @override
   final String name;
   @override
-  @JsonKey(name: 'name_ar')
   final String nameAr;
-  @override
-  final TransactionType type;
   @override
   final String icon;
   @override
   final String color;
+  @override
+  final TransactionType type;
+  @override
+  final DateTime? createdAt;
+  @override
+  final String? serverId;
+  @override
+  @JsonKey()
+  final bool isDefault;
 
   @override
   String toString() {
-    return 'Category(id: $id, name: $name, nameAr: $nameAr, type: $type, icon: $icon, color: $color)';
+    return 'Category(id: $id, name: $name, nameAr: $nameAr, icon: $icon, color: $color, type: $type, createdAt: $createdAt, serverId: $serverId, isDefault: $isDefault)';
   }
 
   @override
@@ -210,15 +257,21 @@ class _$CategoryImpl implements _Category {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.nameAr, nameAr) || other.nameAr == nameAr) &&
-            (identical(other.type, type) || other.type == type) &&
             (identical(other.icon, icon) || other.icon == icon) &&
-            (identical(other.color, color) || other.color == color));
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.serverId, serverId) ||
+                other.serverId == serverId) &&
+            (identical(other.isDefault, isDefault) ||
+                other.isDefault == isDefault));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, nameAr, type, icon, color);
+  int get hashCode => Object.hash(runtimeType, id, name, nameAr, icon, color,
+      type, createdAt, serverId, isDefault);
 
   /// Create a copy of Category
   /// with the given fields replaced by the non-null parameter values.
@@ -240,10 +293,13 @@ abstract class _Category implements Category {
   const factory _Category(
       {required final String id,
       required final String name,
-      @JsonKey(name: 'name_ar') required final String nameAr,
-      required final TransactionType type,
+      required final String nameAr,
       required final String icon,
-      required final String color}) = _$CategoryImpl;
+      required final String color,
+      required final TransactionType type,
+      final DateTime? createdAt,
+      final String? serverId,
+      final bool isDefault}) = _$CategoryImpl;
 
   factory _Category.fromJson(Map<String, dynamic> json) =
       _$CategoryImpl.fromJson;
@@ -253,14 +309,19 @@ abstract class _Category implements Category {
   @override
   String get name;
   @override
-  @JsonKey(name: 'name_ar')
   String get nameAr;
-  @override
-  TransactionType get type;
   @override
   String get icon;
   @override
   String get color;
+  @override
+  TransactionType get type;
+  @override
+  DateTime? get createdAt;
+  @override
+  String? get serverId;
+  @override
+  bool get isDefault;
 
   /// Create a copy of Category
   /// with the given fields replaced by the non-null parameter values.
@@ -278,7 +339,6 @@ CreateCategoryRequest _$CreateCategoryRequestFromJson(
 /// @nodoc
 mixin _$CreateCategoryRequest {
   String get name => throw _privateConstructorUsedError;
-  @JsonKey(name: 'name_ar')
   String get nameAr => throw _privateConstructorUsedError;
   TransactionType get type => throw _privateConstructorUsedError;
   String get icon => throw _privateConstructorUsedError;
@@ -302,7 +362,7 @@ abstract class $CreateCategoryRequestCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      @JsonKey(name: 'name_ar') String nameAr,
+      String nameAr,
       TransactionType type,
       String icon,
       String color});
@@ -366,7 +426,7 @@ abstract class _$$CreateCategoryRequestImplCopyWith<$Res>
   @useResult
   $Res call(
       {String name,
-      @JsonKey(name: 'name_ar') String nameAr,
+      String nameAr,
       TransactionType type,
       String icon,
       String color});
@@ -422,7 +482,7 @@ class __$$CreateCategoryRequestImplCopyWithImpl<$Res>
 class _$CreateCategoryRequestImpl implements _CreateCategoryRequest {
   const _$CreateCategoryRequestImpl(
       {required this.name,
-      @JsonKey(name: 'name_ar') required this.nameAr,
+      required this.nameAr,
       required this.type,
       required this.icon,
       required this.color});
@@ -433,7 +493,6 @@ class _$CreateCategoryRequestImpl implements _CreateCategoryRequest {
   @override
   final String name;
   @override
-  @JsonKey(name: 'name_ar')
   final String nameAr;
   @override
   final TransactionType type;
@@ -483,7 +542,7 @@ class _$CreateCategoryRequestImpl implements _CreateCategoryRequest {
 abstract class _CreateCategoryRequest implements CreateCategoryRequest {
   const factory _CreateCategoryRequest(
       {required final String name,
-      @JsonKey(name: 'name_ar') required final String nameAr,
+      required final String nameAr,
       required final TransactionType type,
       required final String icon,
       required final String color}) = _$CreateCategoryRequestImpl;
@@ -494,7 +553,6 @@ abstract class _CreateCategoryRequest implements CreateCategoryRequest {
   @override
   String get name;
   @override
-  @JsonKey(name: 'name_ar')
   String get nameAr;
   @override
   TransactionType get type;

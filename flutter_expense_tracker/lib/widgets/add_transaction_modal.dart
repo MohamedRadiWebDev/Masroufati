@@ -9,6 +9,7 @@ import '../providers/offline_providers.dart';
 import '../utils/category_icons.dart';
 import '../widgets/image_compression_widget.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import '../utils/text_direction_helper.dart';
 import 'package:flutter/services.dart';
 
 class AddTransactionModal extends ConsumerStatefulWidget {
@@ -113,7 +114,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
-                      textDirection: TextDirection.rtl,
+                      textDirection: TextDirectionHelper.rtl,
                     ),
 
                     const SizedBox(height: 24),
@@ -220,7 +221,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
                 color: isSelected ? Colors.white : color,
                 fontWeight: FontWeight.w600,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
           ],
         ),
@@ -238,7 +239,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             fontWeight: FontWeight.w600,
             color: Theme.of(context).colorScheme.onSurface,
           ),
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
         ),
         const SizedBox(height: 8),
         
@@ -288,7 +289,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const Spacer(),
             if (_showCategorySuggestions && _suggestedCategories.isNotEmpty)
@@ -341,7 +342,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w500,
                           ),
-                          textDirection: TextDirection.rtl,
+                          textDirection: TextDirectionHelper.rtl,
                         ),
                       ],
                     ),
@@ -355,7 +356,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
           value: _selectedCategoryId,
           decoration: InputDecoration(
             hintText: 'اختر التصنيف',
-            hintTextDirection: TextDirection.rtl,
+            hintTextDirection: TextDirectionHelper.rtl,
             prefixIcon: _selectedCategoryId != null 
                 ? Icon(
                     CategoryIcons.getIcon(
@@ -386,7 +387,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
                 const SizedBox(width: 12),
                 Text(
                   category.name,
-                  textDirection: TextDirection.rtl,
+                  textDirection: TextDirectionHelper.rtl,
                 ),
               ],
             ),
@@ -413,18 +414,18 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             fontWeight: FontWeight.w600,
             color: Theme.of(context).colorScheme.onSurface,
           ),
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
         ),
         const SizedBox(height: 8),
         
         TextFormField(
           controller: _noteController,
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
           maxLines: 3,
           onChanged: _onNoteChanged,
           decoration: InputDecoration(
             hintText: 'أضف ملاحظة أو وصف للعملية...',
-            hintTextDirection: TextDirection.rtl,
+            hintTextDirection: TextDirectionHelper.rtl,
             prefixIcon: const Icon(LucideIcons.fileText),
             filled: true,
             fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
@@ -448,7 +449,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             fontWeight: FontWeight.w600,
             color: Theme.of(context).colorScheme.onSurface,
           ),
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
         ),
         const SizedBox(height: 8),
         
@@ -471,7 +472,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
                 Text(
                   DateFormat('EEEE، d MMMM yyyy - HH:mm', 'ar').format(_selectedDate),
                   style: Theme.of(context).textTheme.bodyLarge,
-                  textDirection: TextDirection.rtl,
+                  textDirection: TextDirectionHelper.rtl,
                 ),
               ],
             ),
@@ -491,7 +492,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             fontWeight: FontWeight.w600,
             color: Theme.of(context).colorScheme.onSurface,
           ),
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
         ),
         const SizedBox(height: 8),
 
@@ -703,7 +704,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
           SnackBar(
             content: Text(
               'خطأ في اختيار الصورة: ${e.toString()}',
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
@@ -744,7 +745,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             const SnackBar(
               content: Text(
                 'تم تعديل العملية بنجاح',
-                textDirection: TextDirection.rtl,
+                textDirection: TextDirectionHelper.rtl,
               ),
             ),
           );
@@ -767,7 +768,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
             const SnackBar(
               content: Text(
                 'تم إضافة العملية بنجاح',
-                textDirection: TextDirection.rtl,
+                textDirection: TextDirectionHelper.rtl,
               ),
             ),
           );
@@ -783,7 +784,7 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
           SnackBar(
             content: Text(
               'خطأ في حفظ العملية: ${e.toString()}',
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),

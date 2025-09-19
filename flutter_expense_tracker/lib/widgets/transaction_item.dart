@@ -9,6 +9,7 @@ import '../providers/offline_providers.dart';
 import '../utils/category_icons.dart';
 import '../widgets/receipt_image_viewer.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import '../utils/text_direction_helper.dart';
 
 class TransactionItem extends ConsumerWidget {
   final Transaction transaction;
@@ -26,8 +27,10 @@ class TransactionItem extends ConsumerWidget {
       orElse: () => Category(
         id: 'default',
         name: transaction.category,
+        nameAr: transaction.category,
         color: '#6B7280',
         icon: 'circle',
+        type: transaction.type,
         createdAt: DateTime.now(),
       ),
     );
@@ -80,7 +83,7 @@ class TransactionItem extends ConsumerWidget {
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
-                            textDirection: TextDirection.rtl,
+                            textDirection: TextDirectionHelper.rtl,
                           ),
                         ),
                         
@@ -113,7 +116,7 @@ class TransactionItem extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
-                          textDirection: TextDirection.rtl,
+                          textDirection: TextDirectionHelper.rtl,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -125,7 +128,7 @@ class TransactionItem extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
-                      textDirection: TextDirection.rtl,
+                      textDirection: TextDirectionHelper.rtl,
                     ),
                   ],
                 ),
@@ -145,7 +148,7 @@ class TransactionItem extends ConsumerWidget {
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.error,
                     ),
-                    textDirection: TextDirection.rtl,
+                    textDirection: TextDirectionHelper.rtl,
                   ),
 
                   const SizedBox(height: 4),
@@ -173,7 +176,7 @@ class TransactionItem extends ConsumerWidget {
                             const SizedBox(width: 8),
                             Text(
                               'عرض الإيصال',
-                              textDirection: TextDirection.rtl,
+                              textDirection: TextDirectionHelper.rtl,
                               style: TextStyle(
                                 color: transaction.receiptImage != null
                                     ? Theme.of(context).colorScheme.onSurfaceVariant
@@ -195,7 +198,7 @@ class TransactionItem extends ConsumerWidget {
                             const SizedBox(width: 8),
                             const Text(
                               'تعديل',
-                              textDirection: TextDirection.rtl,
+                              textDirection: TextDirectionHelper.rtl,
                             ),
                           ],
                         ),
@@ -212,7 +215,7 @@ class TransactionItem extends ConsumerWidget {
                             const SizedBox(width: 8),
                             Text(
                               'حذف',
-                              textDirection: TextDirection.rtl,
+                              textDirection: TextDirectionHelper.rtl,
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.error,
                               ),
@@ -299,11 +302,11 @@ class TransactionItem extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text(
           'تأكيد الحذف',
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
         ),
         content: const Text(
           'هل أنت متأكد من حذف هذه العملية؟ لا يمكن التراجع عن هذا الإجراء.',
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
         ),
         actions: [
           TextButton(
@@ -332,7 +335,7 @@ class TransactionItem extends ConsumerWidget {
       SnackBar(
         content: const Text(
           'تم حذف العملية بنجاح',
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
         ),
         action: SnackBarAction(
           label: 'تراجع',
@@ -382,7 +385,7 @@ class _TransactionDetailsModal extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
-                  textDirection: TextDirection.rtl,
+                  textDirection: TextDirectionHelper.rtl,
                 ),
 
                 const SizedBox(height: 24),
@@ -495,7 +498,7 @@ class _TransactionDetailsModal extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
-                  textDirection: TextDirection.rtl,
+                  textDirection: TextDirectionHelper.rtl,
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -503,7 +506,7 @@ class _TransactionDetailsModal extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
-                  textDirection: TextDirection.rtl,
+                  textDirection: TextDirectionHelper.rtl,
                 ),
               ],
             ),

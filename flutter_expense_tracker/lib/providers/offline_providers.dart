@@ -144,8 +144,10 @@ class CategoryRepository {
     final category = Category(
       id: uuid.v4(), // Use UUID for consistent server-client IDs
       name: request.name,
+      nameAr: request.nameAr,
       color: request.color,
       icon: request.icon,
+      type: request.type,
       createdAt: DateTime.now(),
     );
 

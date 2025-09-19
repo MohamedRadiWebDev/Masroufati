@@ -7,6 +7,7 @@ import '../widgets/transaction_item.dart';
 import '../widgets/add_transaction_modal.dart';
 import '../widgets/transaction_filters.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import '../utils/text_direction_helper.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
   const TransactionsScreen({super.key});
@@ -59,11 +60,11 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: TextField(
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
               onChanged: (value) => setState(() => _searchText = value),
               decoration: InputDecoration(
                 hintText: 'البحث في العمليات...',
-                hintTextDirection: TextDirection.rtl,
+                hintTextDirection: TextDirectionHelper.rtl,
                 prefixIcon: const Icon(LucideIcons.search),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
@@ -185,7 +186,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 8),
             Text(
@@ -193,7 +194,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -227,7 +228,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 8),
             Text(
@@ -235,7 +236,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -285,7 +286,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                textDirection: TextDirection.rtl,
+                textDirection: TextDirectionHelper.rtl,
               ),
             ),
 

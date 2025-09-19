@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import '../utils/text_direction_helper.dart';
 import '../models/transaction.dart';
 import '../models/category.dart';
 import '../providers/offline_providers.dart';
@@ -63,9 +64,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.pieChart, size: 16)),
+            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.chartPie, size: 16)),
             Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trendingUp, size: 16)),
-            Tab(text: 'المقارنات', icon: Icon(LucideIcons.barChart3, size: 16)),
+            Tab(text: 'المقارنات', icon: Icon(LucideIcons.chartBar, size: 16)),
           ],
         ),
       ),
@@ -135,7 +136,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               decoration: InputDecoration(
                 labelText: 'نوع الرسم',
                 labelStyle: const TextStyle(fontSize: 12),
-                prefixIcon: const Icon(LucideIcons.barChart3, size: 18),
+                prefixIcon: const Icon(LucideIcons.chartBar, size: 18),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(
@@ -280,7 +281,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirectionHelper.rtl,
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -292,7 +293,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               fontWeight: FontWeight.bold,
               color: color,
             ),
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirectionHelper.rtl,
           ),
         ],
       ),
@@ -315,7 +316,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -469,7 +470,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -495,7 +496,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -577,7 +578,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -587,8 +588,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 orElse: () => Category(
                   id: 'default',
                   name: trend.category,
+                  nameAr: trend.category,
                   color: '#6B7280',
                   icon: 'circle',
+                  type: TransactionType.expense,
                   createdAt: DateTime.now(),
                 ),
               );
@@ -607,7 +610,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                       child: Text(
                         trend.category,
                         style: Theme.of(context).textTheme.bodyMedium,
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirectionHelper.rtl,
                       ),
                     ),
                     Text(
@@ -616,7 +619,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      textDirection: TextDirection.rtl,
+                      textDirection: TextDirectionHelper.rtl,
                     ),
                     const SizedBox(width: 8),
                     Container(
@@ -658,7 +661,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -708,7 +711,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               Text(
                 title,
                 style: Theme.of(context).textTheme.bodyMedium,
-                textDirection: TextDirection.rtl,
+                textDirection: TextDirectionHelper.rtl,
               ),
             ],
           ),
@@ -718,7 +721,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirectionHelper.rtl,
           ),
           const SizedBox(height: 4),
           Row(
@@ -760,7 +763,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -792,7 +795,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                           child: Text(
                             comparison.category,
                             style: Theme.of(context).textTheme.bodyMedium,
-                            textDirection: TextDirection.rtl,
+                            textDirection: TextDirectionHelper.rtl,
                           ),
                         ),
                         Text(
@@ -800,7 +803,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
-                          textDirection: TextDirection.rtl,
+                          textDirection: TextDirectionHelper.rtl,
                         ),
                       ],
                     ),
@@ -814,7 +817,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
-                            textDirection: TextDirection.rtl,
+                            textDirection: TextDirectionHelper.rtl,
                           ),
                         ),
                         Container(
@@ -865,7 +868,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-                textDirection: TextDirection.rtl,
+                textDirection: TextDirectionHelper.rtl,
               ),
             ],
           ),
@@ -885,7 +888,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             Text(
               'خيارات التصفية',
               style: Theme.of(context).textTheme.titleLarge,
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             // Add more filter options here

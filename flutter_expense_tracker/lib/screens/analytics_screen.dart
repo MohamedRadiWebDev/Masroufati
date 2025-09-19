@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import '../utils/text_direction_helper.dart';
 import '../models/transaction.dart';
 import '../models/category.dart';
 import '../providers/offline_providers.dart';
@@ -59,9 +60,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.pie_chart, size: 16)),
+            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.chartPie, size: 16)),
             Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trending_up, size: 16)),
-            Tab(text: 'المقارنات', icon: Icon(LucideIcons.bar_chart_3, size: 16)),
+            Tab(text: 'المقارنات', icon: Icon(LucideIcons.chartBar, size: 16)),
           ],
         ),
       ),
@@ -106,7 +107,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.primary,
             ),
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirectionHelper.rtl,
           ),
           const Spacer(),
           IconButton(
@@ -258,7 +259,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirectionHelper.rtl,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
@@ -268,7 +269,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               fontWeight: FontWeight.bold,
               color: color,
             ),
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirectionHelper.rtl,
           ),
         ],
       ),
@@ -320,7 +321,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -389,7 +390,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       Text(
                         entry.key,
                         style: Theme.of(context).textTheme.bodySmall,
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirectionHelper.rtl,
                       ),
                     ],
                   ),
@@ -443,7 +444,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -515,7 +516,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     const SizedBox(width: 4),
-                    Text('الدخل', textDirection: TextDirection.rtl),
+                    Text('الدخل', textDirection: TextDirectionHelper.rtl),
                   ],
                 ),
                 const SizedBox(width: 16),
@@ -527,7 +528,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       color: Theme.of(context).colorScheme.error,
                     ),
                     const SizedBox(width: 4),
-                    Text('المصروفات', textDirection: TextDirection.rtl),
+                    Text('المصروفات', textDirection: TextDirectionHelper.rtl),
                   ],
                 ),
               ],
@@ -568,7 +569,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -623,7 +624,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirectionHelper.rtl,
                       ),
                     ),
                     Text(
@@ -632,7 +633,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      textDirection: TextDirection.rtl,
+                      textDirection: TextDirectionHelper.rtl,
                     ),
                   ],
                 ),
@@ -673,7 +674,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             
@@ -747,7 +748,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             Text(
@@ -756,7 +757,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontStyle: FontStyle.italic,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
           ],
         ),
@@ -776,7 +777,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             Text(
@@ -785,7 +786,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontStyle: FontStyle.italic,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
           ],
         ),
@@ -805,7 +806,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             Text(
@@ -814,7 +815,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontStyle: FontStyle.italic,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
           ],
         ),
@@ -834,7 +835,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             Text(
@@ -843,7 +844,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontStyle: FontStyle.italic,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
           ],
         ),
@@ -860,7 +861,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.pieChart,
+              LucideIcons.chartPie,
               size: 48,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -870,7 +871,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
               textAlign: TextAlign.center,
             ),
           ],
