@@ -35,10 +35,10 @@ class LocalStorage {
       final key = Hive.generateSecureKey();
       keyString = base64.encode(key);
       await storage.write(key: 'hive_encryption_key', value: keyString);
-      return key;
+      return Uint8List.fromList(key);
     }
     
-    return base64.decode(keyString);
+    return Uint8List.fromList(base64.decode(keyString));
   }
 
   LocalStorage._();

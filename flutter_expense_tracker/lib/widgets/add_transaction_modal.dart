@@ -13,10 +13,12 @@ import 'package:flutter/services.dart';
 
 class AddTransactionModal extends ConsumerStatefulWidget {
   final Transaction? editTransaction;
+  final TransactionType? initialType;
 
   const AddTransactionModal({
     super.key,
     this.editTransaction,
+    this.initialType,
   });
 
   @override
@@ -43,6 +45,8 @@ class _AddTransactionModalState extends ConsumerState<AddTransactionModal> {
     super.initState();
     if (widget.editTransaction != null) {
       _initializeFromTransaction(widget.editTransaction!);
+    } else if (widget.initialType != null) {
+      _selectedType = widget.initialType!;
     }
   }
 
