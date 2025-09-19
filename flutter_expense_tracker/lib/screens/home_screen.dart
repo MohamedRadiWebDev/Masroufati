@@ -9,6 +9,7 @@ import '../widgets/add_transaction_modal.dart';
 import '../widgets/voice_input_modal.dart';
 import '../widgets/file_import_modal.dart';
 import '../utils/category_icons.dart';
+import '../utils/text_direction_helper.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -96,10 +97,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final categories = ref.watch(localCategoriesProvider);
 
     final filteredTransactions = _getFilteredTransactions(transactions);
-    final displayTransactions = _hasActiveFilters 
-        ? filteredTransactions 
-        : _showAllTransactions 
-            ? transactions 
+    final displayTransactions = _hasActiveFilters
+        ? filteredTransactions
+        : _showAllTransactions
+            ? transactions
             : transactions.take(5).toList();
 
     // Calculate balance
@@ -167,7 +168,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirectionHelper.rtl,
                       ),
                       const Spacer(),
                       if (!_hasActiveFilters && transactions.length > 5)
@@ -179,7 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           },
                           child: Text(
                             _showAllTransactions ? 'عرض أقل' : 'عرض الكل',
-                            textDirection: TextDirection.rtl,
+                            textDirection: TextDirectionHelper.rtl,
                           ),
                         ),
                     ],
@@ -243,7 +244,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 color: Colors.white,
                 fontSize: 16,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 8),
             Text(
@@ -253,7 +254,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             const SizedBox(height: 16),
             Row(
@@ -262,7 +263,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Column(
                     children: [
                       const Icon(
-                        LucideIcons.trendingUp,
+                        LucideIcons.trending_up,
                         color: Colors.white,
                         size: 20,
                       ),
@@ -273,7 +274,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           color: Colors.white70,
                           fontSize: 12,
                         ),
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirectionHelper.rtl,
                       ),
                       Text(
                         '${totalIncome.toStringAsFixed(2)} ج.م',
@@ -282,7 +283,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirectionHelper.rtl,
                       ),
                     ],
                   ),
@@ -296,7 +297,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Column(
                     children: [
                       const Icon(
-                        LucideIcons.trendingDown,
+                        LucideIcons.trending_down,
                         color: Colors.white,
                         size: 20,
                       ),
@@ -307,7 +308,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           color: Colors.white70,
                           fontSize: 12,
                         ),
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirectionHelper.rtl,
                       ),
                       Text(
                         '${totalExpenses.toStringAsFixed(2)} ج.م',
@@ -316,7 +317,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
-                        textDirection: TextDirection.rtl,
+                        textDirection: TextDirectionHelper.rtl,
                       ),
                     ],
                   ),
@@ -383,7 +384,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'البحث في الوصف...',
-                  hintTextDirection: TextDirection.rtl,
+                  hintTextDirection: TextDirectionHelper.rtl,
                   prefixIcon: const Icon(LucideIcons.search),
                   filled: true,
                   fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
@@ -392,7 +393,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                textDirection: TextDirection.rtl,
+                textDirection: TextDirectionHelper.rtl,
                 onChanged: (value) {
                   setState(() {
                     _searchText = value;
@@ -440,7 +441,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     const DropdownMenuItem(value: 'all', child: Text('جميع التصنيفات')),
                     ...categories.map((category) => DropdownMenuItem(
                       value: category.name,
-                      child: Text(category.name, textDirection: TextDirection.rtl),
+                      child: Text(category.name, textDirection: TextDirectionHelper.rtl),
                     )),
                   ],
                   onChanged: (value) {
@@ -510,11 +511,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final category = categories.firstWhere(
       (c) => c.name == transaction.category,
       orElse: () => Category(
-        id: 'default',
-        name: transaction.category,
+        id: 'other',
+        name: 'أخرى',
+        nameAr: 'أخرى',
+        icon: 'more-horizontal',
         color: '#6B7280',
-        icon: 'circle',
-        createdAt: DateTime.now(),
+        type: TransactionType.expense,
       ),
     );
 
@@ -537,7 +539,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         title: Text(
           transaction.category,
           style: const TextStyle(fontWeight: FontWeight.w600),
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirectionHelper.rtl,
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -545,7 +547,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             if (transaction.note != null)
               Text(
                 transaction.note!,
-                textDirection: TextDirection.rtl,
+                textDirection: TextDirectionHelper.rtl,
                 style: const TextStyle(fontSize: 12),
               ),
             Text(
@@ -554,7 +556,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 fontSize: 11,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
           ],
         ),
@@ -570,12 +572,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ? Colors.green
                     : Theme.of(context).colorScheme.error,
               ),
-              textDirection: TextDirection.rtl,
+              textDirection: TextDirectionHelper.rtl,
             ),
             Icon(
               transaction.type == TransactionType.income
-                  ? LucideIcons.trendingUp
-                  : LucideIcons.trendingDown,
+                  ? LucideIcons.trending_up
+                  : LucideIcons.trending_down,
               size: 14,
               color: transaction.type == TransactionType.income
                   ? Colors.green
@@ -603,7 +605,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirectionHelper.rtl,
           ),
           const SizedBox(height: 8),
           Text(
@@ -611,7 +613,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirectionHelper.rtl,
           ),
           if (!_hasActiveFilters) ...[
             const SizedBox(height: 24),
@@ -654,21 +656,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('الإعدادات', textDirection: TextDirection.rtl),
+        title: const Text('الإعدادات', textDirection: TextDirectionHelper.rtl),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: Icon(LucideIcons.palette),
-              title: Text('تخصيص الألوان', textDirection: TextDirection.rtl),
+              title: Text('تخصيص الألوان', textDirection: TextDirectionHelper.rtl),
             ),
             ListTile(
               leading: Icon(LucideIcons.bell),
-              title: Text('الإشعارات', textDirection: TextDirection.rtl),
+              title: Text('الإشعارات', textDirection: TextDirectionHelper.rtl),
             ),
             ListTile(
               leading: Icon(LucideIcons.download),
-              title: Text('النسخ الاحتياطي', textDirection: TextDirection.rtl),
+              title: Text('النسخ الاحتياطي', textDirection: TextDirectionHelper.rtl),
             ),
           ],
         ),

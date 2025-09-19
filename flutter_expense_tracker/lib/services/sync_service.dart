@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../models/transaction.dart';
-import '../models/category.dart' as models;
+import '../models/category.dart';
 import '../services/api_client.dart';
 import '../services/local_storage.dart';
 
@@ -206,6 +206,8 @@ class SyncService {
         try {
           final request = CreateCategoryRequest(
             name: category.name,
+            nameAr: category.nameAr,
+            type: category.type,
             color: category.color,
             icon: category.icon,
           );

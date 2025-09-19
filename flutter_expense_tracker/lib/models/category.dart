@@ -26,7 +26,6 @@ class Category with _$Category {
 class CreateCategoryRequest with _$CreateCategoryRequest {
   const factory CreateCategoryRequest({
     required String name,
-    @JsonKey(name: 'name_ar')
     required String nameAr,
     required TransactionType type,
     required String icon,
