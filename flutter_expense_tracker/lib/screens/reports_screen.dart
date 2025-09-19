@@ -64,9 +64,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.pie_chart, size: 16)),
+            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.chart, size: 16)),
             Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trending_up, size: 16)),
-            Tab(text: 'المقارنات', icon: Icon(LucideIcons.bar_chart, size: 16)),
+            Tab(text: 'المقارنات', icon: Icon(LucideIcons.chart, size: 16)),
           ],
         ),
       ),
@@ -136,7 +136,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               decoration: InputDecoration(
                 labelText: 'نوع الرسم',
                 labelStyle: const TextStyle(fontSize: 12),
-                prefixIcon: const Icon(LucideIcons.bar_chart, size: 18),
+                prefixIcon: const Icon(LucideIcons.chart, size: 18),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(
@@ -860,7 +860,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                LucideIcons.bar_chart_3,
+                LucideIcons.chart_3,
                 size: 48,
                 color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
               ),

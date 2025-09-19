@@ -60,9 +60,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.pie_chart, size: 16)),
+            Tab(text: 'نظرة عامة', icon: Icon(LucideIcons.chart, size: 16)),
             Tab(text: 'الاتجاهات', icon: Icon(LucideIcons.trending_up, size: 16)),
-            Tab(text: 'المقارنات', icon: Icon(LucideIcons.bar_chart, size: 16)),
+            Tab(text: 'المقارنات', icon: Icon(LucideIcons.chart, size: 16)),
           ],
         ),
       ),
@@ -861,7 +861,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.pie_chart,
+              LucideIcons.chart,
               size: 48,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -922,7 +922,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('الشهر الحالي', textDirection: TextDirection.rtl),
+                title: const Text('الشهر الحالي'),
                 leading: const Icon(LucideIcons.calendar),
                 onTap: () {
                   setState(() {
@@ -933,7 +933,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 },
               ),
               ListTile(
-                title: const Text('السنة الحالية', textDirection: TextDirection.rtl),
+                title: const Text('السنة الحالية'),
                 leading: const Icon(LucideIcons.calendar),
                 onTap: () {
                   setState(() {
@@ -944,7 +944,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 },
               ),
               ListTile(
-                title: const Text('جميع الفترات', textDirection: TextDirection.rtl),
+                title: const Text('جميع الفترات'),
                 leading: const Icon(LucideIcons.calendar),
                 onTap: () {
                   setState(() {

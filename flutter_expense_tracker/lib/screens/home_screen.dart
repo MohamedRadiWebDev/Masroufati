@@ -409,7 +409,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 });
               },
               icon: Icon(
-                LucideIcons.filter,
+                LucideIcons.settings,
                 color: _showFilters ? Theme.of(context).primaryColor : null,
               ),
             ),

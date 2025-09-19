@@ -183,7 +183,7 @@ class _FileImportModalState extends ConsumerState<FileImportModal> {
         Row(
           children: [
             Icon(
-              result.isSuccess ? LucideIcons.check_circle_2 : LucideIcons.alert_circle,
+              result.isSuccess ? LucideIcons.check : LucideIcons.alert_triangle,
               color: result.isSuccess ? Colors.green : Theme.of(context).colorScheme.error,
               size: 24,
             ),
@@ -337,7 +337,7 @@ class _FileImportModalState extends ConsumerState<FileImportModal> {
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: _resetImport,
-                icon: const Icon(LucideIcons.refresh_cw),
+                icon: const Icon(LucideIcons.refresh),
                 label: const Text('استيراد ملف آخر'),
               ),
             ),
