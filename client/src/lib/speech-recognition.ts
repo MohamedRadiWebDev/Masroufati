@@ -227,11 +227,15 @@ export function startSpeechRecognition(
     console.log('انتهى رصد الكلام');
   };
 
+  let fullTranscript = '';
+  let isCollectingResults = false;
+  let resultTimer: any = null;
+  
   recognition.onresult = (event: SpeechRecognitionEvent) => {
     let finalTranscript = '';
     let interimTranscript = '';
 
-    for (let i = event.resultIndex; i < event.results.length; i++) {
+    for (let i = 0; i < event.results.length; i++) {
       // نحاول الحصول على أفضل بديل مع تحليل متقدم
       let bestTranscript = '';
       let bestConfidence = 0;
@@ -258,32 +262,75 @@ export function startSpeechRecognition(
       }
     }
 
-    // تحسين متقدم للنص العربي
-    const enhancedCleanText = (text: string) => {
-      return text
-        .replace(/\s+/g, ' ') // إزالة المسافات الزائدة
-        .replace(/[A-Za-z]+/g, (match) => convertEnglishToArabicNumerals(match)) // تحويل الأرقام الإنجليزية المنطوقة
-        .replace(/[٠-٩]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - '٠'.charCodeAt(0) + '0'.charCodeAt(0))) // تحويل جميع الأرقام العربية للـ ASCII
-        .replace(/ه\s*(\d)/g, '$1') // إزالة "ه" قبل الأرقام (مثل "ه 50" -> "50")
-        .replace(/\b(\d+)\s*جنيه?\b/g, '$1') // تبسيط عبارات الجنيه
-        .trim();
-    };
-
-    const result = enhancedCleanText(finalTranscript || interimTranscript);
-    if (result.length > 0) {
-      onResult(result);
+    // جمع النتائج النهائية
+    if (finalTranscript) {
+      fullTranscript += (fullTranscript ? ' ' : '') + finalTranscript;
+      isCollectingResults = true;
     }
+
+    // عرض النتائج المؤقتة أو النهائية
+    const currentResult = fullTranscript + (interimTranscript ? ' ' + interimTranscript : '');
+    
+    if (currentResult.trim()) {
+      // تحسين متقدم للنص العربي
+      const enhancedCleanText = (text: string) => {
+        return text
+          .replace(/\s+/g, ' ') // إزالة المسافات الزائدة
+          .replace(/[A-Za-z]+/g, (match) => convertEnglishToArabicNumerals(match)) // تحويل الأرقام الإنجليزية المنطوقة
+          .replace(/[٠-٩]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - '٠'.charCodeAt(0) + '0'.charCodeAt(0))) // تحويل جميع الأرقام العربية للـ ASCII
+          .replace(/ه\s*(\d)/g, '$1') // إزالة "ه" قبل الأرقام (مثل "ه 50" -> "50")
+          .replace(/\b(\d+)\s*جنيه?\b/g, '$1') // تبسيط عبارات الجنيه
+          .trim();
+      };
+
+      const result = enhancedCleanText(currentResult);
+      if (result.length > 0) {
+        onResult(result);
+      }
+    }
+
+    // إعادة تشغيل الاستماع إذا توقف مؤقتاً
+    if (resultTimer) {
+      clearTimeout(resultTimer);
+    }
+    
+    resultTimer = setTimeout(() => {
+      if (isCollectingResults && fullTranscript.trim()) {
+        console.log('Completed collecting speech results');
+        isCollectingResults = false;
+      }
+    }, 1500); // انتظار 1.5 ثانية بعد آخر نتيجة
   };
 
   recognition.onerror = (event: any) => {
-    let errorMessage = 'حدث خطأ في التعرف على الصوت';
-    let shouldRetry = false;
+    console.warn('Speech recognition error:', event.error);
     
-    switch (event.error) {
-      case 'no-speech':
-        errorMessage = 'لم يتم رصد أي كلام. حاول التحدث بوضوح أكثر';
-        shouldRetry = true;
-        break;
+    // لا نتوقف عند أخطاء معينة، نحاول إعادة التشغيل
+    if (event.error === 'aborted' || event.error === 'no-speech') {
+      console.log('Attempting to restart speech recognition after error:', event.error);
+      
+      // إعادة تشغيل بعد توقف قصير
+      setTimeout(() => {
+        if (recognition) {
+          try {
+            recognition.start();
+            console.log('Speech recognition restarted after error');
+          } catch (restartError) {
+            console.error('Failed to restart speech recognition:', restartError);
+            handleFinalError(event.error);
+          }
+        }
+      }, 100);
+      return;
+    }
+    
+    handleFinalError(event.error);
+  };
+  
+  function handleFinalError(errorType: string) {
+    let errorMessage = 'حدث خطأ في التعرف على الصوت';
+    
+    switch (errorType) {
       case 'audio-capture':
         errorMessage = 'لا يمكن الوصول للميكروفون. تأكد من السماح بالوصول للميكروفون في المتصفح';
         break;
@@ -291,8 +338,7 @@ export function startSpeechRecognition(
         errorMessage = 'تم رفض الإذن للوصول للميكروفون. اضغط على أيقونة الميكروفون في شريط العنوان واسمح بالوصول';
         break;
       case 'network':
-        errorMessage = 'خطأ في الاتصال بالإنترنت. تحقق من اتصالك';
-        shouldRetry = true;
+        errorMessage = 'خطأ في الاتصال بالإنترنت. تحقق من اتصالك وحاول مرة أخرى';
         break;
       case 'language-not-supported':
         errorMessage = 'اللغة العربية غير مدعومة في متصفحك. جرب استخدام Chrome أو Edge';
@@ -300,21 +346,29 @@ export function startSpeechRecognition(
       case 'service-not-allowed':
         errorMessage = 'خدمة التعرف على الصوت غير متاحة. تأكد من أنك تستخدم HTTPS';
         break;
-      case 'aborted':
-        errorMessage = 'حاول مرة أخرى. انقطع التسجيل بسبب خطأ مؤقت';
-        shouldRetry = true;
-        break;
       default:
-        errorMessage = `خطأ في التعرف على الصوت: ${event.error}. تأكد من السماح بالوصول للميكروفون`;
-        shouldRetry = false;
+        errorMessage = 'تأكد من السماح بالوصول للميكروفون وحاول مرة أخرى';
     }
     
-    console.warn('Speech recognition error:', event.error, errorMessage);
     onError(errorMessage);
-  };
+  }
 
   recognition.onend = () => {
-    console.log('انتهى التسجيل');
+    console.log('انتهى التسجيل - إعادة تشغيل تلقائي');
+    
+    // إعادة تشغيل تلقائي إذا كان التسجيل ما زال نشطاً
+    if (recognition && !recognition._stopped) {
+      try {
+        setTimeout(() => {
+          if (recognition && !recognition._stopped) {
+            recognition.start();
+            console.log('تم إعادة تشغيل التسجيل تلقائياً');
+          }
+        }, 100);
+      } catch (error) {
+        console.error('فشل في إعادة تشغيل التسجيل:', error);
+      }
+    }
   };
 
   // Add comprehensive pre-start checks
@@ -345,6 +399,7 @@ export function startSpeechRecognition(
 
 export function stopSpeechRecognition(): void {
   if (recognition) {
+    recognition._stopped = true; // علامة للإشارة للتوقف
     recognition.stop();
     recognition = null;
   }
