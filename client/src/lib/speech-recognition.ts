@@ -202,13 +202,21 @@ export function startSpeechRecognition(
     console.log('انتهى رصد الكلام');
   };
 
-  let fullTranscript = '';
+  // متغيرات لتخزين النتائج عبر جلسات متعددة
+  let allFinalTranscript = ''; // جميع النتائج النهائية متراكمة
+  let processedFinalCount = 0; // عدد النتائج النهائية المعالجة
+  
+  recognition.onstart = () => {
+    console.log('بدأ التسجيل بنجاح');
+    processedFinalCount = 0; // إعادة تعيين عداد المعالجة في كل جلسة
+    restartAttempts = 0; // إعادة تعيين محاولات الإعادة عند بدء جلسة جديدة
+  };
   
   recognition.onresult = (event: SpeechRecognitionEvent) => {
-    let finalTranscript = '';
+    let newFinalText = '';
     let interimTranscript = '';
 
-    // معالجة النتائج الجديدة فقط بدءاً من المؤشر الصحيح
+    // معالجة النتائج الجديدة فقط بدءاً من event.resultIndex
     for (let i = event.resultIndex; i < event.results.length; i++) {
       // نحاول الحصول على أفضل بديل مع تحليل متقدم
       let bestTranscript = '';
@@ -229,20 +237,25 @@ export function startSpeechRecognition(
       const intelligentChoice = selectBestArabicAlternative(allAlternatives, bestTranscript);
       const transcript = intelligentChoice || event.results[i][0].transcript;
       
-      if (event.results[i].isFinal) {
-        finalTranscript += (finalTranscript ? ' ' : '') + transcript;
-      } else {
+      if (event.results[i].isFinal && i >= processedFinalCount) {
+        // نتيجة نهائية جديدة لم تتم معالجتها بعد
+        newFinalText += (newFinalText ? ' ' : '') + transcript;
+        processedFinalCount = i + 1;
+      } else if (!event.results[i].isFinal) {
+        // نتيجة مؤقتة
         interimTranscript += (interimTranscript ? ' ' : '') + transcript;
       }
     }
 
-    // جمع النتائج النهائية فقط
-    if (finalTranscript) {
-      fullTranscript += (fullTranscript ? ' ' : '') + finalTranscript;
+    // إضافة النتائج النهائية الجديدة إلى النص المتراكم
+    if (newFinalText) {
+      allFinalTranscript += (allFinalTranscript ? ' ' : '') + newFinalText;
+      console.log('Added new final text:', newFinalText);
+      console.log('Total accumulated text:', allFinalTranscript);
     }
 
-    // عرض النتائج المؤقتة مع النهائية
-    const currentResult = fullTranscript + (interimTranscript ? ' ' + interimTranscript : '');
+    // دمج النص النهائي المتراكم مع النص المؤقت لعرضه
+    const currentResult = allFinalTranscript + (interimTranscript ? (allFinalTranscript ? ' ' : '') + interimTranscript : '');
     
     if (currentResult.trim()) {
       // تحسين متقدم للنص العربي
@@ -341,14 +354,6 @@ export function startSpeechRecognition(
     }
   };
   
-  // إعادة تعيين عداد المحاولات عند الحصول على نتيجة ناجحة
-  const originalOnResult = recognition.onresult;
-  recognition.onresult = (event: SpeechRecognitionEvent) => {
-    restartAttempts = 0; // إعادة تعيين المحاولات عند النجاح
-    if (originalOnResult) {
-      originalOnResult(event);
-    }
-  };
 
   // Add comprehensive pre-start checks
   console.log('Attempting to start speech recognition...');
@@ -393,6 +398,7 @@ export function stopSpeechRecognition(): void {
     }
     
     recognition = null;
+    console.log('Speech recognition stopped and cleaned up');
   }
 }
 
