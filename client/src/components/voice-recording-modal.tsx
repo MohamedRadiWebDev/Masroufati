@@ -143,13 +143,16 @@ export default function VoiceRecordingModal({ open, onOpenChange }: VoiceRecordi
 
     return () => {
       stopSpeechRecognition();
-      // Clear any pending processing timeout
-      if (processingTimeout) {
-        clearTimeout(processingTimeout);
-        setProcessingTimeout(null);
-      }
     };
-  }, [open, isRecording, handleSpeechResult, handleSpeechError, processingTimeout]);
+  }, [open, isRecording, handleSpeechResult, handleSpeechError]);
+  
+  // منفصل timeout cleanup عند إغلاق المودال
+  useEffect(() => {
+    if (!open && processingTimeout) {
+      clearTimeout(processingTimeout);
+      setProcessingTimeout(null);
+    }
+  }, [open, processingTimeout]);
 
   // Memoized start recording handler
   const handleStartRecording = useCallback(async () => {

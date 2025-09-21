@@ -117,20 +117,8 @@ export function preloadSpeechRecognition(): Promise<boolean> {
       preloadedRecognition.interimResults = true;
       preloadedRecognition.maxAlternatives = 3; // Reduced for better performance
       
-      // Advanced audio processing setup if supported
-      try {
-        if ('noiseSuppression' in preloadedRecognition) {
-          preloadedRecognition.noiseSuppression = true;
-        }
-        if ('echoCancellation' in preloadedRecognition) {
-          preloadedRecognition.echoCancellation = true;
-        }
-        if ('autoGainControl' in preloadedRecognition) {
-          preloadedRecognition.autoGainControl = true;
-        }
-      } catch (error) {
-        console.warn('Advanced audio processing not supported:', error);
-      }
+      // Note: noiseSuppression, echoCancellation, autoGainControl are MediaTrackConstraints
+      // and not part of SpeechRecognition API - these would have no effect here
       
       isPreloading = false;
       resolve(true);
@@ -184,20 +172,7 @@ export function startSpeechRecognition(
     }
   }
   
-  // تحسين معالجة الضوضاء (مع فحص الدعم)
-  try {
-    if ('noiseSuppression' in recognition) {
-      recognition.noiseSuppression = true;
-    }
-    if ('echoCancellation' in recognition) {
-      recognition.echoCancellation = true;
-    }
-    if ('autoGainControl' in recognition) {
-      recognition.autoGainControl = true;
-    }
-  } catch (error) {
-    console.warn('Advanced audio processing not supported:', error);
-  }
+  // Note: Audio processing constraints would need to be set on getUserMedia, not SpeechRecognition
 
   recognition.onstart = () => {
     console.log('بدأ التسجيل بنجاح');
@@ -228,14 +203,13 @@ export function startSpeechRecognition(
   };
 
   let fullTranscript = '';
-  let isCollectingResults = false;
-  let resultTimer: any = null;
   
   recognition.onresult = (event: SpeechRecognitionEvent) => {
     let finalTranscript = '';
     let interimTranscript = '';
 
-    for (let i = 0; i < event.results.length; i++) {
+    // معالجة النتائج الجديدة فقط بدءاً من المؤشر الصحيح
+    for (let i = event.resultIndex; i < event.results.length; i++) {
       // نحاول الحصول على أفضل بديل مع تحليل متقدم
       let bestTranscript = '';
       let bestConfidence = 0;
@@ -262,13 +236,12 @@ export function startSpeechRecognition(
       }
     }
 
-    // جمع النتائج النهائية
+    // جمع النتائج النهائية فقط
     if (finalTranscript) {
       fullTranscript += (fullTranscript ? ' ' : '') + finalTranscript;
-      isCollectingResults = true;
     }
 
-    // عرض النتائج المؤقتة أو النهائية
+    // عرض النتائج المؤقتة مع النهائية
     const currentResult = fullTranscript + (interimTranscript ? ' ' + interimTranscript : '');
     
     if (currentResult.trim()) {
@@ -288,42 +261,25 @@ export function startSpeechRecognition(
         onResult(result);
       }
     }
-
-    // إعادة تشغيل الاستماع إذا توقف مؤقتاً
-    if (resultTimer) {
-      clearTimeout(resultTimer);
-    }
-    
-    resultTimer = setTimeout(() => {
-      if (isCollectingResults && fullTranscript.trim()) {
-        console.log('Completed collecting speech results');
-        isCollectingResults = false;
-      }
-    }, 1500); // انتظار 1.5 ثانية بعد آخر نتيجة
   };
 
+  let restartAttempts = 0;
+  const maxRestartAttempts = 3;
+  let restartTimeout: any = null;
+  
   recognition.onerror = (event: any) => {
     console.warn('Speech recognition error:', event.error);
     
-    // لا نتوقف عند أخطاء معينة، نحاول إعادة التشغيل
+    // إيقاف التعرف أولاً ثم ترك onend يتعامل مع إعادة التشغيل
     if (event.error === 'aborted' || event.error === 'no-speech') {
-      console.log('Attempting to restart speech recognition after error:', event.error);
-      
-      // إعادة تشغيل بعد توقف قصير
-      setTimeout(() => {
-        if (recognition) {
-          try {
-            recognition.start();
-            console.log('Speech recognition restarted after error');
-          } catch (restartError) {
-            console.error('Failed to restart speech recognition:', restartError);
-            handleFinalError(event.error);
-          }
-        }
-      }, 100);
+      console.log('Stopping recognition to allow restart after error:', event.error);
+      if (recognition && !recognition._stopped) {
+        recognition.stop();
+      }
       return;
     }
     
+    // أخطاء نهائية لا يمكن إعادة المحاولة معها
     handleFinalError(event.error);
   };
   
@@ -354,20 +310,43 @@ export function startSpeechRecognition(
   }
 
   recognition.onend = () => {
-    console.log('انتهى التسجيل - إعادة تشغيل تلقائي');
+    console.log('انتهى التسجيل');
     
-    // إعادة تشغيل تلقائي إذا كان التسجيل ما زال نشطاً
-    if (recognition && !recognition._stopped) {
-      try {
-        setTimeout(() => {
-          if (recognition && !recognition._stopped) {
+    // إعادة تشغيل مع backoff exponential إذا كان التسجيل ما زال نشطاً
+    if (recognition && !recognition._stopped && restartAttempts < maxRestartAttempts) {
+      const backoffDelay = Math.min(200 * Math.pow(2, restartAttempts), 3000); // 200ms → 400ms → 800ms → 3s cap
+      restartAttempts++;
+      
+      console.log(`Scheduling restart attempt ${restartAttempts} after ${backoffDelay}ms`);
+      
+      if (recognition._restartTimeout) {
+        clearTimeout(recognition._restartTimeout);
+        recognition._restartTimeout = null;
+      }
+      
+      recognition._restartTimeout = setTimeout(() => {
+        if (recognition && !recognition._stopped) {
+          try {
             recognition.start();
             console.log('تم إعادة تشغيل التسجيل تلقائياً');
+          } catch (error) {
+            console.error('فشل في إعادة تشغيل التسجيل:', error);
+            if (restartAttempts >= maxRestartAttempts) {
+              onError('فشل في التعرف على الصوت. تأكد من السماح بالوصول للميكروفون');
+            }
           }
-        }, 100);
-      } catch (error) {
-        console.error('فشل في إعادة تشغيل التسجيل:', error);
-      }
+        }
+        recognition._restartTimeout = null;
+      }, backoffDelay);
+    }
+  };
+  
+  // إعادة تعيين عداد المحاولات عند الحصول على نتيجة ناجحة
+  const originalOnResult = recognition.onresult;
+  recognition.onresult = (event: SpeechRecognitionEvent) => {
+    restartAttempts = 0; // إعادة تعيين المحاولات عند النجاح
+    if (originalOnResult) {
+      originalOnResult(event);
     }
   };
 
@@ -400,7 +379,19 @@ export function startSpeechRecognition(
 export function stopSpeechRecognition(): void {
   if (recognition) {
     recognition._stopped = true; // علامة للإشارة للتوقف
-    recognition.stop();
+    
+    // مسح أي timeout معلق لإعادة التشغيل
+    if (recognition._restartTimeout) {
+      clearTimeout(recognition._restartTimeout);
+      recognition._restartTimeout = null;
+    }
+    
+    try {
+      recognition.stop();
+    } catch (error) {
+      console.warn('Error stopping recognition:', error);
+    }
+    
     recognition = null;
   }
 }
